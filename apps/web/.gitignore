@@ -6,16 +6,6 @@
 .pnp.js
 .yarn/install-state.gz
 
-# buat commit chore: harus dihapus setelah commit chore
-/src/app/event
-/src/app/auth
-/src/components
-/src/features
-/src/lib
-/src/providers
-/src/utils
-/src/zustand
-
 # testing
 /coverage
 
