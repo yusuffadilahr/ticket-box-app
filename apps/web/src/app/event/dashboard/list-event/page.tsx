@@ -52,7 +52,7 @@ export default function EventTable() {
 
 
 
-    const { data: getEventList } = useQuery({
+    const { data: getEventList, refetch } = useQuery({
         queryKey: ['get-event-list', searchInput, page],
         queryFn: async () => {
             const res = await instance.get(`/event/organizer-event`, {
@@ -68,7 +68,10 @@ export default function EventTable() {
             await instance.delete(`/event/delete-event/${id}`)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['get-event-list'] });
+            refetch();
+        },
+        onError: (err) => {
+            console.log(err)
         }
     });
 

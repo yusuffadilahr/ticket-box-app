@@ -447,20 +447,34 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
         const { id } = req.params;
         const { userId } = req.body
 
-        const deletedEvent = await prisma.event.delete({
-            where: {
-                id: Number(id),
-                eventOrganizerId: userId
-            },
-        });
+        await prisma.$transaction(async (tx) => {
+            const findImage = await tx.eventImages.findMany({
+                where: { eventsId: Number(id) }
+            })
 
-        await prisma.tickets.deleteMany({
-            where: { eventId: deletedEvent.id },
-        });
-        await prisma.eventImages.deleteMany({
-            where: { eventsId: deletedEvent.id },
-        });
-        
+            await tx.tickets.deleteMany({
+                where: {
+                    eventId: Number(id)
+                }
+            })
+
+            await tx.eventImages.deleteMany({
+                where: { eventsId: Number(id) },
+            });
+
+            await tx.event.delete({
+                where: {
+                    id: Number(id),
+                    eventOrganizerId: userId
+                },
+            });
+
+            findImage.forEach((item) => {
+                fs.rmSync(item?.eventImageUrl)
+            })
+        })
+
+
         res.status(200).json({
             error: false,
             message: "Data Berhasil Dihapus!",
