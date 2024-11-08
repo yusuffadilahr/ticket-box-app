@@ -21,30 +21,14 @@ export const userRegister = async (
     const date = `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`;
     const refferal = `TBX-${id}-${date}`;
 
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      identityNumber,
-      referralBody /* REFERRAL BOLEH NULL */,
-    } = req.body;
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !password ||
-      !phoneNumber ||
-      !identityNumber
-    )
-      throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
+    const { firstName, lastName, email, password, phoneNumber, identityNumber, referralBody /* REFERRAL BOLEH NULL */ } = req.body;
+    if (!firstName || !lastName || !email || !password || !phoneNumber || !identityNumber) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
+    
     const checkedEmail = await prisma.users.findMany({
       where: { email },
     });
 
-    if (checkedEmail.length != 0)
-      throw { msg: 'Email sudah terpakai', status: 400 };
+    if (checkedEmail.length != 0) throw { msg: 'Email sudah terpakai', status: 400 };
     const hashed = await hashPassword(password);
 
     const dataRegisterUser = await prisma.users.create({
@@ -191,7 +175,7 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
     let dataEventOrganizer: any;
 
 
-    if(authorizationRole == 'user') {
+    if (authorizationRole == 'user') {
       dataUser = await prisma.users.findMany({
         where: { id: userId },
         include: {
@@ -201,23 +185,23 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         },
       })
 
-    } else if(authorizationRole == 'EO') {
-     dataEventOrganizer = await prisma.eventOrganizer.findMany({
-      where: {id: userId},
-      include: {
-        events: true,
-        Transactions: true
-      }
-     })
+    } else if (authorizationRole == 'EO') {
+      dataEventOrganizer = await prisma.eventOrganizer.findMany({
+        where: { id: userId },
+        include: {
+          events: true,
+          Transactions: true
+        }
+      })
     }
-    
+
     if (dataUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
     if (dataEventOrganizer.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
 
     res.status(200).json({
       error: false,
       message: 'Get Profile berhasil',
-      data: authorizationRole == 'user' ?  {
+      data: authorizationRole == 'user' ? {
         isVerified: dataUser[0]?.isVerified,
         firstName: dataUser[0].firstName,
         lastName: dataUser[0].lastName,
@@ -227,7 +211,7 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         profilePicture: dataUser[0].profilePicture,
         identityNumber: dataUser[0].identityNumber,
         refferalCode: dataUser[0].referralCode,
-      } : authorizationRole == 'EO' ?  {
+      } : authorizationRole == 'EO' ? {
         organizerName: dataEventOrganizer[0]?.organizerName,
         ownerName: dataEventOrganizer[0].ownerName,
         role: dataEventOrganizer[0].role,
@@ -444,11 +428,7 @@ export const updateProfileUser = async (
   }
 };
 
-export const verifyUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, verificationCode } = req.body;
 
@@ -468,7 +448,7 @@ export const verifyUser = async (
     });
 
     res.status(200).json({
-      error:false,
+      error: false,
       message: 'Berhasil',
       data: {}
     })

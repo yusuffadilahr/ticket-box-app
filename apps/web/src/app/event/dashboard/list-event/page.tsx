@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useMutation } from '@tanstack/react-query';
+import Link from 'next/link'
 
 
 
@@ -52,7 +53,7 @@ export default function EventTable() {
 
 
 
-    const { data: getEventList } = useQuery({
+    const { data: getEventList, refetch } = useQuery({
         queryKey: ['get-event-list', searchInput, page],
         queryFn: async () => {
             const res = await instance.get(`/event/organizer-event`, {
@@ -64,11 +65,14 @@ export default function EventTable() {
     });
 
     const { mutate: mutateDeleteData } = useMutation({
-        mutationFn: async (id: number) => {
+        mutationFn: async (id: any) => {
             await instance.delete(`/event/delete-event/${id}`)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['get-event-list'] });
+            refetch()
+        }, 
+        onError: (err) => {
+            console.log(err)
         }
     });
 
@@ -151,7 +155,7 @@ export default function EventTable() {
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel>Batal</AlertDialogCancel>
                                                 <AlertDialogAction
-                                                    onClick={() => mutateDeleteData(item.id)}
+                                                    onClick={() => mutateDeleteData(item?.id)}
                                                 >
 
                                                     Hapus
@@ -159,11 +163,9 @@ export default function EventTable() {
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
-
-
-
-
-                                    <button className='bg-yellow-500 p-2 rounded-md'><FaPencil color='white' /></button>
+                                    <Link href={`/event/dashboard/u/${item?.id}`}>
+                                        <button className='bg-yellow-500 p-2 rounded-md'><FaPencil color='white' /></button>
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

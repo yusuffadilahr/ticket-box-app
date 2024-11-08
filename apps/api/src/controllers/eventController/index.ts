@@ -276,14 +276,8 @@ export const getCarousel = async (req: Request, res: Response, next: NextFunctio
 export const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const imagesUploaded: any = req?.files
-        const { eventName, location, description, isPaid, locationUrl, startEvent, endEvent, categoryId, userId, tickets } = req.body
+        const { eventName, location, description, isPaid, locationUrl, startEvent, endEvent, categoryId, userId } = req.body
         const { id } = req.params
-        // const dataArrayTikcet = JSON.parse(tickets)
-        // const dataArrayTikcet = [tickets] /* tester */
-        const dataArrayTikcet = Array.isArray(tickets) ? tickets : JSON.parse(tickets || '[]');
-
-        console.log(dataArrayTikcet, 'datatickets')
-        console.log(tickets)
 
         console.log(req.files)
         console.log(eventName, "<<<<<< event Name");
@@ -293,6 +287,12 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
         console.log('<<<<< sampe mana 1')
 
         await prisma.$transaction(async (tx) => {
+            const findUser = await tx.event.findMany({
+                where: { eventOrganizerId: userId }
+            })
+
+            if (findUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 }
+
             console.log('<<<<< sampe mana 2')
             const updatedEvent = await tx.event.update({
                 data: {
@@ -303,7 +303,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                     isPaid: Boolean(isPaid),
                     startEvent: new Date(startEvent),
                     endEvent: new Date(endEvent),
-                    categoryId: 1, // ini contoh, natni dari body
+                    categoryId: Number(categoryId),
                     eventOrganizerId: userId
                 },
                 where: { id: Number(id) }
@@ -317,43 +317,8 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 }
             })
 
-            console.log('<<<<< sampe mana 4')
-            console.log(dataArrayTikcet)
-            const dataTicket = dataArrayTikcet?.map((tik: any) => {
-                return {
-                    price: Number(tik.price),
-                    ticketName: tik.ticketName,
-                    ticketType: tik.ticketType,
-                    // locationUrl: tik.locationUrl,
-                    seatAvailable: Number(tik.seatAvailable),
-                    eventId: Number(updatedEvent.id),
-                    discount: Number(tik.discount),
-                    startDate: new Date(tik.startDate),
-                    endDate: new Date(tik.endDate),
-                }
-            })
-
-            // dataArrayTikcet?.forEach(async(tik: any)=> {
-            //     await tx.tickets.updateMany({
-            //         data: {
-            //             price: Number(tik.price),
-            //             ticketName: tik.ticketName,
-            //             ticketType: tik.ticketType,
-            //             // locationUrl: tik.locationUrl,
-            //             seatAvailable: Number(tik.seatAvailable),
-            //             eventId: Number(updatedEvent.id),
-            //             discount: Number(tik.discount),
-            //             startDate: new Date(tik.startDate),
-            //             endDate: new Date(tik.endDate),
-            //         },
-            //         where: {eventId: updatedEvent.id}
-            //     })
-            // })
-
-            // console.log('<<<<< sampe mana 5')
-            await tx.tickets.updateMany({
-                data: dataTicket,
-                where: { eventId: updatedEvent.id }
+            await prisma.eventImages.deleteMany({
+                where: { eventsId: findEvent?.id }
             })
 
             console.log('<<<<< sampe mana 6')
@@ -371,14 +336,14 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
             console.log('<<<<< sampe mana 8')
 
-            // findEvent?.EventImages.forEach((item)=> {
-            //     fs.rmSync(`src/public/images/${item.eventImageUrl}`)
-            // })
+            findEvent?.EventImages?.forEach((item) => {
+                fs.rmSync(`src/public/images/${item.eventImageUrl}`)
+            })
         })
 
         res.status(200).json({
             error: false,
-            message: 'Berhasil',
+            message: 'Berhasil merubah data event!',
             data: {}
         })
 
@@ -429,13 +394,13 @@ export const getOrganizerEvent = async (req: Request, res: Response, next: NextF
         const totalCount = await prisma.event.count({ where: filters });
         const totalPage = Math.ceil(totalCount / Number(limit_data));
 
-        if (eventList.length === 0) throw { msg: 'Event not found!', status: 404 }
+        // if () return []
 
 
         res.status(200).json({
             error: false,
             message: "Event berdasarkan data event organizer berhasil ditambahkan!",
-            data: { eventList, totalPage }
+            data: eventList.length === 0 ? {} : { eventList, totalPage }
         })
     } catch (error) {
         next(error);
@@ -447,20 +412,33 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
         const { id } = req.params;
         const { userId } = req.body
 
-        const deletedEvent = await prisma.event.delete({
-            where: {
-                id: Number(id),
-                eventOrganizerId: userId
-            },
-        });
+        await prisma.$transaction(async (tx) => {
+            const findImage = await tx.eventImages.findMany({
+                where: { eventsId: Number(id) }
+            })
 
-        await prisma.tickets.deleteMany({
-            where: { eventId: deletedEvent.id },
-        });
-        await prisma.eventImages.deleteMany({
-            where: { eventsId: deletedEvent.id },
-        });
-        
+            await tx.tickets.deleteMany({
+                where: {
+                    eventId: Number(id)
+                }
+            })
+
+            await tx.eventImages.deleteMany({
+                where: { eventsId: Number(id) },
+            });
+
+            await tx.event.delete({
+                where: {
+                    id: Number(id),
+                    eventOrganizerId: userId
+                },
+            });
+
+            findImage.forEach((item)=> {
+                fs.rmSync(`src/public/images/${item?.eventImageUrl}`)
+            })
+        })
+
         res.status(200).json({
             error: false,
             message: "Data Berhasil Dihapus!",

@@ -86,7 +86,7 @@ export default function RegisterOrganizer() {
                             identityNumber: null,
                             password: '',
                         }}
-                        validationSchema={registerOrganizerSchema}
+                        // validationSchema={registerOrganizerSchema}
                         onSubmit={(values) => {
                             console.log(values)
                             handleRegister({

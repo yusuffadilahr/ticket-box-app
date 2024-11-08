@@ -12,7 +12,7 @@ export const EventSchema = Yup.object().shape({
     userId: Yup.string(),
     tickets: Yup.array().of(
         Yup.object().shape({
-            price: Yup.number().required('Harga tiket wajib diisi').default(0),
+            price: Yup.number().required('Harga tiket wajib diisi'),
             ticketName: Yup.string().required('Nama tiket wajib diisi'),
             ticketType: Yup.string().required('Tipe tiket wajib diisi'),
             seatAvailable: Yup.number(),

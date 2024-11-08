@@ -1,15 +1,16 @@
 'use client'; // Add this line at the top of your component file
 
 import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { EventSchema } from '@/features/event/schema/eventSchemas';
 import TiptapEditor from '@/components/RichTextEditor';
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
-import {toast} from 'react-hot-toast'
-
+import { toast } from 'react-hot-toast'
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 // Validasi menggunakan Yup
 
 const EventForm = () => {
@@ -256,6 +257,18 @@ const EventForm = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col col-span-2">
                                     <label className="font-bold text-sm">Nama Tiket</label>
+                                     <button
+                                        id="tooltip-button"
+                                        className="px-4 py-2 font-semibold text-white bg-indigo-600 rounded-lg"
+                                    >
+                                        Hover me
+                                    </button>
+                                    <Tooltip
+                                        anchorSelect="#tooltip-button"
+                                        place="top"
+                                        content="This is a tooltip"
+                                        style={{ backgroundColor: 'rgba(0,0,0,0.8)', color: 'white', borderRadius: '5px', padding: '8px' }}
+                                    />
                                     <Field
                                         name="ticketName"
                                         placeholder="Nama Tiket"
