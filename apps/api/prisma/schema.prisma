@@ -124,6 +124,7 @@ datasource db {
 //   rating int 
 //   feedback string
 // }
+
 model Users {
   id                  String  @id @default(uuid())
   firstName           String
