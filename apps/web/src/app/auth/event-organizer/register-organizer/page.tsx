@@ -1,7 +1,7 @@
 'use client'
-import bg from "./../../../../public/daftar-cr.webp"
+import bg from "@/../public/daftar-cr.webp"
 import Image from "next/image"
-import logo from "./../../../../public/Logo.webp"
+import logo from "@/../public/Logo.webp"
 import { Formik, Field, ErrorMessage, Form } from 'formik';
 import { useState } from "react";
 import { FaEye } from 'react-icons/fa';
@@ -84,7 +84,7 @@ export default function RegisterOrganizer() {
                             identityNumber: null,
                             password: '',
                         }}
-                        validationSchema={registerOrganizerSchema}
+                        // validationSchema={registerOrganizerSchema}
                         onSubmit={(values) => {
                             // organizerName, ownerName, email, password, phoneNumber, identityNumber
                             handleRegister({

@@ -52,7 +52,7 @@ const EventForm = () => {
     });
 
     return (
-        <main className="ml-64 p-10">
+        <main className="p-10">
             <Formik
                 initialValues={{
                     eventName: "",

@@ -13,6 +13,8 @@ export const keepAuthUserOrganizer = async (req: Request, res: Response, next: N
       where: { id: userId }
     })
 
+    if (searchData.length == 0) throw { msg: 'Data tidak tersedia', status: 404 }
+
     res.status(200).json({
       error: false,
       message: 'Data berhasil didapatkan!',
@@ -24,6 +26,7 @@ export const keepAuthUserOrganizer = async (req: Request, res: Response, next: N
         profilePicture: searchData[0].profilePicture
       }
     })
+    
   } catch (error) {
     next(error)
   }

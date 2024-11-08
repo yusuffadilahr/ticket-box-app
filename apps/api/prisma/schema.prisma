@@ -155,14 +155,14 @@ model Users {
 // User organizer tugasnya itu CRUD/Dashboard
 
 model EventOrganizer {
-  id             String @id @default(uuid())
+  id             String  @id @default(uuid())
   organizerName  String // soundproject
   ownerName      String
-  email          String @unique
+  email          String  @unique
   password       String
-  role           String @default("EO")
+  role           String  @default("EO")
   phoneNumber    String
-  identityNumber BigInt?    @unique
+  identityNumber BigInt? @unique
   profilePicture String
 
   createdAt DateTime  @default(now())
@@ -179,11 +179,11 @@ model Event {
   id               Int      @id @default(autoincrement())
   eventName        String
   location         String
+  locationUrl      String
   description      String
   isPaid           Boolean
   startEvent       DateTime
   endEvent         DateTime
-  artist           String
   eventOrganizerId String
   categoryId       Int
 

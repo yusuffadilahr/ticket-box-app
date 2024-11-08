@@ -10,8 +10,10 @@ import { ErrorMessage } from 'formik';
 import { useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
+import authStore from '@/zustand/authstore';
 
 export default function Page() {
+    const token = authStore((state) => state.setAuth)
     const { mutate: handleLogin, isPending } = useMutation({
         mutationFn: async ({ email, password }: { email: string, password: string }) => {
             return await instance.post('/auth/login/event-organizer', {
@@ -20,6 +22,7 @@ export default function Page() {
             })
         },
         onSuccess: (res) => {
+            token({ token: res.data.data.token })
             toast.success('suz')
             console.log(res)
         },

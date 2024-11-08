@@ -12,6 +12,8 @@ const authStore = create(persist((set) => ({
     referralCode: '',
     identityNumber: null,
     isVerified:'',
+    ownerName: '',
+    organizerName: '',
 
 
     setAuth: ({

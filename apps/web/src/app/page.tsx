@@ -16,6 +16,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import authStore from '@/zustand/authstore';
+import CarousellEvent from '@/components/carousell/carousellProduct';
 
 export default function Home() {
   const router = useRouter()
@@ -71,10 +72,31 @@ export default function Home() {
     queryKey: ['Get-comedy-event'],
     queryFn: async () => {
       const res = await instance.get('/event/comedy-event')
-      console.log(res)
       return res.data.data
     }
   })
+
+  const { data: queryGetMusicCategory } = useQuery({
+    queryKey: ['Get-music'],
+    queryFn: async () => {
+      const res = await instance.get('/event/search', {
+        params: {
+          category: 1
+        }
+      })
+      return res.data.data.eventSearch
+    }
+  })
+
+  const { data: getCategory } = useQuery({
+    queryKey: ['Get-music'],
+    queryFn: async () => {
+      const res = await instance.get('/category')
+      return res.data.data
+    }
+  })
+
+  console.log(getCategory, "<<<< ===")
 
   return (
     <main className="space-y-8" >
@@ -220,6 +242,15 @@ export default function Home() {
           </span>
           <div className="mt-4">
             <CarousellNewestEvent queryGetDataNewest={queryGetDataNewest} />
+          </div>
+        </h1>
+      </div>
+
+      {/* COPY TO BOBBY */}
+      <div className="px-12 lg:px-20">
+        <h1 className="text-2xl font-bold">Musik Seru<span className="pl-3 text-blue-500 font-normal text-sm">Lihat Semua</span>
+          <div className="mt-4">
+            <CarousellEvent data={queryGetMusicCategory} />
           </div>
         </h1>
       </div>
