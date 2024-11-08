@@ -46,14 +46,7 @@ export default function EventDetail({ params }: IParams) {
         },
     });
 
-    console.log(id);
-    console.log(queryDataDetailEvent);
-    console.log(ticketQuantities)
 
-    // const increment = () => setQuantity(quantity + 1);
-    // const decrement = () => {
-    //     if (quantity > 0) setQuantity(quantity - 1);
-    // };
 
     const increment = (index: number) => {
         const newQuantities = [...ticketQuantities];
