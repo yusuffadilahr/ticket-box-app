@@ -1,20 +1,19 @@
 'use client'
-import AvatarHover from '@/components/homepage/avatar';
-import { SidebarMenu } from '@/components/Sidebar';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 
 export default function OrganizerDashboard() {
     return (
         <main className="flex">
-            {/* Sidebar */}
-           
-
-            {/* Main Content */}
-            <section className="ml-64 h-screen  w-full px-8 space-y-10 p-10">
+            <section className="h-screen  w-full px-8 space-y-10 p-10">
                 <div className='flex justify-end gap-8'>
                     <button className='px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
                         + Buat Event
                     </button>
-                    <AvatarHover />
+                    <Avatar className=' border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300'>
+                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                        <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
                 </div>
                 <div className='font-bold text-2xl text-gray-700'>Hello User</div>
                 <div className="w-full h-[500px] grid grid-cols-4 grid-rows-4 gap-4">

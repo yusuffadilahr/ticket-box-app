@@ -1,56 +1,95 @@
-'use client'
+'use client';
 
-import contohgambar from "./../../../../../gagagugu.jpg"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import contohgambar from './../../../../../gagagugu.jpg';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 import {
-    Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
-} from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MdOutlineAccessTimeFilled } from "react-icons/md";
-import { IoLocationSharp } from "react-icons/io5";
-import { FaCalendarAlt } from "react-icons/fa";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query"
-import instance from "@/utils/axiosInstance/axiosInstance"
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MdOutlineAccessTimeFilled } from 'react-icons/md';
+import { IoLocationSharp } from 'react-icons/io5';
+import { FaCalendarAlt } from 'react-icons/fa';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import instance from '@/utils/axiosInstance/axiosInstance';
+import Link from 'next/link';
+import { IoTicketOutline } from "react-icons/io5";
+
 
 interface IParams {
     params: {
-        detail: string
-    }
+        detail: string;
+    };
 }
 
+
 export default function EventDetail({ params }: IParams) {
+
+
+    const [ticketQuantities, setTicketQuantities] = useState<number[]>([]);
+
     const [quantity, setQuantity] = useState(0);
-    const { detail } = params
-    const id = detail.split('TBX')[0]
+    const { detail } = params;
+    const id = detail.split('TBX')[0];
     const { data: queryDataDetailEvent } = useQuery({
         queryKey: ['get-detail-event'],
         queryFn: async () => {
-            const res = await instance.get(`/event/detail/${id}`)
-            return res.data.data[0]
-        }
-    })
+            const res = await instance.get(`/event/detail/${id}`);
+            return res.data.data[0];
+        },
+    });
 
-    console.log(id)
-    console.log(queryDataDetailEvent)
+    console.log(id);
+    console.log(queryDataDetailEvent);
+    console.log(ticketQuantities)
 
-    const increment = () => setQuantity(quantity + 1);
-    const decrement = () => {
-        if (quantity > 0) setQuantity(quantity - 1);
+    // const increment = () => setQuantity(quantity + 1);
+    // const decrement = () => {
+    //     if (quantity > 0) setQuantity(quantity - 1);
+    // };
+
+    const increment = (index: number) => {
+        const newQuantities = [...ticketQuantities];
+        newQuantities[index] = (newQuantities[index] || 0) + 1;
+        setTicketQuantities(newQuantities);
     };
+
+    const decrement = (index: number) => {
+        const newQuantities = [...ticketQuantities];
+        newQuantities[index] = Math.max((newQuantities[index] || 0) - 1, 0);
+        setTicketQuantities(newQuantities);
+    };
+
+    const totalTickets = ticketQuantities.reduce((total, qty) => total + qty, 0);
+    const totalPrice = ticketQuantities.reduce((total, qty, index) => {
+        const ticketPrice = queryDataDetailEvent?.tickets[index]?.price || 0;
+        return total + qty * ticketPrice;
+    }, 0);
+
+
 
     return (
         <main>
             <section className="pt-28 px-20 flex gap-5">
                 <div className="w-2/3">
                     <Image
-                        src={queryDataDetailEvent?.EventImages[0]?.eventImageUrl}
-                        alt="testing"
+                    // { item?.EventImages[0]?.eventImageUrl?.includes('https://')
+                    //     ? item.EventImages[0].eventImageUrl
+                    //     : `http://localhost:8000/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
+                        src={queryDataDetailEvent?.EventImages[0]?.eventImageUrl.includes('https://') ?
+                            queryDataDetailEvent?.EventImages[0]?.eventImageUrl :  
+                            `http://localhost:8000/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
+                        } alt="testing"
                         className="object-cover w-full h-auto rounded-lg drop-shadow-lg"
-                        width={300}
-                        height={300}
+                        width={1000}
+                        height={1000}
                     />
                 </div>
                 <div className="w-1/3 bg-white rounded-lg font-bold text-lg border border-gray-50 drop-shadow-lg p-7 flex flex-col">
@@ -60,19 +99,30 @@ export default function EventDetail({ params }: IParams) {
                             <div className="flex items-center gap-2">
                                 <FaCalendarAlt />
                                 <div className="text-base font-normal">
-                                    {queryDataDetailEvent?.startEvent.split('T')[0]} s/d {queryDataDetailEvent?.endEvent.split('T')[0]}
+                                    {queryDataDetailEvent?.startEvent.split('T')[0]} s/d{' '}
+                                    {queryDataDetailEvent?.endEvent.split('T')[0]}
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <MdOutlineAccessTimeFilled />
                                 <div className="text-base font-normal">
-                                    {queryDataDetailEvent?.startEvent.split('T')[1].split('.')[0].slice(0, -3)} s/d {queryDataDetailEvent?.endEvent.split('T')[1].split('.')[0].slice(0, -3)}
+                                    {queryDataDetailEvent?.startEvent
+                                        .split('T')[1]
+                                        .split('.')[0]
+                                        .slice(0, -3)}{' '}
+                                    s/d{' '}
+                                    {queryDataDetailEvent?.endEvent
+                                        .split('T')[1]
+                                        .split('.')[0]
+                                        .slice(0, -3)}
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <IoLocationSharp />
                                 <div className="text-base font-normal">
-                                    {queryDataDetailEvent?.location}
+                                    <Link target='_blank' href={`${queryDataDetailEvent?.locationUrl}`}>
+                                        {queryDataDetailEvent?.location}
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -80,16 +130,17 @@ export default function EventDetail({ params }: IParams) {
                     <div className="mt-auto  border-t-2">
                         <div className="mt-4 flex items-center gap-6">
                             <Avatar>
-                                <AvatarImage src={queryDataDetailEvent?.EventOrganizer?.profilePicture} alt="@shadcn" />
+                                <AvatarImage
+                                    src={queryDataDetailEvent?.EventOrganizer?.profilePicture}
+                                    alt="@shadcn"
+                                />
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col">
                                 <div className="text-gray-600 text-sm font-normal ">
                                     Diselenggarakan Oleh
                                 </div>
-                                <div>
-                                    {queryDataDetailEvent?.EventOrganizer?.organizerName}
-                                </div>
+                                <div>{queryDataDetailEvent?.EventOrganizer?.organizerName}</div>
                             </div>
                         </div>
                     </div>
@@ -100,23 +151,19 @@ export default function EventDetail({ params }: IParams) {
                     <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="deskripsi">Deskripsi</TabsTrigger>
                         <TabsTrigger value="tiket">Tiket</TabsTrigger>
-                        <TabsTrigger value="peta">Peta</TabsTrigger>
+                        <TabsTrigger value="peta">Review</TabsTrigger>
                     </TabsList>
                     <TabsContent value="deskripsi">
                         <Card className="p-4">
                             <CardHeader>
-                                <CardTitle className="pb-4">Account</CardTitle>
+                                <CardTitle className="pb-4">Deskrpsi</CardTitle>
                                 <CardDescription>
                                     {queryDataDetailEvent?.description}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="space-y-1">
-                                    as
-                                </div>
-                                <div className="space-y-1">
-                                    asdasd
-                                </div>
+                                <div className="space-y-1">as</div>
+                                <div className="space-y-1">asdasd</div>
                             </CardContent>
                             <CardFooter>
                                 <Button>Save changes</Button>
@@ -129,73 +176,69 @@ export default function EventDetail({ params }: IParams) {
                                 <CardTitle className="pb-4">Pilih Tiket Anda:</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
-                                    <div className="flex  items-start">
-                                        {
-                                            queryDataDetailEvent?.tickets?.map((item: any, i: any) => {
-                                                return (
-                                                    <div key={i}>
-                                                        <h3 className="text-lg font-semibold">
-                                                            {item.ticketName}
-                                                        </h3>
-                                                        <p className="text-gray-600 mt-1">
-                                                            {item.ticketType}
-                                                        </p>
-                                                        <div className="text-blue-600 mt-2">
-                                                            <span className="flex items-center">
-                                                                <MdOutlineAccessTimeFilled />
-                                                                Ends {item.endDate.split('T')[0]} • {queryDataDetailEvent?.tickets[0].endDate.split('T')[1].split('.')[0].slice(0, -3)}
-                                                            </span>
-                                                        </div>
+                                {queryDataDetailEvent?.tickets?.map((item: any, index: any) => (
+                                    <div key={index} className="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
+                                        <div className="flex  items-start">
+                                            <div>
+                                                <h3 className="text-lg font-semibold">
+                                                    {item.ticketName}
+                                                </h3>
+                                                <p className="text-gray-600 mt-1">
+                                                    {item.ticketType}
+                                                </p>
+                                                <div className="text-blue-600 mt-2">
+                                                    <span className="flex items-center">
+                                                        <MdOutlineAccessTimeFilled />
+                                                        Ends {item.endDate.split('T')[0]} • {queryDataDetailEvent?.tickets[0].endDate.split('T')[1].split('.')[0].slice(0, -3)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr className="my-4 border-blue-300 border-dashed" />
+                                        <div className="flex justify-between items-center">
+                                            <p className="text-xl font-semibold">
+                                                {item.discount > 0 ? (
+                                                    <div>
+                                                        <span className="line-through mr-2 text-gray-500">Rp.{item.price}</span>
+                                                        <span className="text-red-600">
+                                                            Rp.{item.price - item.discount}
+                                                        </span>
                                                     </div>
-                                                )
-                                            })
-                                        }
+                                                ) : (
+                                                    `Rp.${item.price}`
+                                                )}
 
-
-
-                                    </div>
-                                    <hr className="my-4 border-blue-300 border-dashed" />
-                                    <div className="flex justify-between items-center">
-                                        <p className="text-xl font-semibold">Rp275.000</p>
-                                        <div className="flex items-center space-x-4">
-                                            <button
-                                                onClick={decrement}
-                                                className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
-                                            >
-                                                –
-                                            </button>
-                                            <span>{quantity}</span>
-                                            <button
-                                                onClick={increment}
-                                                className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
-                                            >
-                                                +
-                                            </button>
+                                            </p>
+                                            <div className="flex items-center space-x-4">
+                                                <button
+                                                    onClick={() => decrement(index)}
+                                                    className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
+                                                >
+                                                    –
+                                                </button>
+                                                <span>{ticketQuantities[index] || 0}</span>
+                                                <button
+                                                    onClick={() => increment(index)}
+                                                    className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                ))}
                             </CardContent>
-                            <CardFooter>
-                                <Button>Save password</Button>
-                            </CardFooter>
                         </Card>
                     </TabsContent>
                     <TabsContent value="peta">
                         <Card className="p-4">
                             <CardHeader>
-                                <CardTitle className="pb-4">Password</CardTitle>
-                                <CardDescription>
-                                    asdasdasdasdas
-                                </CardDescription>
+                                <CardTitle className="pb-4">Review</CardTitle>
+                                <CardDescription>asdasdasdasdas</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="space-y-1">
-                                    asd
-                                </div>
-                                <div className="space-y-1">
-                                    asd
-                                </div>
+                                <div className="space-y-1">asd</div>
+                                <div className="space-y-1">asd</div>
                             </CardContent>
                             <CardFooter>
                                 <Button>Save password</Button>
@@ -203,10 +246,44 @@ export default function EventDetail({ params }: IParams) {
                         </Card>
                     </TabsContent>
                 </Tabs>
-                <div className="w-1/3 bg-white rounded-lg border border-gray-50 drop-shadow-lg">
-                    asd
+                <div id="totaltickets" className="w-1/3 bg-white h-fit p-7 rounded-lg border border-gray-50 drop-shadow-lg">
+                    {ticketQuantities.map((quantity, index) => {
+                        const ticket = queryDataDetailEvent?.tickets[index];
+                        if (quantity > 0 && ticket) { // Only display tickets with quantity greater than zero
+                            const discountedPrice = ticket.discount > 0
+                                ? ticket.price * (1 - ticket.discount / 100)
+                                : ticket.price;
+                            const ticketSubtotal = quantity * (ticket.price || 0);
+                            return (
+                                <div key={index} className="mb-2 flex flex-row gap-4 items-center justify-center">
+                                    <div className='flex w-24 flex-col justify-center'>
+                                        <p className="text-md font-semibold">{ticket.ticketName}</p>
+                                        <IoTicketOutline size={40} />
+                                    </div>
+                                    <div className='flex flex-col justify-center'>
+                                        <p className="text-sm">x {quantity}</p>
+                                        {ticket.discount > 0 ? (
+
+                                            <p className="text-sm text-green-600">Discounted: Rp{discountedPrice.toLocaleString()}</p>
+
+                                        ) : (   
+                                            <p className="text-sm">Price: Rp{discountedPrice.toLocaleString()}</p>
+                                        )}
+                                        <p className="text-sm">Subtotal: Rp{ticketSubtotal.toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            );
+                        }
+                        return null;
+                    })}
+
+                    <div className='flex justify-between items-center border-t-2 border-gray-300'>
+                        <p className="text-md mt-4 text-gray-700 ">Jumlah {totalTickets} tiket</p>
+                        <p className="text-xl mt-4 font-bold"><span className='text-base text-gray-700 font-normal'>Harga:</span> Rp{totalPrice.toLocaleString()}</p>
+                    </div>
+                    <button className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5'>Bayar Sekarang</button>
                 </div>
             </section>
         </main>
-    )
+    );
 }

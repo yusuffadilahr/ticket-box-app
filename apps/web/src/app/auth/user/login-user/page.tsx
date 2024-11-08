@@ -47,7 +47,7 @@ export default function Page() {
             console.log(err)
         }
     })
-    
+
     return (
         <main className="h-svh md:h-lvh flex justify-center items-center">
             <section className="w-[800px] h-[500px] justify-center items-center flex rounded-xl">
@@ -122,7 +122,7 @@ export default function Page() {
                                 <input type="checkbox" name="checkbox" id="checkbox" />
                                 <h1 className="pl-3 text-sm md:text-base">Ingat saya</h1>
                             </div>
-                            <Link href={'/auth/forgot-password'} className='text-sm md:text-base'>Lupa kata sandi?</Link>
+                            <Link href={'/auth/user/forgot-password'} className='text-sm md:text-base'>Lupa kata sandi?</Link>
                         </div>
                         <Link
                             href="/auth/user/register-user"
