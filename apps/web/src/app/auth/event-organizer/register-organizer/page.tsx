@@ -1,7 +1,7 @@
 'use client'
-import bg from "@/../public/daftar-cr.webp"
+import bg from "@/../../apps/web/public/daftar-cr.webp"
 import Image from "next/image"
-import logo from "@/../public/Logo.webp"
+import logo from "@/../../apps/web/public/Logo.webp"
 import { Formik, Field, ErrorMessage, Form } from 'formik';
 import { useState } from "react";
 import { FaEye } from 'react-icons/fa';
@@ -12,13 +12,15 @@ import { useMutation } from "@tanstack/react-query";
 import { IRegisterOrganizer } from "./type";
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { toast } from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 
 export default function RegisterOrganizer() {
-    const { mutate: handleRegister, isPending } = useMutation({
+    const pathname = usePathname()
+    const { mutate: handleRegister } = useMutation({
         mutationFn: async ({ organizerName, ownerName, email, password, phoneNumber, identityNumber }: IRegisterOrganizer) => {
             return await instance.post('/auth/register/event-organizer', {
-                organizerName, ownerName, email, password, phoneNumber, identityNumber: Number(identityNumber)
+                organizerName, ownerName, email, password, phoneNumber, identityNumber
             })
         },
         onSuccess: (res) => {
@@ -64,7 +66,7 @@ export default function RegisterOrganizer() {
 
             <section className="w-1/2 relative h-screen rounded-xl border border-gray-200 shadow-lg">
                 <div className="absolute p-10 w-full">
-                    <Link href='/auth/login-organizer'>
+                    <Link href='/auth/event-organizer/login-organizer'>
                         <button className="text-yellow-300 text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 w-full">
                             Login
                         </button>
@@ -86,7 +88,7 @@ export default function RegisterOrganizer() {
                         }}
                         // validationSchema={registerOrganizerSchema}
                         onSubmit={(values) => {
-                            // organizerName, ownerName, email, password, phoneNumber, identityNumber
+                            console.log(values)
                             handleRegister({
                                 organizerName: values.organizerName,
                                 ownerName: values.ownerName,
@@ -94,6 +96,7 @@ export default function RegisterOrganizer() {
                                 password: values.password,
                                 phoneNumber: values.phoneNumber,
                                 identityNumber: values.identityNumber
+
                             })
                         }}
                     >
@@ -238,7 +241,7 @@ export default function RegisterOrganizer() {
                                     type="identityNumber"
                                 />
                             </div>
-                            <button disabled={isPending} type="submit" className="text-yellow-300 disabled:bg-neutral-300 w-[500px] text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 ">
+                            <button /*disabled={isPending}*/ type="submit" className="z-50 text-yellow-300 disabled:bg-neutral-300 w-[500px] text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 ">
                                 Daftar
                             </button>
                         </Form>

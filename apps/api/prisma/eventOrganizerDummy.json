@@ -1,0 +1,112 @@
+[
+    {
+        "id": "1",
+        "organizerName": "SEKELIK FEST",
+        "ownerName": "Budiman",
+        "email": "sekelik@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "628563213213",
+        "identityNumber": "123123123",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20240927191223_66f6a127052fb.png"
+    },
+    {
+        "id": "2",
+        "organizerName": "RX INDONESIA",
+        "ownerName": "Joni",
+        "email": "rx@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "6284965423213",
+        "identityNumber": "234234234",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20230617034447.jpg"
+    },
+    {
+        "id": "3",
+        "organizerName": "Bengkel Space",
+        "ownerName": "Toto",
+        "email": "bengkel@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "622342352",
+        "identityNumber": "345345345",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20220509153707_6278d2b381650.png"
+    },
+    {
+        "id": "4",
+        "organizerName": "COMIKA EVENT",
+        "ownerName": "Tomi",
+        "email": "comika@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "62234234523",
+        "identityNumber": "456456456",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20220304170257_6221e3d1169c9.png"
+    },
+    {
+        "id": "5",
+        "organizerName": "Ismaya Live",
+        "ownerName": "Jaja",
+        "email": "ismaya@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "6234234235",
+        "identityNumber": "567575672",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/ZnRxl_1730200988592819.jpeg"
+    },
+    {
+        "id": "6",
+        "organizerName": "Deal Indonesia",
+        "ownerName": "Celine",
+        "email": "deal@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "62234234324",
+        "identityNumber": "678678678",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20240404153109_660e654d3c31b.png"
+    },
+    {
+        "id": "7",
+        "organizerName": "IAM Automodified",
+        "ownerName": "Rara",
+        "email": "iam@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "6223424562",
+        "identityNumber": "789789789",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20230921143028_650bf11414744.png"
+    },
+    {
+        "id": "8",
+        "organizerName": "CNCF Indonesia",
+        "ownerName": "Bian",
+        "email": "cncf@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "62756756756",
+        "identityNumber": "890890890",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20240912213251_66e2fb93194b2.png"
+    },
+    {
+        "id": "9",
+        "organizerName": "Marketeers",
+        "ownerName": "Gofar",
+        "email": "marketeers@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "62567568567",
+        "identityNumber": "235235235",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20220914154833_6321956146ea8.jpg"
+    },
+    {
+        "id": "10",
+        "organizerName": "Dilantern",
+        "ownerName": "Palim",
+        "email": "dilantern@gmail.com",
+        "password": "abc12345",
+        "role": "EO",
+        "phoneNumber": "62567568567",
+        "identityNumber": "457457457",
+        "profilePicture": "https://assets.loket.com/neo/production/images/organization/20181005183517_5bb74c756308b.png"
+    }
+]

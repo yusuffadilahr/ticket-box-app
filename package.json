@@ -33,6 +33,10 @@
     }
   },
   "dependencies": {
+    "@tiptap/extension-text-style": "^2.9.1",
+    "@tiptap/extension-underline": "^2.9.1",
+    "@tiptap/react": "^2.9.1",
+    "@tiptap/starter-kit": "^2.9.1",
     "@types/axios": "^0.14.0",
     "axios": "^1.7.2"
   }

@@ -162,7 +162,7 @@ model EventOrganizer {
   password       String
   role           String  @default("EO")
   phoneNumber    String
-  identityNumber BigInt? @unique
+  identityNumber String? @unique
   profilePicture String
 
   createdAt DateTime  @default(now())
@@ -180,7 +180,7 @@ model Event {
   eventName        String
   location         String
   locationUrl      String
-  description      String
+  description      String   @db.LongText
   isPaid           Boolean
   startEvent       DateTime
   endEvent         DateTime
@@ -278,8 +278,8 @@ model ReferalDiscounts {
 model Reviews {
   id         Int    @id @default(autoincrement())
   rating     Int
-  reviewText String
-  feedback   String
+  reviewText String @db.LongText
+  feedback   String @db.LongText
   eventId    Int
   userId     String
 
@@ -299,6 +299,7 @@ model Transactions {
   eventId    Int
   totalPrice Int
 
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -308,8 +309,8 @@ model Transactions {
   transactionStatus TransactionStatus[]
   transactionDetail TransactionDetail[]
   event             Event               @relation(fields: [eventId], references: [id])
-  EventOrganizer    EventOrganizer?     @relation(fields: [eventOrganizerId], references: [id])
   eventOrganizerId  String?
+  EventOrganizer    EventOrganizer?     @relation(fields: [eventOrganizerId], references: [id])
 
   @@map("transactions")
 }

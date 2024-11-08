@@ -5,17 +5,15 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
     try {
         const { category } = req.body
 
-        const contoh = await prisma.category.create({
+        const createdCategory = await prisma.category.create({
             data: {
                 Category: category
             }
         })
 
-        console.log(contoh)
-
         res.status(200).json({
             error: false,
-            message: 'Berhasil',
+            message: 'Berhasil menambahkan kategori!',
             data: { category }
         })
 
@@ -24,16 +22,17 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
     }
 }
 
-export const getCategory = async (req: Request, res: Response, next: NextFunction) => {
+export const getCategoryEvents = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const dataCategory = await prisma.category.findMany()
-        if (!dataCategory) throw { msg: "data tidak tersedia", status: 404 }
-
+        const findCategory = await prisma.category.findMany()
+        if(findCategory.length == 0) throw {msg: 'Data tidak tersedia, mohon periksa kembali!', status: 404}
+        
         res.status(200).json({
             error: false,
-            message: 'Berhasil',
-            data: dataCategory
+            message: 'Berhasil menampilkan data kategori!',
+            data: findCategory
         })
+
     } catch (error) {
         next(error)
     }
