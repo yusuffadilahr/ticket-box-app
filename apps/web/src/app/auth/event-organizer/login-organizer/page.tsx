@@ -10,117 +10,147 @@ import { ErrorMessage } from 'formik';
 import { useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
+import bg from '@/../../apps/web/public/daftar-cr.webp';
+import Image from 'next/image';
+import logo from '@/../../apps/web/public/Logo.webp';
+import { loginOrganizerSchema } from '@/features/login-organizer/schema/loginOrganizerSchema';
+import authStore from '@/zustand/authstore';
 
 export default function Page() {
-    const { mutate: handleLogin, isPending } = useMutation({
-        mutationFn: async ({ email, password }: { email: string, password: string }) => {
-            return await instance.post('/auth/login/event-organizer', {
-                email,
-                password
-            })
-        },
-        onSuccess: (res) => {
-            toast.success('suz')
-            console.log(res)
-        },
-        onError: (error) => {
-            console.log('err')
-            console.log(error);
-        }
-    })
+  const setAuth = authStore((state) => state.setAuth);
+  const { mutate: handleLogin, isPending } = useMutation({
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      return await instance.post('/auth/login/event-organizer', {
+        email,
+        password,
+      });
+    },
+    onSuccess: (res) => {
+      toast.success('suz');
+      setAuth({ token: res.data.data.token });
+      console.log(res);
+    },
+    onError: (error) => {
+      console.log('err');
+      console.log(error);
+    },
+  });
 
-    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
-    const togglePasswordVisibility = () => {
-        setPasswordVisible(!passwordVisible);
-    };
-    return (
-        <main className="h-svh md:h-lvh flex justify-center items-center">
-            <section className="w-[800px] h-[500px] justify-center items-center flex rounded-xl">
-                <Formik
-                    initialValues={{
-                        email: '',
-                        password: '',
-                    }}
-                    validationSchema={loginSchema}
-                    onSubmit={(values) => {
-                        handleLogin({
-                            email: values.email,
-                            password: values.password
-                        })
-                    }}
-                >
-                    <Form className="w-full flex flex-col px-10 gap-7">
-                        <div id="email-input" className="flex flex-col">
-                            <div className="flex gap-3">
-                                <label htmlFor="email" className="text-sm md:text-base">
-                                    Email Organizer <span className="text-red-500">*</span>
-                                </label>
-                                <ErrorMessage
-                                    name="email"
-                                    component="div"
-                                    className="text-red-500 text-sm mt-1"
-                                />
-                            </div>
-                            <Field
-                                type="email"
-                                name="email"
-                                id="email"
-                                placeholder="Username..."
-                                className="py-2 text-sm mt-3 rounded-lg px-4 border focus:outline-none active:border focus:border-yellow-400"
-                            />
-                        </div>
-                        <div id="password-input" className="relative">
-                            <div className="flex gap-3">
-                                <label htmlFor="password" className="text-sm md:text-base">
-                                    Kata Sandi <span className="text-red-500">*</span>
-                                </label>
-                                <ErrorMessage
-                                    name="password"
-                                    component="div"
-                                    className="text-red-500 text-sm mt-1 gap-0"
-                                />
-                            </div>
-                            <div className="relative">
-                                <Field
-                                    name="password"
-                                    id="password"
-                                    placeholder="Password..."
-                                    type={passwordVisible ? 'text' : 'password'}
-                                    className="rounded-lg mt-3 text-sm focus:outline-none active:border focus:border-yellow-400
-                                w-full px-4 py-2 border border-gray-300  pr-10"
-                                />
-                                <span
-                                    className="absolute top-1/2 right-3 translate-y-0 flex items-center cursor-pointer text-gray-500"
-                                    onClick={togglePasswordVisibility}
-                                >
-                                    {passwordVisible ? <FaEye /> : <FaEyeSlash />}
-                                </span>
-                            </div>
-                        </div>
-                        <button
-                            disabled={isPending}
-                            type="submit"
-                            className="text-white disabled:bg-neutral-300 text-sm rounded-lg w-full py-2 bg-yellow-500 hover:bg-yellow-600"
-                        >
-                            Masuk
-                        </button>
-                        <div className="flex w-full justify-between items-center">
-                            <div className="flex justify-start">
-                                <input type="checkbox" name="checkbox" id="checkbox" />
-                                <h1 className="pl-3 text-sm md:text-base">Ingat saya</h1>
-                            </div>
-                            <h1 className='text-sm md:text-base'>Lupa kata sandi?</h1>
-                        </div>
-                        <Link
-                            href="/auth/register"
-                            className="text-white text-sm rounded-lg text-center w-full py-2 bg-blue-900 hover:bg-blue-950"
-                        >
-                            Daftar
-                        </Link>
-                    </Form>
-                </Formik>
-            </section>
-        </main>
-    );
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+  return (
+    <main className="w-full h-screen bg-white flex lg:px-20 lg:py-32 gap-5">
+      <section className="w-full h-full bg-white shadow-lg flex flex-col justify-center rounded-xl items-center border border-gray-200 lg:px-32">
+        <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          validationSchema={loginOrganizerSchema}
+          onSubmit={(values) => {
+            console.log(values);
+            handleLogin({
+              email: values.email,
+              password: values.password,
+            });
+          }}
+        >
+          <Form className="flex flex-col justify-center items-center w-full space-y-4">
+            <div id="emailOrganizer-input" className="w-full">
+              <div className="flex gap-5 items-center">
+                <label>
+                  Email Organizer<span className="text-red-500">*</span>
+                </label>
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+              <Field
+                name="email"
+                className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                placeholder="example@gmail.com"
+                type="email"
+              />
+            </div>
+            <div id="password-input" className="relative w-full">
+              <div className="flex gap-5 items-center">
+                <label>
+                  Password <span className="text-red-500">*</span>
+                </label>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+              <Field
+                name="password"
+                className=" w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                placeholder="******"
+                type={passwordVisible ? 'text' : 'password'}
+              />
+              <span
+                className="absolute right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                onClick={togglePasswordVisibility}
+              >
+                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+              </span>
+            </div>
+            <button
+              disabled={isPending}
+              type="submit"
+              className="text-yellow-300 disabled:bg-neutral-300 w-full rounded-lg font-bold py-2 text-sm bg-blue-500 hover:bg-blue-600 transition-all duration-300 "
+            >
+              Login
+            </button>
+            <div className="flex w-full justify-between items-center">
+              <div className="flex justify-start">
+                <input type="checkbox" name="checkbox" id="checkbox" />
+                <h1 className="pl-3 text-sm md:text-base">Ingat saya</h1>
+              </div>
+              <Link
+                href={'/auth/forgot-password'}
+                className="text-sm md:text-base"
+              >
+                Lupa kata sandi?
+              </Link>
+            </div>
+          </Form>
+        </Formik>
+      </section>
+      <section className="w-full h-full bg-purple-900 relative rounded-xl shadow-lg flex justify-center items-center border border-gray-200">
+        <section className="w-full h-full">
+          <Image
+            src={bg}
+            alt="background"
+            className="rounded-xl object-bottom h-full w-full shadow-lg"
+          />
+        </section>
+        <div className="absolute top-0 left-5 z-10 text-white">
+          <Image
+            src={logo}
+            alt="background"
+            className="rounded-xl object-cover w-8 md:w-20 lg:w-48"
+          />
+          <div className="mt-8 font-bold text-5xl">Welcome 👋</div>
+          <div className="font-bold text-4xl">Event Creator</div>
+          <div className="mt-10 text-lg">Login sekarang!</div>
+          <div className="text-lg">
+            Buat event dan manage tiketmu di Tiketbox.com
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }

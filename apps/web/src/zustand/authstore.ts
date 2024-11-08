@@ -1,20 +1,23 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const authStore = create(persist((set) => ({
-    token: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    role: '',
-    phoneNumber: '',
-    profilePicture: '',
-    referralCode: '',
-    identityNumber: null,
-    isVerified:'',
+const authStore = create(
+  persist(
+    (set) => ({
+      token: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: '',
+      phoneNumber: '',
+      profilePicture: '',
+      referralCode: '',
+      identityNumber: null,
+      isVerified: null,
+      ownerName: '',
+      organizerName: '',
 
-
-    setAuth: ({
+      setAuth: ({
         token,
         firstName,
         lastName,
@@ -24,20 +27,25 @@ const authStore = create(persist((set) => ({
         profilePicture,
         referralCode,
         identityNumber,
-        isVerified
-    }: any) => set({
-        token: token,
-        firstName: firstName,
-        lastName: lastName,
-        email:email,
-        role: role,
-        phoneNumber: phoneNumber,
-        profilePicture: profilePicture,
-        referralCode: referralCode,
-        identityNumber: identityNumber,
-        isVerified: isVerified
-    }),
-    setKeepAuth: ({
+        isVerified,
+        ownerName,
+        organizerName,
+      }: any) =>
+        set({
+          token: token,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          role: role,
+          phoneNumber: phoneNumber,
+          profilePicture: profilePicture,
+          referralCode: referralCode,
+          identityNumber: identityNumber,
+          isVerified: isVerified,
+          ownerName: ownerName,
+          organizerName: organizerName,
+        }),
+      setKeepAuth: ({
         firstName,
         lastName,
         email,
@@ -46,22 +54,29 @@ const authStore = create(persist((set) => ({
         profilePicture,
         referralCode,
         isVerified,
-        identityNumber }: any) => set({
-            firstName: firstName,
-            lastName: lastName,
-            email:email,
-            role: role,
-            isVerified:isVerified,
-            phoneNumber: phoneNumber,
-            profilePicture: profilePicture,
-            referralCode: referralCode,
-            identityNumber: identityNumber
-        })
-}),
+        identityNumber,
+        ownerName,
+        organizerName,
+      }: any) =>
+        set({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          role: role,
+          isVerified: isVerified,
+          phoneNumber: phoneNumber,
+          profilePicture: profilePicture,
+          referralCode: referralCode,
+          identityNumber: identityNumber,
+          ownerName: ownerName,
+          organizerName: organizerName,
+        }),
+    }),
     {
-        name: 'authToken',
-        partialize: (state: any) => ({ token: state.token })
-    }
-))
+      name: 'authToken',
+      partialize: (state: any) => ({ token: state.token }),
+    },
+  ),
+);
 
 export default authStore;

@@ -8,8 +8,9 @@ export const uploader = (req: Request, res: Response, next: NextFunction) => {
 
     uploads(req, res, (err) => {
         try {
+            console.log('>>>>>><<<<< line 11', req.files)
             if (err) throw { msg: err.message, status: 400 }
-            console.log('>>>>>><<<<< line 12')
+            console.log('>>>>>><<<<< line 13')
             if (!Array.isArray(req?.files) && !req?.files?.images?.length) throw { msg: 'file tidak ditemukan', status: 404 }
 
             if (userId && authorizationRole) {
@@ -17,6 +18,7 @@ export const uploader = (req: Request, res: Response, next: NextFunction) => {
                 req.body.authorizationRole = authorizationRole
             }
 
+            console.log('>>>>>><<<<< line 21', req.files)
             next()
         } catch (error) {
             next(error)
