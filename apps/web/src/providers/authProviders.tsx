@@ -16,7 +16,6 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
     // const [protectAuth, setProtectAuth] = useState<boolean>(false)
     const token = authStore((state) => state.token)
     const setKeepAuth = authStore((state) => state.setKeepAuth)
-    const setAuth = authStore((state) => state.setAuth)
     const role = authStore((state) => state.role)
     console.log(role)
     const fetchKeepAuth = async () => {
@@ -35,13 +34,15 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
                 ownerName: auth?.data?.data?.ownerName,
                 organizerName: auth?.data?.data?.organizerName
             })
+
+            console.log(auth)
         } catch (err) {
             console.log(err);
         }
     };
 
     useLayoutEffect(() => {
-        if (token && role) {
+        if (token) {
             fetchKeepAuth()
         }
     }, [token])

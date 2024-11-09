@@ -195,8 +195,9 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
       })
     }
 
-    if (dataUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
-    if (dataEventOrganizer.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
+    console.log('>>>>', dataUser)
+    if (dataUser?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
+    if (dataEventOrganizer?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
 
     res.status(200).json({
       error: false,
@@ -211,6 +212,9 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         profilePicture: dataUser[0].profilePicture,
         identityNumber: dataUser[0].identityNumber,
         refferalCode: dataUser[0].referralCode,
+        point: dataUser[0]?.points[0].point,
+        discount: dataUser[0]?.referalDiscounts[0].discount
+
       } : authorizationRole == 'EO' ? {
         organizerName: dataEventOrganizer[0]?.organizerName,
         ownerName: dataEventOrganizer[0].ownerName,
