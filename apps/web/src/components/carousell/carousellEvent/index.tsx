@@ -58,11 +58,6 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                 <Link href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`}>
                                     <CardContent className="flex items-center justify-center">
                                         <div className='w-full lg:h-44'>
-                                            {
-                                                item?.EventImages[0]?.eventImageUrl?.includes('https://')
-                                                    ? "test"
-                                                    : "false"
-                                            }
                                             <Image
                                                 src={
                                                     item?.EventImages[0]?.eventImageUrl?.includes('https://')

@@ -299,7 +299,7 @@ model Transactions {
   userId     String
   eventId    Int
   totalPrice Int
-
+  expiredAt DateTime
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -318,9 +318,9 @@ model Transactions {
 
 model TransactionDetail {
   id            Int @id @default(autoincrement())
-  transactionId Int
+  transactionsId String?
   ticketId      Int
-  price         Int
+  price         Int //subtotal per tiket
   quantity      Int
 
   createdAt DateTime  @default(now())
@@ -329,7 +329,6 @@ model TransactionDetail {
 
   tickets        Tickets       @relation(fields: [ticketId], references: [id])
   Transactions   Transactions? @relation(fields: [transactionsId], references: [id])
-  transactionsId String?
 
   @@map("transactionDetails")
 }
@@ -351,4 +350,5 @@ enum Status {
   WAITING_FOR_PAYMENT
   PAID
   CANCELLED
+  EXPIRED
 }
