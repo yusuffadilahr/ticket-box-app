@@ -58,7 +58,7 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                                 src={
                                                     item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                                     ? item.EventImages[0].eventImageUrl
-                                                    : `http://localhost:8000/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
+                                                    : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
                                                 }
                                                 height={142}
                                                 width={142}
