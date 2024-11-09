@@ -17,7 +17,7 @@ export const tokenValidation = async (req: Request, res: Response, next: NextFun
         req.body!.userId = decodedToken?.data?.id
         req.body!.authorizationRole = decodedToken?.data?.role
 
-        console.log(req.body)
+        // console.log(req.body)
 
         next()
     } catch (error) {
