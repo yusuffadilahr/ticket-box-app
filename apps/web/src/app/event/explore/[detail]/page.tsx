@@ -16,12 +16,12 @@ import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { IoLocationSharp } from 'react-icons/io5';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import Link from 'next/link';
 import { IoTicketOutline } from "react-icons/io5";
-
+import authStore from '@/zustand/authstore';
 
 interface IParams {
     params: {
@@ -33,9 +33,7 @@ interface IParams {
 export default function EventDetail({ params }: IParams) {
 
 
-    const [ticketQuantities, setTicketQuantities] = useState<number[]>([]);
-
-    const [quantity, setQuantity] = useState(0);
+    
     const { detail } = params;
     const id = detail.split('TBX')[0];
     const { data: queryDataDetailEvent } = useQuery({
@@ -45,15 +43,47 @@ export default function EventDetail({ params }: IParams) {
             return res.data.data[0];
         },
     });
-
-    console.log(id);
-    console.log(queryDataDetailEvent);
+    
+    const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
     console.log(ticketQuantities)
 
-    // const increment = () => setQuantity(quantity + 1);
-    // const decrement = () => {
-    //     if (quantity > 0) setQuantity(quantity - 1);
-    // };
+    // useEffect(() => {
+    //     if (queryDataDetailEvent) {
+    //         setTicketQuantities(new Array(queryDataDetailEvent.tickets.length).fill(0));
+    //     }
+    // }, [queryDataDetailEvent]);
+
+
+    const profilePoint = authStore((state) => state.point);
+    const profileDiscount = authStore((state) => state.discount);
+    const { mutate: handleCheckoutTickets } = useMutation({
+        mutationFn: async () => {
+          
+            const ticketDetails = ticketQuantities
+                .map((quantity, index) => quantity > 0 && ({
+                    ticketId: queryDataDetailEvent?.tickets[index]?.id,
+                    quantity,
+                    price: queryDataDetailEvent?.tickets[index]?.price,
+                    discount: queryDataDetailEvent?.tickets[index]?.discount,
+
+                })
+                )
+           
+            return await instance.post(`/transaction/${id}`, {
+                referralPoints: profilePoint,
+                ticketDetails,
+                referralDiscount: profileDiscount
+            })
+        },
+        onSuccess: (res) => {
+            console.log(res)
+        },
+        onError: (err) => {
+            console.log(err)
+        }
+    })
+
+
 
     const increment = (index: number) => {
         const newQuantities = [...ticketQuantities];
@@ -69,7 +99,7 @@ export default function EventDetail({ params }: IParams) {
 
     const totalTickets = ticketQuantities.reduce((total, qty) => total + qty, 0);
     const totalPrice = ticketQuantities.reduce((total, qty, index) => {
-        const ticketPrice = queryDataDetailEvent?.tickets[index]?.price || 0;
+        const ticketPrice = (queryDataDetailEvent?.tickets[index]?.price - queryDataDetailEvent?.tickets[index]?.discount) || 0;
         return total + qty * ticketPrice;
     }, 0);
 
@@ -80,11 +110,8 @@ export default function EventDetail({ params }: IParams) {
             <section className="pt-28 px-20 flex gap-5">
                 <div className="w-2/3">
                     <Image
-                    // { item?.EventImages[0]?.eventImageUrl?.includes('https://')
-                    //     ? item.EventImages[0].eventImageUrl
-                    //     : `http://localhost:8000/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
                         src={queryDataDetailEvent?.EventImages[0]?.eventImageUrl.includes('https://') ?
-                            queryDataDetailEvent?.EventImages[0]?.eventImageUrl :  
+                            queryDataDetailEvent?.EventImages[0]?.eventImageUrl :
                             `http://localhost:8000/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
                         } alt="testing"
                         className="object-cover w-full h-auto rounded-lg drop-shadow-lg"
@@ -249,11 +276,15 @@ export default function EventDetail({ params }: IParams) {
                 <div id="totaltickets" className="w-1/3 bg-white h-fit p-7 rounded-lg border border-gray-50 drop-shadow-lg">
                     {ticketQuantities.map((quantity, index) => {
                         const ticket = queryDataDetailEvent?.tickets[index];
-                        if (quantity > 0 && ticket) { // Only display tickets with quantity greater than zero
+
+                        if (quantity > 0 && ticket) {
                             const discountedPrice = ticket.discount > 0
-                                ? ticket.price * (1 - ticket.discount / 100)
+                                // ? ticket.price * (1 - ticket.discount / 100)
+                                // : ticket.price;
+                                ? ticket.price - ticket.discount
                                 : ticket.price;
-                            const ticketSubtotal = quantity * (ticket.price || 0);
+                            const ticketSubtotal = quantity * (discountedPrice || 0);
+
                             return (
                                 <div key={index} className="mb-2 flex flex-row gap-4 items-center justify-center">
                                     <div className='flex w-24 flex-col justify-center'>
@@ -266,7 +297,7 @@ export default function EventDetail({ params }: IParams) {
 
                                             <p className="text-sm text-green-600">Discounted: Rp{discountedPrice.toLocaleString()}</p>
 
-                                        ) : (   
+                                        ) : (
                                             <p className="text-sm">Price: Rp{discountedPrice.toLocaleString()}</p>
                                         )}
                                         <p className="text-sm">Subtotal: Rp{ticketSubtotal.toLocaleString()}</p>
@@ -281,7 +312,7 @@ export default function EventDetail({ params }: IParams) {
                         <p className="text-md mt-4 text-gray-700 ">Jumlah {totalTickets} tiket</p>
                         <p className="text-xl mt-4 font-bold"><span className='text-base text-gray-700 font-normal'>Harga:</span> Rp{totalPrice.toLocaleString()}</p>
                     </div>
-                    <button className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5'>Bayar Sekarang</button>
+                    <button className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>Bayar Sekarang</button>
                 </div>
             </section>
         </main>

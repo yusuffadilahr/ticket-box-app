@@ -23,7 +23,7 @@ export const userRegister = async (
 
     const { firstName, lastName, email, password, phoneNumber, identityNumber, referralBody /* REFERRAL BOLEH NULL */ } = req.body;
     if (!firstName || !lastName || !email || !password || !phoneNumber || !identityNumber) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
-    
+
     const checkedEmail = await prisma.users.findMany({
       where: { email },
     });
@@ -184,7 +184,7 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
           Transactions: true,
         },
       })
-
+      
     } else if (authorizationRole == 'EO') {
       dataEventOrganizer = await prisma.eventOrganizer.findMany({
         where: { id: userId },
@@ -194,9 +194,10 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         }
       })
     }
-
-    if (dataUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
-    if (dataEventOrganizer.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
+    
+    // console.log(dataUser,"datauser")
+    // if (dataUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
+    // if (dataEventOrganizer.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
 
     res.status(200).json({
       error: false,
@@ -211,6 +212,8 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         profilePicture: dataUser[0].profilePicture,
         identityNumber: dataUser[0].identityNumber,
         refferalCode: dataUser[0].referralCode,
+        point: dataUser[0]?.points[0].point,
+        discount: dataUser[0]?.referalDiscounts[0].discount
       } : authorizationRole == 'EO' ? {
         organizerName: dataEventOrganizer[0]?.organizerName,
         ownerName: dataEventOrganizer[0].ownerName,

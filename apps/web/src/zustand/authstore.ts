@@ -57,6 +57,8 @@ const authStore = create(
         identityNumber,
         ownerName,
         organizerName,
+        point,
+        discount,
       }: any) =>
         set({
           firstName: firstName,
@@ -70,6 +72,9 @@ const authStore = create(
           identityNumber: identityNumber,
           ownerName: ownerName,
           organizerName: organizerName,
+          point: point,
+          discount : discount,
+
         }),
     }),
     {
