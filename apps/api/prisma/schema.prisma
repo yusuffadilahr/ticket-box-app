@@ -295,11 +295,11 @@ model Reviews {
 }
 
 model Transactions {
-  id         String @id @default(cuid())
-  userId     String
-  eventId    Int
-  totalPrice Int
-  expiredAt DateTime
+  id         String   @id @default(cuid())
+  userId     String // token
+  eventId    Int // params slug
+  totalPrice Int // state
+  expiredAt  DateTime
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

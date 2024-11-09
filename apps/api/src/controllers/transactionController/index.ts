@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { prisma, mysqlConnection } from "@/connection";
-import { addMinutes } from 'date-fns'
+import { mysqlConnection, prisma } from "@/connection";
+import { addHours, addMinutes } from "date-fns";
+
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -26,25 +27,34 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 ticketId: item.ticketId,
                 price: subtotal,
                 quantity: item.quantity,
+                expiredAt: addMinutes(new Date(), 1)
             }
         })
-
-
 
         if (referralDiscount) {
             const findUserDiscount = await prisma.referalDiscounts.findFirst({
                 where: {
                     userIdRefferal: userId,
                     isUsed: false,
-                    expiredDate: {
-                        gt: new Date()
-                    }
+                    // expiredDate: {
+                    //     gt: new Date()
+                    // }
                 }
             })
+
+            if (new Date() >= findUserDiscount?.expiredDate!) throw { msg: 'ERROR', status: 404 }
 
             if (findUserDiscount) {
                 const discountUser = findUserDiscount.discount * totalPembayaran
                 totalPembayaran -= discountUser
+
+                await prisma.referalDiscounts.update({
+                    where: { id: findUserDiscount.id },
+                    data: {
+                        isUsed: true,
+                        discount: 0
+                    }
+                })
             }
         }
 
@@ -52,11 +62,13 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             const findUserRefferal = await prisma.points.findFirst({
                 where: {
                     userIdRefferalMatch: userId,
-                    expiredDate: {
-                        gt: new Date()
-                    }
+                    // expiredDate: {
+                    //     gt: new Date()
+                    // }
                 }
             })
+
+            if (new Date() >= findUserRefferal?.expiredDate!) throw { msg: 'ERROR', status: 404 }
 
             if (findUserRefferal) {
                 const totalPoints = findUserRefferal?.point
@@ -71,6 +83,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 })
             }
         }
+        console.log(dataDetails, "<<< data details")
 
         const transactionId = await prisma.transactions.create({
             data: {
@@ -78,14 +91,30 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 totalPrice: totalPembayaran,
                 userId: userId,
                 eventOrganizerId: dataEvent.EventOrganizer.id,
-                expiredAt: await addMinutes(new Date(), 15),
-                transactionDetail: {
-                    createMany: dataDetails
-                },
+                expiredAt: addMinutes(new Date(), 1),
+                // transactionDetail: {
+                //     createMany: {
+                //         data: dataDetails
+                //     }
+                // },
                 transactionStatus: {
                     create: { status: "WAITING_FOR_PAYMENT" }
                 }
             }
+        })
+
+        console.log(transactionId, '<<<< id tf')
+
+        const dataArrTransacDetail = dataDetails.map((item: any, i: any) => {
+            return {
+                transactionsId: transactionId.id,
+                ticketId: item.ticketId,
+                price: item.price,
+                quantity: item.quantity,
+            }
+        })
+        await prisma.transactionDetail.createMany({
+            data: dataArrTransacDetail
         })
 
         const query = await mysqlConnection()
@@ -98,11 +127,11 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             END
         `);
 
-
-        // await prisma.transactionDetail.createMany({
-        //     data: transactionDetailUser
-        // })
-        // console.log(transactionDetailUser)
+        res.status(200).json({
+            error: false,
+            message: 'Berhasil',
+            data: []
+        })
 
     } catch (error) {
         next(error)

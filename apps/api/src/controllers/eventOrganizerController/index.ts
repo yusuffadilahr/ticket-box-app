@@ -193,3 +193,15 @@ export const resetPasswordOrganizer = async (
     next(error);
   }
 };
+
+export const getOrganizerProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+try {
+  
+} catch (error) {
+  
+}
+}

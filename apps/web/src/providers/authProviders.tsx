@@ -33,15 +33,18 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
                 identityNumber: auth?.data?.data?.identityNumber,
                 isVerified: auth?.data?.data?.isVerified,
                 ownerName: auth?.data?.data?.ownerName,
-                organizerName: auth?.data?.data?.organizerName
+                organizerName: auth?.data?.data?.organizerName,
+                point: auth?.data?.data?.point,
+                discount: auth?.data?.data?.discount
             })
+            console.log(auth)
         } catch (err) {
             console.log(err);
         }
-    };
+    }; 
 
     useLayoutEffect(() => {
-        if (token && role) {
+        if (token) {
             fetchKeepAuth()
         }
     }, [token])
