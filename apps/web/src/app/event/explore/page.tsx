@@ -395,8 +395,6 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                             );
                         })
                         : "Data Tidak DItemukan"} 
-
-                    
                 </section>
             </div>
         </main>
