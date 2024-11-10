@@ -188,7 +188,7 @@ export const Header = () => {
               {!!token ? (
                 <>
                   <div
-                    className={`${pathname.startsWith('/auth/event-organizer/login-organizer') ? 'hidden' : 'block'}`}
+                    className={`${pathname.startsWith('/event-organizer/') ? 'hidden' : 'block'}`}
                   >
                     <AvatarHover />
                   </div>
@@ -196,13 +196,13 @@ export const Header = () => {
               ) : (
                 <>
                   <Link
-                    href={'/auth/user/register-user'}
+                    href={'/user/register'}
                     className={`py-2 hover:text-slate-300 border border-white px-5 rounded-xl transition-all duration-200 ease-in-ou ${pathname.startsWith('/auth/event-organizer/login-organizer') ? 'hidden' : 'block'}`}
                   >
                     Register
                   </Link>
                   <Link
-                    href={'/auth/user/login-user'}
+                    href={'/user/login'}
                     className={`py-2 px-5 rounded-xl bg-blue-700 hover:bg-blue-800 transition-all duration-200 ease-in-out ${pathname.startsWith('/auth/event-organizer/login-organizer') ? 'hidden' : 'block'}`}
                   >
                     Masuk

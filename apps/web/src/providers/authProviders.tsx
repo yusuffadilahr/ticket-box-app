@@ -5,6 +5,9 @@ import instance from '@/utils/axiosInstance/axiosInstance';
 import authStore from '@/zustand/authstore';
 import { redirect, usePathname, useRouter } from 'next/navigation'
 import toast from 'react-hot-toast';
+import CryptoJS from 'crypto-js'
+import Cookies from 'js-cookie'
+import dotenv from 'dotenv'
 
 interface IAuthProviderProps {
     children: ReactNode;
@@ -16,8 +19,9 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
     // const [protectAuth, setProtectAuth] = useState<boolean>(false)
     const token = authStore((state) => state.token)
     const setKeepAuth = authStore((state) => state.setKeepAuth)
-    const setAuth = authStore((state) => state.setAuth)
     const role = authStore((state) => state.role)
+    const secret_key = process.env.CRYPTO_ENCRYPT_ROLE || '12312312'
+
     console.log(role)
     console.log(token)
     console.log(setAuth)
@@ -39,24 +43,25 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
                 organizerName: auth?.data?.data?.organizerName,
                 point: auth?.data?.data?.point,
                 discount: auth?.data?.data?.discount
-            })
-            console.log(auth)
+            })  
+
+            console.log(auth?.data?.data?.isVerified)
+
+            const encryptRole = CryptoJS.AES.encrypt(auth?.data?.data?.role, secret_key).toString()
+
+            Cookies.set('role', encryptRole, { expires: 1 })
+            Cookies.set('token', token, { expires: 1 })
+
         } catch (err) {
             console.log(err);
         }
-    }; 
+    };
 
     useLayoutEffect(() => {
         if (token) {
             fetchKeepAuth()
         }
     }, [token])
-
-    useLayoutEffect(() => {
-        if (token && (pathname == '/auth/user/login-user' || pathname == '/auth/user/register-user')) {
-            return router.push('/')
-        }
-    }, [token, router])
 
     return (
         <>

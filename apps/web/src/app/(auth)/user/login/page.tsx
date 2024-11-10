@@ -11,6 +11,7 @@ import { useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
 import authStore from '@/zustand/authstore';
+import Cookies from 'js-cookie'
 
 export default function Page() {
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -41,6 +42,7 @@ export default function Page() {
                 totalPoint: res.data.data.totalPoint,
                 identityNumber: res.data.data.identityNumber
             })
+            Cookies.set('token', res?.data?.data?.token, { expires: 1 })
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message)

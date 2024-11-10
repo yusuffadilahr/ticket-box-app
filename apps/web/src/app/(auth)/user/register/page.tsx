@@ -7,7 +7,7 @@ import { registerUserSchema } from '@/features/register/schema/registerSchema';
 import { useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { toast } from "react-hot-toast";
-import { IDataRegister } from './type'
+import { IDataRegister } from './type';
 
 export default function Page() {
     const { mutate: handleRegister, isPending } = useMutation({

@@ -22,7 +22,7 @@ export default function Page() {
         onSuccess: (res) => {
             console.log(res)
             toast.success('Harap cek email secara berkala!')
-            navigate.push('/auth/user/login-user')
+            navigate.push('/user/login')
         },
         onError: (err) => {
             toast.error('Maaf ada kesalahan atau mungkin email belum terdaftar!')

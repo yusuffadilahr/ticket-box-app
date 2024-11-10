@@ -26,7 +26,6 @@ export default function Explore({ searchParams }: { searchParams: any }) {
     
     
     const params = useSearchParams();
-    // const [dataEvent, setDataEvent] = useState([]);
     const [searchInput, setSearchInput] = useState(params.get('search') || '');
     const [limitData, setLimitData] = useState(8);
     const [page, setPage] = useState(Number(params.get('page')) || 1);
@@ -325,7 +324,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                                     <Image
                                                         src={item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                                             ? item.EventImages[0].eventImageUrl
-                                                            : `http://localhost:8000/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
+                                                            : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
                                                         height={142}
                                                         width={142}
                                                         alt="testing"
@@ -396,8 +395,6 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                             );
                         })
                         : "Data Tidak DItemukan"} 
-
-                    
                 </section>
             </div>
         </main>

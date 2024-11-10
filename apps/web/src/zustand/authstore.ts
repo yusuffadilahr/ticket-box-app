@@ -16,6 +16,8 @@ const authStore = create(
       isVerified: null,
       ownerName: '',
       organizerName: '',
+      point: null,
+      discount: null,
 
       setAuth: ({
         token,
@@ -30,6 +32,8 @@ const authStore = create(
         isVerified,
         ownerName,
         organizerName,
+        point,
+        discount,
       }: any) =>
         set({
           token: token,
@@ -44,6 +48,8 @@ const authStore = create(
           isVerified: isVerified,
           ownerName: ownerName,
           organizerName: organizerName,
+          point: point,
+          discount: discount
         }),
       setKeepAuth: ({
         firstName,

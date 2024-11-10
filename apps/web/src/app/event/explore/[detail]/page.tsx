@@ -29,11 +29,7 @@ interface IParams {
     };
 }
 
-
 export default function EventDetail({ params }: IParams) {
-
-
-    
     const { detail } = params;
     const id = detail.split('TBX')[0];
     const { data: queryDataDetailEvent } = useQuery({
@@ -117,7 +113,7 @@ export default function EventDetail({ params }: IParams) {
                     <Image
                         src={queryDataDetailEvent?.EventImages[0]?.eventImageUrl.includes('https://') ?
                             queryDataDetailEvent?.EventImages[0]?.eventImageUrl :
-                            `http://localhost:8000/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
+                            `http://localhost:8000/api/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
                         } alt="testing"
                         className="object-cover w-full h-auto rounded-lg drop-shadow-lg"
                         width={1000}
