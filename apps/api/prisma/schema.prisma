@@ -320,7 +320,7 @@ model TransactionDetail {
   id            Int @id @default(autoincrement())
   transactionsId String?
   ticketId      Int
-  price         Int
+  price         Int //subtotal per tiket
   quantity      Int
 
   createdAt DateTime  @default(now())

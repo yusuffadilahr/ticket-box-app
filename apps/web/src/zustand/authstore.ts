@@ -79,7 +79,8 @@ const authStore = create(
           ownerName: ownerName,
           organizerName: organizerName,
           point: point,
-          discount: discount,
+          discount : discount,
+
         }),
     }),
     {

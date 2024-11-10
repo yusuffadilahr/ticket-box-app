@@ -78,7 +78,7 @@ export default function ProfileHome() {
                             fd.append('identityNumber', values.identityNumber)
 
                             if (values.images) {
-                                fd.append('images', values.images); // Append only the single file
+                                fd.append('images', values.images);
                             }
 
                             mutateProfileUpdate(fd)

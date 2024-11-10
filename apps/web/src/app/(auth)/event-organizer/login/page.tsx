@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
@@ -18,6 +18,7 @@ import authStore from '@/zustand/authstore';
 
 export default function Page() {
   const setAuth = authStore((state) => state.setAuth);
+  const router = useRouter()
   const { mutate: handleLogin, isPending } = useMutation({
     mutationFn: async ({
       email,
@@ -34,6 +35,7 @@ export default function Page() {
     onSuccess: (res) => {
       toast.success('suz');
       setAuth({ token: res.data.data.token });
+      router.push('/event/dashboard')
       console.log(res);
     },
     onError: (error) => {

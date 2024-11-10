@@ -434,7 +434,7 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
                 },
             });
 
-            findImage.forEach((item)=> {
+            findImage.forEach((item) => {
                 fs.rmSync(`src/public/images/${item?.eventImageUrl}`)
             })
         })

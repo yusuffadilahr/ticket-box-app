@@ -8,11 +8,7 @@ import { compile } from 'handlebars';
 import { transporter } from '@/utils/transporter';
 import { addMonths } from 'date-fns';
 
-export const userRegister = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = nanoid(8);
     const dateNow = new Date();
@@ -23,7 +19,7 @@ export const userRegister = async (
 
     const { firstName, lastName, email, password, phoneNumber, identityNumber, referralBody /* REFERRAL BOLEH NULL */ } = req.body;
     if (!firstName || !lastName || !email || !password || !phoneNumber || !identityNumber) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
-    
+
     const checkedEmail = await prisma.users.findMany({
       where: { email },
     });
@@ -120,11 +116,7 @@ export const userRegister = async (
   }
 };
 
-export const userLogin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
     if (!email || !password)
@@ -195,7 +187,6 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
       })
     }
 
-    console.log('>>>>', dataUser)
     if (dataUser?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
     if (dataEventOrganizer?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
 
@@ -204,14 +195,14 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
       message: 'Get Profile berhasil',
       data: authorizationRole == 'user' ? {
         isVerified: dataUser[0]?.isVerified,
-        firstName: dataUser[0].firstName,
-        lastName: dataUser[0].lastName,
-        role: dataUser[0].role,
-        email: dataUser[0].email,
-        phoneNumber: dataUser[0].phoneNumber,
-        profilePicture: dataUser[0].profilePicture,
-        identityNumber: dataUser[0].identityNumber,
-        refferalCode: dataUser[0].referralCode,
+        firstName: dataUser[0]?.firstName,
+        lastName: dataUser[0]?.lastName,
+        role: dataUser[0]?.role,
+        email: dataUser[0]?.email,
+        phoneNumber: dataUser[0]?.phoneNumber,
+        profilePicture: dataUser[0]?.profilePicture,
+        identityNumber: dataUser[0]?.identityNumber,
+        refferalCode: dataUser[0]?.referralCode,
         point: dataUser[0]?.points[0].point,
         discount: dataUser[0]?.referalDiscounts[0].discount
 
@@ -228,35 +219,9 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
   } catch (error) {
     next(error);
   }
-};
+}
 
-export const getPointUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { userId } = req.body;
-
-    const searchData = await prisma.points.findMany({
-      where: { userIdRefferalMatch: userId },
-    });
-
-    res.status(200).json({
-      error: false,
-      message: 'Berhasil mendapatkan point',
-      data: searchData,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const forgotPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.body;
 
@@ -304,11 +269,7 @@ export const forgotPassword = async (
   }
 };
 
-export const resetPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, password } = req.body;
     const { authorization } = req.headers;
@@ -349,11 +310,7 @@ export const resetPassword = async (
   }
 };
 
-export const resetPasswordProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const resetPasswordProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, existingPassword, password } = req.body;
     const { authorization } = req.headers;
@@ -399,15 +356,11 @@ export const resetPasswordProfile = async (
   }
 };
 
-export const updateProfileUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const updateProfileUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const imagesUpload: any = req.files;
-    const { userId, firstName, lastName, phoneNumber, identityNumber } =
-      req.body;
+    const { userId, firstName, lastName, phoneNumber, identityNumber } = req.body;
+    // if (firstName || lastName || phoneNumber || identityNumber) throw { msg: 'Harus diisi', status: 400 }
 
     await prisma.users.update({
       data: {

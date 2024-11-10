@@ -1,4 +1,4 @@
-'use client'; // Add this line at the top of your component file
+'use client';
 
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -11,7 +11,7 @@ import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { toast } from 'react-hot-toast'
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
-// Validasi menggunakan Yup
+
 
 const EventForm = () => {
     const { mutate: mutationCreateEvent } = useMutation({
@@ -46,9 +46,10 @@ const EventForm = () => {
         endDate: '',
     });
 
+    const [isPaid, setIsPaid] = useState(true)
+
     return (
         <main className="bg-white p-5 px-20">
-            {/* <div className="bg-white rounded-xl shadow-lg h-96 overflow-y-auto"> */}
             <Formik
                 initialValues={{
                     eventName: '',
@@ -101,22 +102,26 @@ const EventForm = () => {
                 }}
             >
                 {({ values, setFieldValue }) => (
-                    <Form>
-                        <section className="flex flex-col justify-center rounded-xl">
+                    <Form className=''>
+                        <section className="bg-white flex flex-col justify-center rounded-xl h-fit w-full border border-gray-200 shadow-lg p-5">
                             <div className="flex justify-center font-bold text-2xl pb-5">
                                 Event
                             </div>
                             <div className="grid grid-cols-2 gap-4 px-40">
-                                <div className="flex flex-col">
-                                    <label className="font-bold text-sm">Nama Event</label>
+                                <div className="flex flex-col relative">
+                                    <label className=" text-sm">Nama Event</label>
                                     <Field
                                         name="eventName"
                                         placeholder="Nama Acara"
                                         className="border border-gray-500 rounded-md p-2"
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="eventName" component="div" className='text-xs text-red-600' />
+                                    </div>
+
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="font-bold text-sm">Kategori</label>
+                                    <label className=" text-sm">Kategori</label>
                                     <Field
                                         as="select"
                                         name="categoryId"
@@ -133,9 +138,12 @@ const EventForm = () => {
                                                 </option>
                                             ))}
                                     </Field>
+                                    <div className='h-1'>
+                                        <ErrorMessage name="categoryId" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="font-bold text-sm">
+                                    <label className=" text-sm">
                                         Event Start Date
                                     </label>
                                     <Field
@@ -144,41 +152,60 @@ const EventForm = () => {
                                         type="datetime-local"
                                         className="border border-gray-500 rounded-md p-2"
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="startEvent" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="font-bold text-sm">Event End Date</label>
+                                    <label className=" text-sm">Event End Date</label>
                                     <Field
                                         name="endEvent"
                                         placeholder="Tanggal Akhir"
                                         type="datetime-local"
                                         className="border border-gray-500 rounded-md p-2"
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="endEvent" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <label className="font-bold text-sm">Lokasi</label>
+                                    <label className=" text-sm">Lokasi</label>
                                     <Field
                                         name="location"
                                         placeholder="Lokasi"
                                         className="border border-gray-500 rounded-md p-2"
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="location" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="font-bold text-sm">Lokasi Google Map</label>
+                                    <label className=" text-sm">Lokasi Google Map</label>
                                     <Field
                                         name="locationUrl"
-                                        placeholder="Google Map Embed"
+                                        placeholder="https://maps.app.goo.gl/ACXwTUMJQ8xSTnyq7"
                                         className="border border-gray-500 rounded-md p-2"
                                         type="text"
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="locationUrl" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
 
                                 <div className="flex items-center justify-center gap-5 col-span-2">
-                                    <label className="font-bold text-sm">Berbayar</label>
+                                    <label className=" text-sm">Berbayar</label>
                                     <Field
                                         type="checkbox"
                                         name="isPaid"
                                         className="border border-gray-500 rounded-md p-2"
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                            const checked = e.target.checked;
+                                            setIsPaid(checked);
+                                            setFieldValue("isPaid", checked);
+                                            setFieldValue("price", checked ? 0 : values.price);
+                                        }}
+                                        defaultChecked={values.isPaid}
                                     />
                                 </div>
                                 <div className="flex flex-col col-span-2">
@@ -186,20 +213,12 @@ const EventForm = () => {
                                     <TiptapEditor
                                         value={values.description}
                                         onChange={(html: any) => setFieldValue('description', html)}
-
-                                    // Update Formik on change
                                     />
-                                    {/* <Field
-                                        name="description"
-                                        placeholder="Deskripsi"
-                                        as="textarea"
-                                        className="col-span-2 border border-gray-500 rounded-md p-2"
-                                    /> */}
                                 </div>
                             </div>
                         </section>
 
-                        <div className="flex flex-col mt-8 px-10">
+                        <div className="bg-white flex flex-col mt-8 px-10 rounded-xl h-fit w-full border border-gray-200 shadow-lg p-5">
                             <h3 className="flex justify-center font-bold text-2xl pb-5">
                                 Upload Gambar Event
                             </h3>
@@ -208,6 +227,8 @@ const EventForm = () => {
                                     <b>Gambar 1</b>: Ukuran 1170 x 570px tidak lebih dari 1Mb
                                     (Format JPG, JPEG, PNG)
                                     <input
+                                        id='gambar1'
+                                        name='gambar1'
                                         type="file"
                                         accept="image/*"
                                         onChange={(event: any) =>
@@ -218,6 +239,9 @@ const EventForm = () => {
                                         }
                                         className="mx-auto"
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="gambar1" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </label>
                                 <label className="text-sm border border-gray-300 rounded-md p-3 text-center">
                                     <b>Gambar 2</b>: Ukuran 500 x 500px tidak lebih dari 1Mb
@@ -250,29 +274,18 @@ const EventForm = () => {
                             </div>
                         </div>
 
-                        <div className="px-40">
+                        <div className="px-40 rounded-xl  mt-8 h-fit w-full border border-gray-200 shadow-lg p-5" >
                             <h3 className="flex justify-center font-bold text-2xl mt-8 pb-5">
                                 Tambah Tiket Baru
                             </h3>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Nama Tiket</label>
-                                     <button
-                                        id="tooltip-button"
-                                        className="px-4 py-2 font-semibold text-white bg-indigo-600 rounded-lg"
-                                    >
-                                        Hover me
-                                    </button>
-                                    <Tooltip
-                                        anchorSelect="#tooltip-button"
-                                        place="top"
-                                        content="This is a tooltip"
-                                        style={{ backgroundColor: 'rgba(0,0,0,0.8)', color: 'white', borderRadius: '5px', padding: '8px' }}
-                                    />
+                                    <label className=" text-sm">Nama Tiket</label>
                                     <Field
                                         name="ticketName"
                                         placeholder="Nama Tiket"
                                         value={newTicket.ticketName}
+                                        className="border border-gray-500 rounded-md p-2"
                                         onChange={(e: any) =>
                                             setNewTicket({
                                                 ...newTicket,
@@ -280,12 +293,17 @@ const EventForm = () => {
                                             })
                                         }
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="ticketName" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
                                 <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Tipe Tiket</label>
+                                    <label className=" text-sm">Tipe Tiket</label>
                                     <Field
                                         name="ticketType"
                                         placeholder="Tipe Tiket"
+                                        className="border border-gray-500 rounded-md p-2"
+
                                         value={newTicket.ticketType}
                                         onChange={(e: any) =>
                                             setNewTicket({
@@ -294,28 +312,41 @@ const EventForm = () => {
                                             })
                                         }
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="ticketType" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
+
+                                {isPaid && (
+                                    <div className="flex flex-col col-span-2">
+                                        <label className=" text-sm">Harga</label>
+                                        <Field
+                                            name="price"
+                                            placeholder="Harga"
+                                            type="number"
+                                            className="border border-gray-500 rounded-md p-2"
+
+                                            value={newTicket.price}
+                                            onChange={(e: any) =>
+                                                setNewTicket({
+                                                    ...newTicket,
+                                                    price: Number(e.target.value),
+                                                })
+                                            }
+                                        />
+                                        <div className='h-1'>
+                                            <ErrorMessage name="price" component="div" className='text-xs text-red-600' />
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Harga</label>
-                                    <Field
-                                        name="price"
-                                        placeholder="Harga"
-                                        type="number"
-                                        value={newTicket.price}
-                                        onChange={(e: any) =>
-                                            setNewTicket({
-                                                ...newTicket,
-                                                price: Number(e.target.value),
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Kuota Kursi</label>
+                                    <label className=" text-sm">Kuota Kursi</label>
                                     <Field
                                         name="seatAvailable"
                                         placeholder="Kuota Kursi"
                                         type="number"
+                                        className="border border-gray-500 rounded-md p-2"
+
                                         value={newTicket.seatAvailable}
                                         onChange={(e: any) =>
                                             setNewTicket({
@@ -324,28 +355,36 @@ const EventForm = () => {
                                             })
                                         }
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="seatAvailable" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
 
+                                {isPaid && (
+                                    <div className="flex flex-col col-span-2">
+                                        <label className=" text-sm">Diskon</label>
+                                        <Field
+                                            name="discount"
+                                            placeholder="Diskon"
+                                            type="number"
+                                            className="border border-gray-500 rounded-md p-2"
+
+                                            value={newTicket.discount}
+                                            onChange={(e: any) =>
+                                                setNewTicket({
+                                                    ...newTicket,
+                                                    discount: Number(e.target.value),
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                )}
                                 <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Diskon</label>
-                                    <Field
-                                        name="discount"
-                                        placeholder="Diskon"
-                                        type="number"
-                                        value={newTicket.discount}
-                                        onChange={(e: any) =>
-                                            setNewTicket({
-                                                ...newTicket,
-                                                discount: Number(e.target.value),
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Tanggal Mulai</label>
+                                    <label className=" text-sm">Tanggal Mulai</label>
                                     <Field
                                         name="startDate"
                                         type="datetime-local" value={newTicket.startDate}
+                                        className="border border-gray-500 rounded-md p-2"
                                         onChange={(e: any) =>
                                             setNewTicket({
                                                 ...newTicket,
@@ -353,17 +392,25 @@ const EventForm = () => {
                                             })
                                         }
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="startDate" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
                                 <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Tanggal Akhir</label>
+                                    <label className=" text-sm">Tanggal Berakhir</label>
                                     <Field
                                         name="endDate"
                                         type="datetime-local"
+                                        className="border border-gray-500 rounded-md p-2"
+
                                         value={newTicket.endDate}
                                         onChange={(e: any) =>
                                             setNewTicket({ ...newTicket, endDate: e.target.value })
                                         }
                                     />
+                                    <div className='h-1'>
+                                        <ErrorMessage name="endDate" component="div" className='text-xs text-red-600' />
+                                    </div>
                                 </div>
                             </div>
                             <button
@@ -380,14 +427,14 @@ const EventForm = () => {
                                         endDate: '',
                                     });
                                 }}
-                                className="bg-blue-500 text-white rounded-md p-3 mt-4"
+                                className="bg-blue-500 text-white rounded-md p-3 mt-4 flex justify-center"
                             >
                                 Tambah Tiket
                             </button>
                         </div>
 
                         <div>
-                            <h3 className='mb-4'>Daftar Tiket</h3>
+                            <h3 className='flex justify-center font-bold text-2xl mt-8 pb-5 mb-4'>Daftar Tiket</h3>
                             {values.tickets.map((ticket: any, index: any) => (
                                 <div key={index} className="bg-blue-50 p-4 mb-2 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
                                     <div className="flex  items-start">
@@ -433,19 +480,6 @@ const EventForm = () => {
                                 </div>
 
 
-
-
-                                // <div key={index}>
-                                //     <p>Nama Tiket: {ticket.ticketName}</p>
-                                //     <p>Tipe Tiket: {ticket.ticketType}</p>
-                                //     <p>Harga: {ticket.price}</p>
-                                //     <p>Kursi Tersedia: {ticket.seatAvailable}</p>
-                                //     <p>Diskon: {ticket.discount}</p>
-                                //     <p>Tanggal Mulai Diskon: {ticket.discountStart}</p>
-                                //     <p>Tanggal Akhir Diskon: {ticket.discountExpiry}</p>
-                                //     <p>Tanggal Mulai: {ticket.startDate}</p>
-                                //     <p>Tanggal Akhir: {ticket.endDate}</p>
-                                // </div>
                             ))}
                         </div>
                         <div className="flex justify-center mt-8">
@@ -459,7 +493,6 @@ const EventForm = () => {
                     </Form>
                 )}
             </Formik>
-            {/* </div> */}
         </main>
     );
 };

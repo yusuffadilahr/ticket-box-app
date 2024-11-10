@@ -27,7 +27,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 ticketId: item.ticketId,
                 price: subtotal,
                 quantity: item.quantity,
-                expiredAt: addHours(new Date(), 1)
+                expiredAt: addMinutes(new Date(), 1)
             }
         })
 
@@ -91,7 +91,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 totalPrice: totalPembayaran,
                 userId: userId,
                 eventOrganizerId: dataEvent.EventOrganizer.id,
-                expiredAt: await addMinutes(new Date(), 15),
+                expiredAt: addMinutes(new Date(), 1),
                 // transactionDetail: {
                 //     createMany: {
                 //         data: dataDetails
@@ -120,7 +120,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         const query = await mysqlConnection()
         await query.query(`
             CREATE EVENT transaction_${transactionId.id}
-            ON SCHEDULE AT NOW() + INTERVAL 15 MINUTE
+            ON SCHEDULE AT NOW() + INTERVAL 1 MINUTE
             DO 
             BEGIN
                 INSERT INTO transaction_statuses (status, transactionsId) VALUES ('EXPIRED', ${transactionId.id});

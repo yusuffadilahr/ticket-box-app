@@ -22,7 +22,7 @@ export default function Page({params}: {params: {slug: string}}) {
             return await instance.put(`/event/updates-event/${slug}`, values);
         },
         onSuccess: (res) => {
-            toast.success('beerhasil')
+            toast.success('berhasil')
             console.log(res);
         },
         onError: (error) => {
