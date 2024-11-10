@@ -45,6 +45,11 @@ export default function EventDetail({ params }: IParams) {
     });
     
     const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
+    const [pointsToDeduct, setPointsToDeduct] = useState(0); // New state for points deduction
+    const [useReferralDiscount, setUseReferralDiscount] = useState(false);
+
+    const toggleReferralDiscount = () => setUseReferralDiscount(!useReferralDiscount);
+
     console.log(ticketQuantities)
 
     // useEffect(() => {
@@ -55,6 +60,7 @@ export default function EventDetail({ params }: IParams) {
 
 
     const profilePoint = authStore((state) => state.point);
+    console.log(profilePoint)
     const profileDiscount = authStore((state) => state.discount);
     const { mutate: handleCheckoutTickets } = useMutation({
         mutationFn: async () => {
@@ -70,10 +76,9 @@ export default function EventDetail({ params }: IParams) {
                 )
            
             return await instance.post(`/transaction/${id}`, {
-                referralPoints: profilePoint,
+                referralPoints: pointsToDeduct,
                 ticketDetails,
-                referralDiscount: profileDiscount
-            })
+                referralDiscount: useReferralDiscount ? profileDiscount : 0,            })
         },
         onSuccess: (res) => {
             console.log(res)
@@ -287,21 +292,22 @@ export default function EventDetail({ params }: IParams) {
 
                             return (
                                 <div key={index} className="mb-2 flex flex-row gap-4 items-center justify-center">
-                                    <div className='flex w-24 flex-col justify-center'>
-                                        <p className="text-md font-semibold">{ticket.ticketName}</p>
+                                    <div className='flex w-36 justify-center items-center gap-3'>
                                         <IoTicketOutline size={40} />
+                                        <p className="text-sm font-semibold">{ticket.ticketName}</p>
                                     </div>
                                     <div className='flex flex-col justify-center'>
                                         <p className="text-sm">x {quantity}</p>
                                         {ticket.discount > 0 ? (
 
-                                            <p className="text-sm text-green-600">Discounted: Rp{discountedPrice.toLocaleString()}</p>
+                                            <p className="text-sm text-green-600">Harga Diskon: Rp{discountedPrice.toLocaleString()}</p>
 
                                         ) : (
                                             <p className="text-sm">Price: Rp{discountedPrice.toLocaleString()}</p>
                                         )}
                                         <p className="text-sm">Subtotal: Rp{ticketSubtotal.toLocaleString()}</p>
                                     </div>
+                                   
                                 </div>
                             );
                         }
@@ -311,6 +317,28 @@ export default function EventDetail({ params }: IParams) {
                     <div className='flex justify-between items-center border-t-2 border-gray-300'>
                         <p className="text-md mt-4 text-gray-700 ">Jumlah {totalTickets} tiket</p>
                         <p className="text-xl mt-4 font-bold"><span className='text-base text-gray-700 font-normal'>Harga:</span> Rp{totalPrice.toLocaleString()}</p>
+                    </div>
+                    <div className="mt-4">
+                        <label className="text-sm text-gray-700">Gunakan Poin (Max: {profilePoint}):</label>
+                        <input
+                            type="number"
+                            max={profilePoint}
+                            value={pointsToDeduct}
+                            onChange={(e) => setPointsToDeduct(Math.min(profilePoint, parseInt(e.target.value) || 0))}
+                            className="w-full p-2 mt-1 rounded border-gray-300"
+                        />
+                    </div>
+                    <div className="flex items-center mt-4">
+                        <input
+                            type="checkbox"
+                            id="useReferralDiscount"
+                            checked={useReferralDiscount}
+                            onChange={toggleReferralDiscount}
+                            className="mr-2"
+                        />
+                        <label htmlFor="useReferralDiscount" className="text-sm font-semibold">
+                            Use Referral Discount
+                        </label>
                     </div>
                     <button className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>Bayar Sekarang</button>
                 </div>

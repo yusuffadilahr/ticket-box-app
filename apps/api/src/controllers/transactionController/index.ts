@@ -5,7 +5,7 @@ import { addHours, addMinutes } from "date-fns";
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { userId, ticketDetails, referralDiscount, referralPoints } = req.body
+        const { userId, ticketDetails, referralDiscount = 0 , referralPoints = 0 } = req.body
         const { id } = req.params
 
         const dataEvent = await prisma.event.findUnique({
@@ -21,12 +21,16 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         let totalPembayaran = 0;
         const dataDetails = ticketDetails?.map((item: any, i: any) => {
             const subtotal = item.quantity * item.price
+            const totalDiscount = item.quantity * item.discount
             totalPembayaran += subtotal
+            totalPembayaran -= totalDiscount
 
             return {
                 ticketId: item.ticketId,
                 price: subtotal,
                 quantity: item.quantity,
+                // discount: item.discount,
+                discount: totalDiscount,
                 expiredAt: addMinutes(new Date(), 1)
             }
         })
@@ -110,6 +114,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 transactionsId: transactionId.id,
                 ticketId: item.ticketId,
                 price: item.price,
+                discount: item.discount,
                 quantity: item.quantity,
             }
         })
@@ -123,7 +128,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             ON SCHEDULE AT NOW() + INTERVAL 1 MINUTE
             DO 
             BEGIN
-                INSERT INTO transaction_statuses (status, transactionsId) VALUES ('EXPIRED', ${transactionId.id});
+                INSERT INTO transactionstatus (status, transactionsId) VALUES ('EXPIRED', ${transactionId.id});
             END
         `);
 
@@ -135,5 +140,29 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
 
     } catch (error) {
         next(error)
+    }
+}
+
+
+export const getTransaction = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId } = req.body
+        const dataTransaction = await prisma.transactions.findMany({
+            where: { userId : userId },
+            include: {
+                transactionDetail: true,
+                event: true,
+                transactionStatus:true
+            }
+        })
+
+        res.status(200).json({
+            error: false,
+            message: 'Berhasil Mendapatkan Data Transaksi',
+            data: dataTransaction
+        })
+
+    } catch (err) {
+        next(err)
     }
 }

@@ -19,6 +19,9 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
     const setAuth = authStore((state) => state.setAuth)
     const role = authStore((state) => state.role)
     console.log(role)
+    console.log(token)
+    console.log(setAuth)
+    console.log(role)
     const fetchKeepAuth = async () => {
         try {
             const auth = await instance.get('/user/user-profile');
