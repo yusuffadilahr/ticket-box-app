@@ -176,6 +176,10 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
           Transactions: true,
         },
       })
+<<<<<<< HEAD
+=======
+      console.log(dataUser, '<<<<<<<<<')
+>>>>>>> cc1fc6d76a3512655a7443a226383a23f8f75577
 
     } else if (authorizationRole == 'EO') {
       dataEventOrganizer = await prisma.eventOrganizer.findMany({
@@ -187,8 +191,14 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
       })
     }
 
+<<<<<<< HEAD
     if (dataUser?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
     if (dataEventOrganizer?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
+=======
+    // console.log(dataUser,"datauser")
+    // if (dataUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
+    // if (dataEventOrganizer.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
+>>>>>>> cc1fc6d76a3512655a7443a226383a23f8f75577
 
     res.status(200).json({
       error: false,

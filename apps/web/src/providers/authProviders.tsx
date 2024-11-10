@@ -23,6 +23,9 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
     const secret_key = process.env.CRYPTO_ENCRYPT_ROLE || '12312312'
 
     console.log(role)
+    console.log(token)
+    console.log(setAuth)
+    console.log(role)
     const fetchKeepAuth = async () => {
         try {
             const auth = await instance.get('/user/user-profile');

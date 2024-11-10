@@ -1,12 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `samples` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE `samples`;
-
 -- CreateTable
 CREATE TABLE `users` (
     `id` VARCHAR(191) NOT NULL,
@@ -16,11 +7,12 @@ CREATE TABLE `users` (
     `password` VARCHAR(191) NOT NULL,
     `role` VARCHAR(191) NOT NULL DEFAULT 'user',
     `phoneNumber` VARCHAR(191) NOT NULL,
-    `birthDate` DATETIME(3) NOT NULL,
     `identityNumber` INTEGER NOT NULL,
     `profilePicture` VARCHAR(191) NULL,
+    `isVerified` BOOLEAN NOT NULL,
+    `verifyCode` VARCHAR(191) NOT NULL,
     `referralCode` VARCHAR(191) NOT NULL,
-    `totalPoint` INTEGER NOT NULL,
+    `forgotPasswordToken` LONGTEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
@@ -40,7 +32,7 @@ CREATE TABLE `eventOrganizer` (
     `password` VARCHAR(191) NOT NULL,
     `role` VARCHAR(191) NOT NULL DEFAULT 'EO',
     `phoneNumber` VARCHAR(191) NOT NULL,
-    `identityNumber` INTEGER NOT NULL,
+    `identityNumber` VARCHAR(191) NULL,
     `profilePicture` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -56,11 +48,11 @@ CREATE TABLE `event` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `eventName` VARCHAR(191) NOT NULL,
     `location` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
+    `locationUrl` VARCHAR(191) NOT NULL,
+    `description` LONGTEXT NOT NULL,
     `isPaid` BOOLEAN NOT NULL,
     `startEvent` DATETIME(3) NOT NULL,
     `endEvent` DATETIME(3) NOT NULL,
-    `artist` VARCHAR(191) NOT NULL,
     `eventOrganizerId` VARCHAR(191) NOT NULL,
     `categoryId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -95,9 +87,8 @@ CREATE TABLE `ticket` (
     `ticketType` VARCHAR(191) NULL,
     `seatAvailable` INTEGER NOT NULL,
     `eventId` INTEGER NOT NULL,
+    `version` VARCHAR(191) NULL,
     `discount` INTEGER NOT NULL,
-    `discountStart` DATETIME(3) NOT NULL,
-    `discountExpiry` DATETIME(3) NOT NULL,
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -124,7 +115,7 @@ CREATE TABLE `points` (
 CREATE TABLE `discounts` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userIdRefferal` VARCHAR(191) NOT NULL,
-    `discount` INTEGER NOT NULL,
+    `discount` DOUBLE NOT NULL,
     `isUsed` BOOLEAN NOT NULL,
     `expiredDate` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -138,8 +129,8 @@ CREATE TABLE `discounts` (
 CREATE TABLE `reviews` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `rating` INTEGER NOT NULL,
-    `reviewText` VARCHAR(191) NOT NULL,
-    `feedback` VARCHAR(191) NOT NULL,
+    `reviewText` LONGTEXT NOT NULL,
+    `feedback` LONGTEXT NOT NULL,
     `eventId` INTEGER NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -155,6 +146,7 @@ CREATE TABLE `transactions` (
     `userId` VARCHAR(191) NOT NULL,
     `eventId` INTEGER NOT NULL,
     `totalPrice` INTEGER NOT NULL,
+    `expiredAt` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
@@ -166,14 +158,14 @@ CREATE TABLE `transactions` (
 -- CreateTable
 CREATE TABLE `transactionDetails` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `transactionId` INTEGER NOT NULL,
+    `transactionsId` VARCHAR(191) NULL,
     `ticketId` INTEGER NOT NULL,
     `price` INTEGER NOT NULL,
+    `discount` INTEGER NOT NULL,
     `quantity` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
-    `transactionsId` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -182,7 +174,7 @@ CREATE TABLE `transactionDetails` (
 CREATE TABLE `transactionStatus` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `transactionsId` VARCHAR(191) NULL,
-    `status` ENUM('WAITING_FOR_PAYMENT', 'PAID', 'CANCELLED') NOT NULL,
+    `status` ENUM('WAITING_FOR_PAYMENT', 'PAID', 'CANCELLED', 'EXPIRED') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,

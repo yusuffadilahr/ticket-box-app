@@ -317,18 +317,19 @@ model Transactions {
 }
 
 model TransactionDetail {
-  id            Int @id @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   transactionsId String?
-  ticketId      Int
-  price         Int //subtotal per tiket
-  quantity      Int
+  ticketId       Int
+  price          Int //subtotal per tiket
+  discount       Int
+  quantity       Int
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  tickets        Tickets       @relation(fields: [ticketId], references: [id])
-  Transactions   Transactions? @relation(fields: [transactionsId], references: [id])
+  tickets      Tickets       @relation(fields: [ticketId], references: [id])
+  Transactions Transactions? @relation(fields: [transactionsId], references: [id])
 
   @@map("transactionDetails")
 }
