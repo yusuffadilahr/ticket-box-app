@@ -3,6 +3,6 @@ export interface IRegisterOrganizer{
     ownerName: string,
     email: string,
     phoneNumber: string,
-    identityNumber: number | null,
+    identityNumber: string,
     password: string,
 }

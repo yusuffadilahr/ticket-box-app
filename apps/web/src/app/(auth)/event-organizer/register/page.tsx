@@ -66,7 +66,7 @@ export default function RegisterOrganizer() {
 
             <section className="w-1/2 relative h-screen rounded-xl border border-gray-200 shadow-lg">
                 <div className="absolute p-10 w-full">
-                    <Link href='/auth/event-organizer/login-organizer'>
+                    <Link href='/event-organizer/login'>
                         <button className="text-yellow-300 text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 w-full">
                             Login
                         </button>

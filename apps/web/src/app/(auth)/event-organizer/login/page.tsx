@@ -1,11 +1,10 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
 import Link from 'next/link';
-import { loginSchema } from '@/features/login/schema/loginSchema';
 import { ErrorMessage } from 'formik';
 import { useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
@@ -17,38 +16,32 @@ import { loginOrganizerSchema } from '@/features/login-organizer/schema/loginOrg
 import authStore from '@/zustand/authstore';
 
 export default function Page() {
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const setAuth = authStore((state) => state.setAuth);
   const router = useRouter()
   const { mutate: handleLogin, isPending } = useMutation({
-    mutationFn: async ({
-      email,
-      password,
-    }: {
-      email: string;
-      password: string;
-    }) => {
-      return await instance.post('/auth/login/event-organizer', {
-        email,
-        password,
-      });
+    mutationFn: async ({ email, password }: { email: string, password: string }) => {
+      return await instance.post('/auth/login/event-organizer', { email, password });
     },
     onSuccess: (res) => {
       toast.success('suz');
       setAuth({ token: res.data.data.token });
-      router.push('/event/dashboard')
       console.log(res);
+      router.push('/event/dashboard')
+      console.log('nyampe mana ---- << --')
     },
     onError: (error) => {
+      toast.error('error')
       console.log('err');
       console.log(error);
     },
   });
 
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
   return (
     <main className="w-full h-screen bg-white flex lg:px-20 lg:py-32 gap-5">
       <section className="w-full h-full bg-white shadow-lg flex flex-col justify-center rounded-xl items-center border border-gray-200 lg:px-32">
@@ -60,10 +53,7 @@ export default function Page() {
           validationSchema={loginOrganizerSchema}
           onSubmit={(values) => {
             console.log(values);
-            handleLogin({
-              email: values.email,
-              password: values.password,
-            });
+            handleLogin({ email: values.email, password: values.password });
           }}
         >
           <Form className="flex flex-col justify-center items-center w-full space-y-4">
@@ -122,7 +112,7 @@ export default function Page() {
                 <h1 className="pl-3 text-sm md:text-base">Ingat saya</h1>
               </div>
               <Link
-                href={'/auth/forgot-password'}
+                href={'/event-organizer/forgot-password'}
                 className="text-sm md:text-base"
               >
                 Lupa kata sandi?

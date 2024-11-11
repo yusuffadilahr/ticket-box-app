@@ -7,12 +7,13 @@ import fs from 'fs';
 import { compile } from 'handlebars';
 import { transporter } from '@/utils/transporter';
 import { addMonths } from 'date-fns';
+import bcrypt from 'bcrypt'
 
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = nanoid(8);
     const dateNow = new Date();
-    const verificationCode = Date.now().toString().slice(0, 7);
+    const verificationCode = nanoid(6);
 
     const date = `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`;
     const refferal = `TBX-${id}-${date}`;
@@ -44,21 +45,15 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
       },
     });
 
-    const setTokenUser = await encodeToken({
-      id: dataRegisterUser.id,
-      role: dataRegisterUser.role,
-    });
+    const setTokenUser = await encodeToken({ id: dataRegisterUser.id, role: dataRegisterUser.role });
 
-    const emailHTML = fs.readFileSync(
-      './src/public/emailSend/emailVerification.html',
-      'utf-8',
-    );
+    const emailHTML = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8');
     let compiledHtml: any = await compile(emailHTML);
     compiledHtml = compiledHtml({
       firstName: firstName,
       email: email,
-      url: `http://localhost:3000/auth/user/verification-user/${verificationCode}-TBX-${setTokenUser}`,
-      verifCode: dataRegisterUser.verifyCode
+      url: `http://localhost:3000/user/verification-user/${verificationCode}-TBX-${setTokenUser}`,
+      verifCode: verificationCode
     });
 
     await transporter.sendMail({
@@ -136,8 +131,8 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
     if (!isComparePassword) throw { msg: 'Password anda Salah!', status: 400 };
 
     const token = await encodeToken({
-      id: checkUser[0].id,
-      role: checkUser[0].role,
+      id: checkUser[0]?.id,
+      role: checkUser[0]?.role,
     });
 
     res.status(200).json({
@@ -146,13 +141,13 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
       data: {
         token,
         email,
-        firstName: checkUser[0].firstName,
-        lastName: checkUser[0].lastName,
-        role: checkUser[0].role,
-        phoneNumber: checkUser[0].phoneNumber,
-        profilePicture: checkUser[0].profilePicture,
-        identityNumber: checkUser[0].identityNumber,
-        refferalCode: checkUser[0].referralCode,
+        firstName: checkUser[0]?.firstName,
+        lastName: checkUser[0]?.lastName,
+        role: checkUser[0]?.role,
+        phoneNumber: checkUser[0]?.phoneNumber,
+        profilePicture: checkUser[0]?.profilePicture,
+        identityNumber: checkUser[0]?.identityNumber,
+        refferalCode: checkUser[0]?.referralCode,
       }, // token
     });
   } catch (error) {
@@ -203,17 +198,17 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         profilePicture: dataUser[0]?.profilePicture,
         identityNumber: dataUser[0]?.identityNumber,
         refferalCode: dataUser[0]?.referralCode,
-        point: dataUser[0]?.points[0].point,
-        discount: dataUser[0]?.referalDiscounts[0].discount
+        point: dataUser[0]?.points[0]?.point || 0,
+        discount: dataUser[0]?.referalDiscounts[0]?.discount || 0
 
       } : authorizationRole == 'EO' ? {
         organizerName: dataEventOrganizer[0]?.organizerName,
-        ownerName: dataEventOrganizer[0].ownerName,
-        role: dataEventOrganizer[0].role,
-        email: dataEventOrganizer[0].email,
-        phoneNumber: dataEventOrganizer[0].phoneNumber,
-        profilePicture: dataEventOrganizer[0].profilePicture,
-        identityNumber: dataEventOrganizer[0].identityNumber,
+        ownerName: dataEventOrganizer[0]?.ownerName,
+        role: dataEventOrganizer[0]?.role,
+        email: dataEventOrganizer[0]?.email,
+        phoneNumber: dataEventOrganizer[0]?.phoneNumber,
+        profilePicture: dataEventOrganizer[0]?.profilePicture,
+        identityNumber: dataEventOrganizer[0]?.identityNumber,
       } : {},
     });
   } catch (error) {
@@ -283,12 +278,8 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     });
     if (!findUser?.id) throw { msg: 'Link sudah tidak berlaku', status: 406 };
 
-    const checkUserPassword = await comparePassword(
-      findUser?.password,
-      password,
-    );
-    if (checkUserPassword)
-      throw { msg: 'Masukan password yang berbeda!', status: 400 };
+    const checkUserPassword = await comparePassword(findUser?.password, password);
+    if (checkUserPassword) throw { msg: 'Masukan password yang berbeda!', status: 400 };
 
     await prisma.users.update({
       data: {
@@ -368,7 +359,7 @@ export const updateProfileUser = async (req: Request, res: Response, next: NextF
         firstName,
         lastName,
         phoneNumber,
-        identityNumber: Number(identityNumber),
+        identityNumber: identityNumber,
       },
       where: {
         id: userId,
@@ -401,7 +392,7 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
       data: {
         isVerified: true,
       },
-      where: { id: findUser.id },
+      where: { id: findUser?.id },
     });
 
     res.status(200).json({

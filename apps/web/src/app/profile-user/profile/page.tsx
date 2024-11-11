@@ -68,7 +68,7 @@ export default function ProfileHome() {
                             firstName: '',
                             lastName: '',
                             phoneNumber: '',
-                            identityNumber: null as number | null,
+                            identityNumber: '',
                         }}
                         onSubmit={(values) => {
                             const fd = new FormData();
