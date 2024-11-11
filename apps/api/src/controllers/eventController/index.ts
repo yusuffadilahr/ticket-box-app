@@ -1,6 +1,7 @@
 import { prisma } from "@/connection";
 import fs from 'fs'
 import { NextFunction, Request, Response } from "express";
+import { addHours } from "date-fns";
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -16,8 +17,8 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
                     locationUrl,
                     description,
                     isPaid: Boolean(isPaid),
-                    startEvent: new Date(startEvent),
-                    endEvent: new Date(endEvent),
+                    startEvent: addHours(new Date(startEvent), 7),
+                    endEvent: addHours(new Date(endEvent), 7),
                     eventOrganizerId: userId,
                     categoryId: Number(categoryId)
                 }
@@ -42,8 +43,8 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
                     seatAvailable: Number(tik.seatAvailable),
                     eventId: Number(event.id),
                     discount: Number(tik.discount),
-                    startDate: new Date(tik.startDate),
-                    endDate: new Date(tik.endDate),
+                    startDate: addHours(new Date(tik.startDate), 7),
+                    endDate: addHours(new Date(tik.endDate), 7),
                 }
             })
 

@@ -6,6 +6,7 @@ import userRouter from './user.router';
 import eventOrganizerRouter from './event.organizer.router';
 import transactionRouter from './transaction.router';
 import reviewRouter from './review.router';
+import midtransRouter from './midtrans.router';
 
 const router = Router();
 router.use('*/images', express.static('src/public/images'))
@@ -17,5 +18,6 @@ router.use('/category', categoryRouter)
 router.use('/event', eventRouter)
 router.use('/transaction', transactionRouter)
 router.use('/review', reviewRouter)
+router.use('/webhook', midtransRouter)
 
 export default router

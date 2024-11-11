@@ -100,7 +100,7 @@ export default function ProfileTransaction() {
                                             <td className="px-6 py-4 text-sm text-gray-600">
                                                {totalQuantity}
                                             </td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.transactionStatus[0]?.status}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">{item.transactionStatus[0].status}</td>
                                             <td className="px-6 py-4 text-sm text-gray-600">{item.totalPrice}</td>
                                             <td className="px-6 py-4 text-sm text-gray-600">
                                                     <button

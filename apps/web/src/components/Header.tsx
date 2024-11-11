@@ -118,12 +118,7 @@ export const Header = () => {
                 src={Logo}
               />
             </Link>
-            <div className="font-bold text-sm flex">
-              <h1>
-                Loyalty Points(0)
-              </h1>
-              {/* LOYALTY POINTS HARUS DIGANTI NANTI DARI AUTH PROVIDER DAN CONTROLLERNYA DIHAPUS, INI UNTUK SEMENTARA */}
-            </div>
+    
           </div>
           <div className="relative z-30">
             <input
@@ -140,7 +135,7 @@ export const Header = () => {
               {isBlur && valueInput && (
                 <div className='flex flex-col'>
                   <div className='w-full px-4 py-5'>
-                    <h1 className='border-b-4 border-yellow-500 pb-3'>Hasil Penelusuran</h1>
+                    <h1 className='border-b-2 border-yellow-500 pb-3'>Hasil Penelusuran</h1>
                   </div>
                   {querySearchData?.map((item: any, index: any) => {
                     return (
@@ -173,7 +168,7 @@ export const Header = () => {
 
           <div className="hidden lg:flex gap-5 items-center px-5">
             <div className="  hover:text-slate-300 transition-all duration-200 ease-in-out">
-              <Link href={'/event/explore'} className="flex items-center gap-1">
+              <Link href={'/event-organizer/register'} className="flex items-center gap-1">
                 <FaRegCalendarAlt />
                 <button className="font-bold text-sm">Buat Event</button>
               </Link>

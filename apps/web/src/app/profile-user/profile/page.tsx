@@ -7,7 +7,7 @@ import LeftMenu from "@/components/profile/leftMenu";
 import authStore from '@/zustand/authstore';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 
 
@@ -31,8 +31,10 @@ export default function ProfileHome() {
 
     const dataReferral = authStore((state) => state.referralCode)
     const dataEmail = authStore((state) => state.email)
-    const setKeepAuth = authStore((state) => state.setKeepAuth)
-
+    const firstName = authStore((state) => state.firstName)
+    const lastName = authStore((state) => state.lastName)
+    const phoneNumber = authStore((state) => state.phoneNumber)
+    const identityNumber = authStore((state) => state.phoneNumber)
 
 
     const { mutate: mutateProfileUpdate } = useMutation({
@@ -46,6 +48,9 @@ export default function ProfileHome() {
             console.log(err)
         }
     })
+
+
+
 
 
     return (
@@ -64,11 +69,11 @@ export default function ProfileHome() {
 
                     <Formik
                         initialValues={{
-                            images: null as File | null,
-                            firstName: '',
-                            lastName: '',
-                            phoneNumber: '',
-                            identityNumber: null as number | null,
+                            images:  null as File | null,
+                            firstName: firstName || '',
+                            lastName: lastName || '',
+                            phoneNumber: phoneNumber || '',
+                            identityNumber: identityNumber || '',
                         }}
                         onSubmit={(values) => {
                             const fd = new FormData();

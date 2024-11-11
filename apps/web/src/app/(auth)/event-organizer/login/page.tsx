@@ -33,7 +33,7 @@ export default function Page() {
       });
     },
     onSuccess: (res) => {
-      toast.success('suz');
+      toast.success('Login Berhasil');
       setAuth({ token: res.data.data.token });
       router.push('/event/dashboard')
       console.log(res);

@@ -6,12 +6,12 @@ import { encodeToken } from '@/utils/token.sign';
 import fs from 'fs';
 import { compile } from 'handlebars';
 import { transporter } from '@/utils/transporter';
-import { addMonths } from 'date-fns';
+import { addMonths, addHours } from 'date-fns';
 
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = nanoid(8);
-    const dateNow = new Date();
+    const dateNow = addHours(new Date(),7);
     const verificationCode = Date.now().toString().slice(0, 7);
 
     const date = `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`;

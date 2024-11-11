@@ -1,4 +1,4 @@
-let midtransClient = require('./midtrans-client-nodejs/index.js');
+const midtransClient = require('midtrans-client');
 
 const snap = new midtransClient.Snap({
     isProduction: false, // Set to true in production

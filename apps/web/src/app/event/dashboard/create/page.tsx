@@ -2,15 +2,15 @@
 
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { EventSchema } from '@/features/event/schema/eventSchemas';
-import TiptapEditor from '@/components/RichTextEditor';
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { toast } from 'react-hot-toast'
-import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { FaRegTrashAlt } from "react-icons/fa";
+
 
 
 const EventForm = () => {
@@ -62,6 +62,9 @@ const EventForm = () => {
                     categoryId: '',
                     tickets: [],
                 }}
+
+                validateOnChange={true}
+                validateOnBlur={true}
                 validationSchema={EventSchema}
                 onSubmit={(values: any) => {
                     console.log([values]);
@@ -103,7 +106,7 @@ const EventForm = () => {
             >
                 {({ values, setFieldValue }) => (
                     <Form className=''>
-                        <section className="bg-white flex flex-col justify-center rounded-xl h-fit w-full border border-gray-200 shadow-lg p-5">
+                        <section className="bg-white flex flex-col justify-center rounded-xl h-[590px] w-full border border-gray-200 shadow-lg p-5">
                             <div className="flex justify-center font-bold text-2xl pb-5">
                                 Event
                             </div>
@@ -210,9 +213,9 @@ const EventForm = () => {
                                 </div>
                                 <div className="flex flex-col col-span-2">
                                     <label className="font-bold text-sm">Deskripsi</label>
-                                    <TiptapEditor
+                                    <ReactQuill
                                         value={values.description}
-                                        onChange={(html: any) => setFieldValue('description', html)}
+                                        onChange={(html) => setFieldValue('description', html)}
                                     />
                                 </div>
                             </div>
@@ -437,7 +440,7 @@ const EventForm = () => {
                             <h3 className='flex justify-center font-bold text-2xl mt-8 pb-5 mb-4'>Daftar Tiket</h3>
                             {values.tickets.map((ticket: any, index: any) => (
                                 <div key={index} className="bg-blue-50 p-4 mb-2 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
-                                    <div className="flex  items-start">
+                                    <div className="flex justify-between items-start">
                                         <div>
                                             <h3 className="text-lg font-semibold">
                                                 {ticket.ticketName}
@@ -458,6 +461,16 @@ const EventForm = () => {
                                                 </span>
                                             </div>
                                         </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const updatedTickets = values.tickets.filter((_: any, i: any) => i !== index);
+                                                setFieldValue('tickets', updatedTickets);
+                                            }}
+                                            className="text-red-500"
+                                        >
+                                            <FaRegTrashAlt />
+                                        </button>
                                     </div>
                                     <hr className="my-4 border-blue-300 border-dashed" />
                                     <div className="flex justify-between items-center">
@@ -487,7 +500,7 @@ const EventForm = () => {
                                 type="submit"
                                 className="bg-blue-500 text-white rounded-md p-3"
                             >
-                                Simpan Event
+                                Buat Event
                             </button>
                         </div>
                     </Form>

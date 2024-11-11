@@ -1,12 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import { mysqlConnection, prisma } from "@/connection";
 import { addHours, addMinutes } from "date-fns";
-
+// import coreApi from "@/utils/midtransInstance/midtransInstance";
+import snap from "@/utils/midtransInstance/midtransInstance";
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId, ticketDetails, referralDiscount = 0 , referralPoints = 0 } = req.body
         const { id } = req.params
+
+        const dataUser = await prisma.users.findUnique({
+            where : {
+                id : userId
+            }
+        })
+
 
         const dataEvent = await prisma.event.findUnique({
             where: { id: Number(id) },
@@ -31,7 +39,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 quantity: item.quantity,
                 // discount: item.discount,
                 discount: totalDiscount,
-                expiredAt: addMinutes(new Date(), 1)
+                expiredAt: addHours(new Date(),7)
             }
         })
 
@@ -40,13 +48,10 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 where: {
                     userIdRefferal: userId,
                     isUsed: false,
-                    // expiredDate: {
-                    //     gt: new Date()
-                    // }
                 }
             })
 
-            if (new Date() >= findUserDiscount?.expiredDate!) throw { msg: 'ERROR', status: 404 }
+            if (addHours(new Date(),7) >= findUserDiscount?.expiredDate!) throw { msg: 'ERROR', status: 404 }
 
             if (findUserDiscount) {
                 const discountUser = findUserDiscount.discount * totalPembayaran
@@ -66,22 +71,20 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             const findUserRefferal = await prisma.points.findFirst({
                 where: {
                     userIdRefferalMatch: userId,
-                    // expiredDate: {
-                    //     gt: new Date()
-                    // }
+  
                 }
             })
 
-            if (new Date() >= findUserRefferal?.expiredDate!) throw { msg: 'ERROR', status: 404 }
+            if (addHours(new Date(),7) >= findUserRefferal?.expiredDate!) throw { msg: 'ERROR', status: 404 }
 
             if (findUserRefferal) {
-                const totalPoints = findUserRefferal?.point
+                const totalPoints = findUserRefferal?.point - referralPoints
 
-                totalPembayaran = Math.max(totalPembayaran - totalPoints, 0)
+                totalPembayaran = Math.max(totalPembayaran - referralPoints, 0)
                 await prisma.points.update({
                     where: { id: findUserRefferal.id },
                     data: {
-                        point: 0,
+                        point: totalPoints,
                     }
 
                 })
@@ -95,12 +98,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 totalPrice: totalPembayaran,
                 userId: userId,
                 eventOrganizerId: dataEvent.EventOrganizer.id,
-                expiredAt: addMinutes(new Date(), 1),
-                // transactionDetail: {
-                //     createMany: {
-                //         data: dataDetails
-                //     }
-                // },
+                expiredAt: addHours(new Date(), 7),
                 transactionStatus: {
                     create: { status: "WAITING_FOR_PAYMENT" }
                 }
@@ -132,11 +130,30 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             END
         `);
 
+
+        const paymentToken = await snap.createTransaction ({
+            payment_type: 'bank_transfer',  
+            transaction_details: {
+                order_id: transactionId.id.toString(),  
+                gross_amount: totalPembayaran,  
+            },
+            customer_details: {
+                first_name: dataUser?.firstName,  
+                email: dataUser?.email, 
+                phone: dataUser?.phoneNumber,
+            }
+        });
+
+
+
+
+
         res.status(200).json({
             error: false,
-            message: 'Berhasil',
-            data: []
+            message: 'Berhasil Melakukan Pembayaran',
+            data: { paymentToken }
         })
+
 
     } catch (error) {
         next(error)
