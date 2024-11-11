@@ -44,14 +44,10 @@ export default function EventTable() {
     const router = useRouter();
     const searchParams = useSearchParams()
     const pathname = usePathname();
-    const queryClient = useQueryClient();
 
     const params = new URLSearchParams(searchParams)
     const [searchInput, setSearchInput] = useState(params.get('search') || '');
     const [page, setPage] = useState(Number(params.get('page')) || 1);
-    // 
-
-
 
     const { data: getEventList, refetch } = useQuery({
         queryKey: ['get-event-list', searchInput, page],
@@ -70,15 +66,15 @@ export default function EventTable() {
         },
         onSuccess: () => {
             refetch()
-        }, 
+        },
         onError: (err) => {
             console.log(err)
         }
     });
 
+    console.log(getEventList, "<<<<<<<<<< gas")
 
     const debounceSearch = useDebouncedCallback((values) => {
-
         setSearchInput(values);
         setPage(1)
 
@@ -172,17 +168,21 @@ export default function EventTable() {
                     </tbody>
                 </table>
             </div>
-            {Array(getEventList?.totalPage).fill(0).map((item, index) => {
-                return (
-                    <button
-                        key={index}
-                        className="join-item btn btn-sm mx-2 border rounded-lg w-10 h-10 hover:bg-slate-400  hover:font-bold transition-all active:bg-yellow-500  focus:ring focus:bg-blue-950 focus:text-white duration-300 ease-in-out "
-                        onClick={() => setPage(index + 1)}
-                    >
-                        {index + 1}
-                    </button>
-                )
-            })}
+            {getEventList?.eventList?.length > 0 ?
+                Array(getEventList?.totalPage).fill(0).map((item, index) => {
+                    return (
+                        <button
+                            key={index}
+                            className="join-item btn btn-sm mx-2 border rounded-lg w-10 h-10 hover:bg-slate-400  hover:font-bold transition-all active:bg-yellow-500  focus:ring focus:bg-blue-950 focus:text-white duration-300 ease-in-out "
+                            onClick={() => setPage(index + 1)}
+                        >
+                            {index + 1}
+                        </button>
+                    )
+                })
+                :
+                <h1>Data tidak tersedia</h1>
+            }
         </main >
     )
 }

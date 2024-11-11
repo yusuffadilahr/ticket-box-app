@@ -68,8 +68,7 @@ export const Header = () => {
 
   return (
     <>
-      <nav
-        className={`${pathname.startsWith('/event/dashboard') ? 'hidden' : 'block'} lg:px-20 w-full lg:py-2 fixed z-20`}
+      <nav className={`${pathname.startsWith('/event/dashboard') || pathname.startsWith('/event-organizer') ? 'hidden' : 'block'} lg:px-20 w-full lg:py-2 fixed z-20`}
       >
         <section className="h-14 lg:h-20 top-0 px-5 items-center text-white justify-between flex lg:rounded-xl bg-blue-950 relative">
           {isBlur && (
@@ -195,15 +194,13 @@ export const Header = () => {
                 </>
               ) : (
                 <>
-                  <Link
-                    href={'/user/register'}
-                    className={`py-2 hover:text-slate-300 border border-white px-5 rounded-xl transition-all duration-200 ease-in-ou ${pathname.startsWith('/auth/event-organizer/login-organizer') ? 'hidden' : 'block'}`}
+                  <Link href={'/user/register'}
+                    className={`py-2 hover:text-slate-300 border border-white px-5 rounded-xl transition-all duration-200 ease-in-ou ${pathname.startsWith('/event-organizer/login') ? 'hidden' : 'block'}`}
                   >
                     Register
                   </Link>
-                  <Link
-                    href={'/user/login'}
-                    className={`py-2 px-5 rounded-xl bg-blue-700 hover:bg-blue-800 transition-all duration-200 ease-in-out ${pathname.startsWith('/auth/event-organizer/login-organizer') ? 'hidden' : 'block'}`}
+                  <Link href={'/user/login'}
+                    className={`py-2 px-5 rounded-xl bg-blue-700 hover:bg-blue-800 transition-all duration-200 ease-in-out ${pathname.startsWith('/event-organizer/login') ? 'hidden' : 'block'}`}
                   >
                     Masuk
                   </Link>

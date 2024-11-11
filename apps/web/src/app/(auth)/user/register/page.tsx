@@ -42,7 +42,7 @@ export default function Page() {
                 email: '',
                 password: '',
                 phoneNumber: '',
-                identityNumber: null,
+                identityNumber: '',
                 referralBody:''
             }}
             validationSchema={registerUserSchema}
@@ -54,7 +54,7 @@ export default function Page() {
                     email: values?.email,
                     password: values?.password,
                     phoneNumber: values?.phoneNumber,
-                    identityNumber: Number(values?.identityNumber),
+                    identityNumber: values?.identityNumber,
                     referralBody:values?.referralBody
                 })
             }}

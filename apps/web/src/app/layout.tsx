@@ -8,7 +8,6 @@ import TanstackProviders from '@/providers/tanstackProviders';
 import { Toaster } from 'react-hot-toast';
 import AuthProvider from '@/providers/authProviders';
 import HOCLoading from '@/providers/HOCLoading';
-import KeepLoginEventOrganizer from '@/providers/keepLoginEventOrganizer'
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,9 +27,7 @@ export default function RootLayout({ children }: ILayoutChildren) {
           <Header />
           <Toaster position="top-center" reverseOrder={false} />
           <AuthProvider>
-            <KeepLoginEventOrganizer>
               <HOCLoading>{children}</HOCLoading>
-            </KeepLoginEventOrganizer>
           </AuthProvider>
           <Footer />
         </TanstackProviders>

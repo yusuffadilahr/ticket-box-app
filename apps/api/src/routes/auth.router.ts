@@ -1,9 +1,8 @@
-// import { userRegister, userLogin, eventOrganizerLogin, eventOrganizerRegister, keepAuthUser, keepAuthUserOrganizer, getPointUser } from "@/controllers/authController";
 import { findEvent } from "@/controllers/eventController";
 import { tokenValidation } from "@/middlewares/verify.token";
 import { Router } from "express";
 import { forgotPassword, resetPassword, resetPasswordProfile, userLogin, userRegister } from "@/controllers/userController";
-import { eventOrganizerLogin, eventOrganizerRegister, keepAuthUserOrganizer } from "@/controllers/eventOrganizerController";
+import { eventOrganizerLogin, eventOrganizerRegister } from "@/controllers/eventOrganizerController";
 
 const authRouter = Router()
 authRouter.post('/register/user', userRegister)

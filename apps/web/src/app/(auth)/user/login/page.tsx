@@ -32,15 +32,15 @@ export default function Page() {
             toast.success(res.data.message)
             router.push('/')
             setAuth({
-                token: res.data.data.token,
-                firstName: res.data.data.firstName,
-                lastName: res.data.data.lastName,
-                role: res.data.data.role,
-                phoneNumber: res.data.data.phoneNumber,
-                profilePicture: res.data.data.profilePicture,
-                referralCode: res.data.data.referralCode,
-                totalPoint: res.data.data.totalPoint,
-                identityNumber: res.data.data.identityNumber
+                token: res?.data?.data?.token,
+                firstName: res?.data?.data?.firstName,
+                lastName: res?.data?.data?.lastName,
+                role: res?.data?.data?.role,
+                phoneNumber: res?.data?.data?.phoneNumber,
+                profilePicture: res?.data?.data?.profilePicture,
+                referralCode: res?.data?.data?.referralCode,
+                totalPoint: res?.data?.data?.totalPoint,
+                identityNumber: res?.data?.data?.identityNumber
             })
             Cookies.set('token', res?.data?.data?.token, { expires: 1 })
         },
@@ -127,7 +127,7 @@ export default function Page() {
                             <Link href={'/auth/user/forgot-password'} className='text-sm md:text-base'>Lupa kata sandi?</Link>
                         </div>
                         <Link
-                            href="/auth/user/register-user"
+                            href="/user/register"
                             className="text-white text-sm rounded-lg text-center w-full py-2 bg-blue-900 hover:bg-blue-950"
                         >
                             Daftar

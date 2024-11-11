@@ -28,7 +28,7 @@ export default function AvatarHover() {
             phoneNumber: '',
             profilePicture: '',
             referralCode: '',
-            identityNumber: null,
+            identityNumber: '',
         })
 
         Cookies.remove('role')

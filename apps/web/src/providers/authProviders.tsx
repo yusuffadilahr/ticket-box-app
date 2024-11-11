@@ -22,10 +22,6 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
     const role = authStore((state) => state.role)
     const secret_key = process.env.CRYPTO_ENCRYPT_ROLE || '12312312'
 
-    console.log(role)
-    console.log(token)
-    console.log(setAuth)
-    console.log(role)
     const fetchKeepAuth = async () => {
         try {
             const auth = await instance.get('/user/user-profile');
@@ -44,8 +40,6 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
                 point: auth?.data?.data?.point,
                 discount: auth?.data?.data?.discount
             })  
-
-            console.log(auth?.data?.data?.isVerified)
 
             const encryptRole = CryptoJS.AES.encrypt(auth?.data?.data?.role, secret_key).toString()
 

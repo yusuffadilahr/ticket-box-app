@@ -5,7 +5,7 @@ export const registerOrganizerSchema = Yup.object().shape({
     ownerName: Yup.string().required('Harap nama owner diisi terlebih dahulu'),
     email: Yup.string().required('Harap email organizer diisi terlebih dahulu'),
     phoneNumber: Yup.string().required('Harap No. HP diisi terlebih dahulu'),
-    identityNumber: Yup.string().required('Harap No. KTP diisi terlebih dahulu'),
+    identityNumber: Yup.string(),
     password: Yup.string().min(8,
         'password minimal 8 huruf'
     ).required('Harap password diisi terlebih dahulu'),
