@@ -394,7 +394,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                 </button>
                             );
                         })
-                        : "Data Tidak DItemukan"} 
+                        : "Data Tidak Ditemukan"} 
                 </section>
             </div>
         </main>

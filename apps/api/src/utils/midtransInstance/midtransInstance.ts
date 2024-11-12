@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-let midtransClient = require('./midtrans-client-nodejs/index.js');
+const midtransClient = require('midtrans-client');
 
 dotenv.config()
 const snap = new midtransClient.Snap({

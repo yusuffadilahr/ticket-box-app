@@ -9,7 +9,7 @@ export const tokenValidation = async (req: Request, res: Response, next: NextFun
         const token = authorization?.split(' ')[1]
         
         if (!token) {
-            throw { msg: 'Token is missing', status: 401 };
+            throw { msg: 'Harap melakukan login terlebih dahulu', status: 401 };
         }
         const decodedToken: any = await decodeToken(token)
         req.body!.userId = decodedToken?.data?.id

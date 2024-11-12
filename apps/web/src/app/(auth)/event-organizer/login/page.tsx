@@ -24,7 +24,7 @@ export default function Page() {
       return await instance.post('/auth/login/event-organizer', { email, password });
     },
     onSuccess: (res) => {
-      toast.success('suz');
+      toast.success('Login Berhasil');
       setAuth({ token: res.data.data.token });
       console.log(res);
       router.push('/event/dashboard')

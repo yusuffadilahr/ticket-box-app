@@ -22,6 +22,9 @@ import instance from '@/utils/axiosInstance/axiosInstance';
 import Link from 'next/link';
 import { IoTicketOutline } from "react-icons/io5";
 import authStore from '@/zustand/authstore';
+// import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+
 
 interface IParams {
     params: {
@@ -29,17 +32,22 @@ interface IParams {
     };
 }
 
+// const loadSnap = dynamic(() => import('@/utils/midtrans'), { ssr: false });
+
+
 export default function EventDetail({ params }: IParams) {
+    const router = useRouter()
     const { detail } = params;
     const id = detail.split('TBX')[0];
     const { data: queryDataDetailEvent } = useQuery({
         queryKey: ['get-detail-event'],
         queryFn: async () => {
             const res = await instance.get(`/event/detail/${id}`);
+            console.log(res.data.data)
             return res.data.data[0];
         },
     });
-    
+
     const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
     const [pointsToDeduct, setPointsToDeduct] = useState(0); // New state for points deduction
     const [useReferralDiscount, setUseReferralDiscount] = useState(false);
@@ -48,19 +56,13 @@ export default function EventDetail({ params }: IParams) {
 
     console.log(ticketQuantities)
 
-    // useEffect(() => {
-    //     if (queryDataDetailEvent) {
-    //         setTicketQuantities(new Array(queryDataDetailEvent.tickets.length).fill(0));
-    //     }
-    // }, [queryDataDetailEvent]);
-
-
-    const profilePoint = authStore((state) => state.point);
+    const profilePoint = authStore((state: any) => state.point);
     console.log(profilePoint)
-    const profileDiscount = authStore((state) => state.discount);
-    const { mutate: handleCheckoutTickets } = useMutation({
+    const profileDiscount = authStore((state: any) => state.discount);
+
+    const { mutate: handleCheckoutTickets, isPending } = useMutation({
         mutationFn: async () => {
-          
+
             const ticketDetails = ticketQuantities
                 .map((quantity, index) => quantity > 0 && ({
                     ticketId: queryDataDetailEvent?.tickets[index]?.id,
@@ -68,29 +70,38 @@ export default function EventDetail({ params }: IParams) {
                     price: queryDataDetailEvent?.tickets[index]?.price,
                     discount: queryDataDetailEvent?.tickets[index]?.discount,
 
-                })
-                )
-           
+                }))
+                .filter(Boolean);
+
             return await instance.post(`/transaction/${id}`, {
                 referralPoints: pointsToDeduct,
                 ticketDetails,
-                referralDiscount: useReferralDiscount ? profileDiscount : 0,            })
+                referralDiscount: useReferralDiscount ? profileDiscount : 0,
+
+            })
+
+
         },
         onSuccess: (res) => {
             console.log(res)
+            // router.push(res?.data?.data?.paymentToken?.redirect_url)
         },
         onError: (err) => {
             console.log(err)
         }
     })
 
-
-
     const increment = (index: number) => {
         const newQuantities = [...ticketQuantities];
-        newQuantities[index] = (newQuantities[index] || 0) + 1;
-        setTicketQuantities(newQuantities);
-    };
+        const seatAvailable = queryDataDetailEvent.tickets[index]?.seatAvailable || 0
+
+        if (
+            (newQuantities[index] || 0) < seatAvailable
+        ) {
+            newQuantities[index] = (newQuantities[index] || 0) + 1;
+            setTicketQuantities(newQuantities);
+        };
+    }
 
     const decrement = (index: number) => {
         const newQuantities = [...ticketQuantities];
@@ -184,18 +195,18 @@ export default function EventDetail({ params }: IParams) {
                     <TabsContent value="deskripsi">
                         <Card className="p-4">
                             <CardHeader>
-                                <CardTitle className="pb-4">Deskrpsi</CardTitle>
-                                <CardDescription>
+                                <CardTitle className="pb-4">Deskripsi</CardTitle>
+                                {/* <CardDescription>
                                     {queryDataDetailEvent?.description}
-                                </CardDescription>
+                                </CardDescription> */}
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="space-y-1">as</div>
-                                <div className="space-y-1">asdasd</div>
+                                <div
+                                    dangerouslySetInnerHTML={{ __html: queryDataDetailEvent?.description }}
+                                    className="prose max-w-none"
+                                />
                             </CardContent>
-                            <CardFooter>
-                                <Button>Save changes</Button>
-                            </CardFooter>
+
                         </Card>
                     </TabsContent>
                     <TabsContent value="tiket">
@@ -247,10 +258,13 @@ export default function EventDetail({ params }: IParams) {
                                                 <span>{ticketQuantities[index] || 0}</span>
                                                 <button
                                                     onClick={() => increment(index)}
-                                                    className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
+                                                    className={`text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center
+                                                     (ticketQuantities[index] || 0) >= (item.seatAvailable || 0) ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+                                                    disabled={(ticketQuantities[index] || 0) >= (item.seatAvailable || 0)}
                                                 >
                                                     +
-                                                </button>
+                                                </button>   
                                             </div>
                                         </div>
                                     </div>
@@ -268,9 +282,6 @@ export default function EventDetail({ params }: IParams) {
                                 <div className="space-y-1">asd</div>
                                 <div className="space-y-1">asd</div>
                             </CardContent>
-                            <CardFooter>
-                                <Button>Save password</Button>
-                            </CardFooter>
                         </Card>
                     </TabsContent>
                 </Tabs>
@@ -303,7 +314,7 @@ export default function EventDetail({ params }: IParams) {
                                         )}
                                         <p className="text-sm">Subtotal: Rp{ticketSubtotal.toLocaleString()}</p>
                                     </div>
-                                   
+
                                 </div>
                             );
                         }
@@ -314,29 +325,45 @@ export default function EventDetail({ params }: IParams) {
                         <p className="text-md mt-4 text-gray-700 ">Jumlah {totalTickets} tiket</p>
                         <p className="text-xl mt-4 font-bold"><span className='text-base text-gray-700 font-normal'>Harga:</span> Rp{totalPrice.toLocaleString()}</p>
                     </div>
-                    <div className="mt-4">
-                        <label className="text-sm text-gray-700">Gunakan Poin (Max: {profilePoint}):</label>
-                        <input
-                            type="number"
-                            max={profilePoint}
-                            value={pointsToDeduct}
-                            onChange={(e) => setPointsToDeduct(Math.min(profilePoint, parseInt(e.target.value) || 0))}
-                            className="w-full p-2 mt-1 rounded border-gray-300"
-                        />
-                    </div>
-                    <div className="flex items-center mt-4">
-                        <input
-                            type="checkbox"
-                            id="useReferralDiscount"
-                            checked={useReferralDiscount}
-                            onChange={toggleReferralDiscount}
-                            className="mr-2"
-                        />
-                        <label htmlFor="useReferralDiscount" className="text-sm font-semibold">
-                            Use Referral Discount
-                        </label>
-                    </div>
-                    <button className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>Bayar Sekarang</button>
+
+                    {
+                        profilePoint > 0 && profilePoint && (
+                            <div className="mt-4">
+                                <label className="text-sm text-gray-700">Gunakan Poin (Max: {profilePoint}):</label>
+                                <input
+                                    type="number"
+                                    max={profilePoint}
+                                    value={pointsToDeduct}
+                                    onChange={(e) => setPointsToDeduct(Math.min(profilePoint, parseInt(e.target.value) || 0))}
+                                    className="w-full p-2 mt-1 rounded border border-gray-300"
+                                />
+                            </div>
+                        )
+                    }
+
+                    {
+                        profileDiscount > 0 && profileDiscount && (
+
+                            <div className=" flex items-center mt-4">
+                                <input
+                                    type="checkbox"
+                                    id="useReferralDiscount"
+                                    checked={useReferralDiscount}
+                                    onChange={toggleReferralDiscount}
+                                    className="mr-2"
+                                />
+                                <label htmlFor="useReferralDiscount" className="text-sm font-semibold">
+                                    Use Referral Discount
+                                </label>
+                            </div>
+
+                        )
+
+                    }
+
+                    <button disabled={isPending} className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>
+                        {isPending ? 'Pembayaran Diproses' : 'Bayar Sekarang'}    
+                    </button>
                 </div>
             </section>
         </main>
