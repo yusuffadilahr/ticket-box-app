@@ -8,8 +8,10 @@ import { useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { toast } from "react-hot-toast";
 import { IDataRegister } from './type';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+    const router = useRouter()
     const { mutate: handleRegister, isPending } = useMutation({
         mutationFn: async ({ firstName, lastName, email, password, phoneNumber, identityNumber, referralBody }: IDataRegister) => {
             return await instance.post('/auth/register/user', { firstName, lastName, email, password, phoneNumber, identityNumber, referralBody })
@@ -17,6 +19,7 @@ export default function Page() {
         onSuccess: (res) => {
             console.log(res)
             toast.success(res.data.message)
+            router.push('/user/login')
         },
         onError: (err) => {
             console.log(err)
@@ -61,7 +64,10 @@ export default function Page() {
         >
             <Form className='flex flex-col justify-center items-center w-full'>
                 <main className="flex justify-center flex-col w-[80%] md:w-[60%] lg:w-[45%] mb-36 pt-24 lg:pt-32 space-y-5">
-                    Logo Daftar
+                <div className='py-2'>
+                    <h1 className='text-2xl font-bold'>Daftar Sekarang!</h1>
+                    <p className='text-neutral-600'>Dan ayo, jadi bagian dari komunitas kami!</p>
+                </div>
                     <div id="email-input">
                         <div className="flex gap-5 items-center">
                             <label>

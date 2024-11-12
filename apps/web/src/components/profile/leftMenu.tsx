@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function LeftMenu() {
     const menuItems = [
-        { name: "Pengaturan Akun", icon: <FaCog />, link: "/profile-user/home" },
+        { name: "Pengaturan Akun", icon: <FaCog />, link: "/profile-user/profile" },
         { name: "Transaksi Event", icon: <FaShoppingCart/>, link: "/profile-user/transaction" },
         { name: "Atur Kata Sandi", icon: <FaLock />, link: "/profile-user/reset-password" },
     ];

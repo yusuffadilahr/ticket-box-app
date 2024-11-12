@@ -33,12 +33,14 @@
     }
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "@tiptap/extension-text-style": "^2.9.1",
     "@tiptap/extension-underline": "^2.9.1",
     "@tiptap/react": "^2.9.1",
     "@tiptap/starter-kit": "^2.9.1",
     "@types/axios": "^0.14.0",
     "axios": "^1.7.2",
-    "mysql2": "^3.11.4"
+    "mysql2": "^3.11.4",
+    "prisma": "^5.22.0"
   }
 }

@@ -3,7 +3,6 @@
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { FaCompass } from 'react-icons/fa';
-import { TiShoppingCart } from 'react-icons/ti';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RxHamburgerMenu } from 'react-icons/rx';
@@ -23,11 +22,11 @@ import AvatarHover from './homepage/avatar';
 import authStore from '@/zustand/authstore';
 import { useQuery } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
-import { useSearchParams } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const SHEET_SIDES = ['top', 'right', 'bottom', 'left'] as const;
 
@@ -36,13 +35,12 @@ type SheetSide = (typeof SHEET_SIDES)[number];
 export const Header = () => {
   const [isBlur, setIsBlur] = useState(false);
   const [valueInput, setValueInput] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const token = authStore((state) => state?.token);
+  const setAuth = authStore((state)=> state.setAuth)
   const router = useRouter();
 
   const pathname = usePathname();
-  const token = authStore((state) => state?.token);
-  const role = authStore((state) => state?.role);
-  const params = useSearchParams()
+  const inputRef: any = useRef(null);
 
   const { data: querySearchData } = useQuery({
     queryKey: ['query-search-data', valueInput],
@@ -51,27 +49,36 @@ export const Header = () => {
         params: {
           event: valueInput,
           page: 1,
-          limit_data: 100
+          limit_data: 100,
         },
-      })
-      return res.data.data.eventSearch
-    }
-  })
+      });
+      return res.data.data.eventSearch;
+    },
+    enabled: !!valueInput,
+  });
 
   const debounce = useDebouncedCallback((values) => {
     if (values) {
-      setValueInput(values)
+      setValueInput(values);
     } else {
-      setValueInput('')
+      setValueInput('');
     }
   }, 200);
 
+  const handleRedirectToOrganizerPage = () =>{
+    setAuth({token: ''})
+    Cookies.remove('role')
+    Cookies.remove('token')
+    router.push('/event-organizer/login')
+  }
+
   return (
     <>
-      <nav className={`${pathname.startsWith('/event/dashboard') || pathname.startsWith('/event-organizer') ? 'hidden' : 'block'} lg:px-20 w-full lg:py-2 fixed z-20`}
+      <nav
+        className={`${pathname.startsWith('/event/dashboard') || pathname.startsWith('/event-organizer') ? 'hidden' : 'block'} lg:px-20 w-full lg:py-2 fixed z-20`}
       >
         <section className="h-14 lg:h-20 top-0 px-5 items-center text-white justify-between flex lg:rounded-xl bg-blue-950 relative">
-          {isBlur && (
+          {isBlur && valueInput && (
             <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10"></div>
           )}
           <div className="lg:hidden">
@@ -118,44 +125,54 @@ export const Header = () => {
               />
             </Link>
             <div className="font-bold text-sm flex">
-              <h1>
-                Loyalty Points(0)
-              </h1>
+              <h1>Loyalty Points(0)</h1>
               {/* LOYALTY POINTS HARUS DIGANTI NANTI DARI AUTH PROVIDER DAN CONTROLLERNYA DIHAPUS, INI UNTUK SEMENTARA */}
             </div>
           </div>
-          <div className="relative z-30">
+          <div
+            className={`${pathname.startsWith('/user') ? 'hidden' : 'block'} relative z-30`}
+          >
             <input
-              onBlur={() => setIsBlur(false)}
+              ref={inputRef}
+              onBlur={() => {
+                inputRef?.current?.value ? setIsBlur(true) : setIsBlur(false);
+              }}
               onFocus={() => setIsBlur(true)}
               type="text"
               placeholder="Search..."
-              className="
-                focus:outline-none
-                bg-white pr-10 pl-4 py-3 z-30 text-sm rounded-md shadow-md sm:w-[300px] lg:w-[550px] text-black"
+              className="focus:outline-none bg-white pr-10 pl-4 py-3 z-30 text-sm rounded-md shadow-md sm:w-[300px] lg:w-[550px] text-black"
               onChange={(e) => debounce(e.target.value)}
             />
+            {/* ${pathname.startsWith */}
             <div className="absolute z-10 bg-white  w-full mt-1 rounded-md shadow-lg max-h-96 overflow-auto text-black">
               {isBlur && valueInput && (
-                <div className='flex flex-col'>
-                  <div className='w-full px-4 py-5'>
-                    <h1 className='border-b-4 border-yellow-500 pb-3'>Hasil Penelusuran</h1>
+                <div className="flex flex-col">
+                  <div className="w-full px-4 py-5">
+                    <h1 className="border-b-4 border-yellow-500 pb-3">
+                      Hasil Penelusuran
+                    </h1>
                   </div>
                   {querySearchData?.map((item: any, index: any) => {
                     return (
                       <div
                         key={index}
                         className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white"
-                        onClick={() =>
+                        onClick={() => {
                           router.push(
                             `/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`,
-                          )
-                        }
+                          );
+                          setValueInput('');
+                        }}
                       >
-                        <div className='grid grid-cols-2'>
-                          <h1 className='text-sm'>{item?.eventName} - {item?.location}</h1>
-                          <div className='w-full flex justify-end'>
-                            <h1 className='text-sm'>Rp. {item?.tickets[0]?.price.toLocaleString('id-ID')}</h1>
+                        <div className="grid grid-cols-2">
+                          <h1 className="text-sm">
+                            {item?.eventName} - {item?.location}
+                          </h1>
+                          <div className="w-full flex justify-end">
+                            <h1 className="text-sm">
+                              Rp.{' '}
+                              {item?.tickets[0]?.price.toLocaleString('id-ID')}
+                            </h1>
                           </div>
                         </div>
                       </div>
@@ -172,10 +189,10 @@ export const Header = () => {
 
           <div className="hidden lg:flex gap-5 items-center px-5">
             <div className="  hover:text-slate-300 transition-all duration-200 ease-in-out">
-              <Link href={'/event/explore'} className="flex items-center gap-1">
+              <div className="flex items-center gap-1">
                 <FaRegCalendarAlt />
-                <button className="font-bold text-sm">Buat Event</button>
-              </Link>
+                <button onClick={handleRedirectToOrganizerPage} className="font-bold text-sm">Buat Event</button>
+              </div>
             </div>
             <div className="hover:text-slate-300 transition-all duration-200 ease-in-out">
               <Link href="/event/explore" className="flex gap-1 items-center">
@@ -194,12 +211,14 @@ export const Header = () => {
                 </>
               ) : (
                 <>
-                  <Link href={'/user/register'}
+                  <Link
+                    href={'/user/register'}
                     className={`py-2 hover:text-slate-300 border border-white px-5 rounded-xl transition-all duration-200 ease-in-ou ${pathname.startsWith('/event-organizer/login') ? 'hidden' : 'block'}`}
                   >
                     Register
                   </Link>
-                  <Link href={'/user/login'}
+                  <Link
+                    href={'/user/login'}
                     className={`py-2 px-5 rounded-xl bg-blue-700 hover:bg-blue-800 transition-all duration-200 ease-in-out ${pathname.startsWith('/event-organizer/login') ? 'hidden' : 'block'}`}
                   >
                     Masuk

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useMutation } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
+import toast from 'react-hot-toast';
 
 
 export default function ProfileHome() {
@@ -17,7 +18,7 @@ export default function ProfileHome() {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
         const file = event.target.files ? event.target.files[0] : null;
         if (file) {
-            const reader = new FileReader();
+            const reader: any = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
                 setFieldValue('images', file);
@@ -40,9 +41,11 @@ export default function ProfileHome() {
             return await instance.patch('/user/user-profile/', fd)
         },
         onSuccess: (res) => {
+            toast.success('Berhasil mengubah data')
             console.log(res)
         },
         onError: (err) => {
+            toast.error('Gagal')
             console.log(err)
         }
     })
@@ -71,7 +74,7 @@ export default function ProfileHome() {
                             identityNumber: '',
                         }}
                         onSubmit={(values) => {
-                            const fd = new FormData();
+                            const fd: any = new FormData();
                             fd.append('firstName', values.firstName)
                             fd.append('lastName', values.lastName)
                             fd.append('phoneNumber', values.phoneNumber)

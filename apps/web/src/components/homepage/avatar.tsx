@@ -48,17 +48,17 @@ export default function AvatarHover() {
             <HoverCardContent className="max-w-fit">
                 <div className="flex justify-between">
                     <div className="space-y-1 flex flex-col text-left">
-                        <Link href="/profile/user-profile/home" className="flex justify-center">
+                        <Link href="/profile-user/profile" className="flex justify-center">
                             <button className="text-base hover:font-bold transition-all duration-300 ">
                                 View Profile
                             </button>
                         </Link>
-                        <Link href="/profile/user-profile/reset-password" className="flex justify-center">
+                        <Link href="/profile-user/reset-password" className="flex justify-center">
                             <button className="text-base hover:font-bold transition-all duration-300">
                                 Reset Password
                             </button>
                         </Link>
-                        <Link href="/profile/user-profile/transaction" className="flex justify-center">
+                        <Link href="/profile-user/transaction" className="flex justify-center">
                             <button className="text-base hover:font-bold transition-all duration-300">
                                 My Tickets
                             </button>

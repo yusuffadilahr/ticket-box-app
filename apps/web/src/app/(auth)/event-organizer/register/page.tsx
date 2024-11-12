@@ -17,7 +17,7 @@ import { usePathname } from "next/navigation";
 
 export default function RegisterOrganizer() {
     const pathname = usePathname()
-    const { mutate: handleRegister } = useMutation({
+    const { mutate: handleRegister, isPending } = useMutation({
         mutationFn: async ({ organizerName, ownerName, email, password, phoneNumber, identityNumber }: IRegisterOrganizer) => {
             return await instance.post('/auth/register/event-organizer', {
                 organizerName, ownerName, email, password, phoneNumber, identityNumber
@@ -45,7 +45,7 @@ export default function RegisterOrganizer() {
 
     return (
         <main className="pt-32 px-20 flex gap-5">
-            <section className="relative w-1/2 h-screen ">
+            <section className="relative w-1/2 h-screen">
                 <Image
                     src={bg}
                     alt="background"
@@ -64,8 +64,8 @@ export default function RegisterOrganizer() {
                 <div className="text-lg">Buat event dan manage tiketmu di Tiketbox.com</div>
             </div>
 
-            <section className="w-1/2 relative h-screen rounded-xl border border-gray-200 shadow-lg">
-                <div className="absolute p-10 w-full">
+            <section className="w-1/2 h-fit rounded-xl border border-gray-200 shadow-lg">
+                <div className="p-10 w-full">
                     <Link href='/event-organizer/login'>
                         <button className="text-yellow-300 text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 w-full">
                             Login
@@ -83,7 +83,7 @@ export default function RegisterOrganizer() {
                             ownerName: '',
                             organizerName: '',
                             phoneNumber: '',
-                            identityNumber: null,
+                            identityNumber: '',
                             password: '',
                         }}
                         // validationSchema={registerOrganizerSchema}
@@ -241,7 +241,7 @@ export default function RegisterOrganizer() {
                                     type="identityNumber"
                                 />
                             </div>
-                            <button /*disabled={isPending}*/ type="submit" className="z-50 text-yellow-300 disabled:bg-neutral-300 w-[500px] text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 ">
+                            <button disabled={isPending} type="submit" className="z-50 text-yellow-300 disabled:bg-neutral-300 w-[500px] text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 ">
                                 Daftar
                             </button>
                         </Form>
