@@ -240,11 +240,11 @@ export default function EventDetail({ params }: IParams) {
                                                     <div>
                                                         <span className="line-through mr-2 text-gray-500">Rp.{item.price}</span>
                                                         <span className="text-red-600">
-                                                            Rp.{item.price - item.discount}
+                                                            Rp{item.price.toLocaleString("id-ID") - item.discount.toLocaleString("id-ID")}
                                                         </span>
                                                     </div>
                                                 ) : (
-                                                    `Rp.${item.price}`
+                                                        `Rp${item.price.toLocaleString("id-ID") }`
                                                 )}
 
                                             </p>
@@ -310,9 +310,9 @@ export default function EventDetail({ params }: IParams) {
                                             <p className="text-sm text-green-600">Harga Diskon: Rp{discountedPrice.toLocaleString()}</p>
 
                                         ) : (
-                                            <p className="text-sm">Price: Rp{discountedPrice.toLocaleString()}</p>
+                                                <p className="text-sm">Price: Rp{discountedPrice.toLocaleString("id-ID")}</p>
                                         )}
-                                        <p className="text-sm">Subtotal: Rp{ticketSubtotal.toLocaleString()}</p>
+                                        <p className="text-sm">Subtotal: Rp{ticketSubtotal.toLocaleString("id-ID")}</p>
                                     </div>
 
                                 </div>
@@ -323,7 +323,7 @@ export default function EventDetail({ params }: IParams) {
 
                     <div className='flex justify-between items-center border-t-2 border-gray-300'>
                         <p className="text-md mt-4 text-gray-700 ">Jumlah {totalTickets} tiket</p>
-                        <p className="text-xl mt-4 font-bold"><span className='text-base text-gray-700 font-normal'>Harga:</span> Rp{totalPrice.toLocaleString()}</p>
+                        <p className="text-xl mt-4 font-bold"><span className='text-base text-gray-700 font-normal'>Harga:</span> Rp{totalPrice.toLocaleString("id-ID")}</p>
                     </div>
 
                     {

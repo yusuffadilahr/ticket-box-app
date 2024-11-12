@@ -19,7 +19,6 @@ import { PiPersonSimpleWalkThin } from "react-icons/pi";
 import { CiTrophy } from "react-icons/ci";
 import { CiMicrophoneOn } from "react-icons/ci";
 import { GiBlackBook } from "react-icons/gi";
-import { IoTicketOutline } from "react-icons/io5";
 
 
 
@@ -131,7 +130,7 @@ export default function Home() {
 
   return (
     <main className="space-y-8">
-      <div className="w-full sm:h-[800px] lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
+      <div className="w-full sm:h-[800px] lg:h-fit sm:px-2 lg:px-28 pt-20 lg:pt-28">
         <CarouselSlider data={queryGetCarousel} />
       </div>
 

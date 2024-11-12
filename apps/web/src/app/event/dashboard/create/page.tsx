@@ -512,9 +512,9 @@ const EventForm = () => {
                                         <p className="text-xl font-semibold">
                                             {ticket.discount > 0 ? (
                                                 <div>
-                                                    <span className="line-through mr-2 text-gray-500">Rp.{ticket.price}</span>
+                                                    <span className="line-through mr-2 text-gray-500">Rp{ticket.price.toLocaleString("id-ID")}</span>
                                                     <span className="text-red-600">
-                                                        Rp.{ticket.price - ticket.discount}
+                                                        Rp{ticket.price.toLocaleString("id-ID") - ticket.discount.toLocaleString("id-ID")}
                                                     </span>
                                                 </div>
                                             ) : (
