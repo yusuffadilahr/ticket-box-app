@@ -95,7 +95,7 @@ export default function EventTable() {
     return (
         <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
             <div className='flex justify-between w-full items-center'>
-                <h1 className="text-lg font-bold">Event List</h1>
+                <h1 className="text-lg font-bold">Daftar Event</h1>
 
                 <div className='flex justify-end gap-8'>
                     <button className='px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
@@ -126,6 +126,10 @@ export default function EventTable() {
                             <th className="py-3 px-6 text-left">Action</th>
                         </tr>
                     </thead>
+
+
+
+
                     <tbody className="text-gray-600 text-sm font-light">
                         {getEventList && getEventList?.eventList?.map((item: EventData, index: number) => (
                             <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
@@ -166,23 +170,30 @@ export default function EventTable() {
                             </tr>
                         ))}
                     </tbody>
+
                 </table>
             </div>
-            {getEventList?.eventList?.length > 0 ?
-                Array(getEventList?.totalPage).fill(0).map((item, index) => {
-                    return (
-                        <button
-                            key={index}
-                            className="join-item btn btn-sm mx-2 border rounded-lg w-10 h-10 hover:bg-slate-400  hover:font-bold transition-all active:bg-yellow-500  focus:ring focus:bg-blue-950 focus:text-white duration-300 ease-in-out "
-                            onClick={() => setPage(index + 1)}
-                        >
-                            {index + 1}
-                        </button>
-                    )
-                })
-                :
-                <h1>Data tidak tersedia</h1>
-            }
+
+
+            <div className='flex justify-center'>
+                {getEventList?.eventList?.length > 0 ?
+                    Array(getEventList?.totalPage).fill(0).map((item, index) => {
+                        return (
+                            <button
+                                key={index}
+                                className="join-item btn btn-sm mx-2 border rounded-lg w-10 h-10 hover:bg-slate-400  hover:font-bold transition-all active:bg-yellow-500  focus:ring focus:bg-blue-950 focus:text-white duration-300 ease-in-out "
+                                onClick={() => setPage(index + 1)}
+                            >
+                                {index + 1}
+                            </button>
+                        )
+                    })
+                    :
+                    <h1 className='font-bold'>Data tidak tersedia, silahkan buat event.</h1>
+                }
+            </div>
+
+
         </main >
     )
 }

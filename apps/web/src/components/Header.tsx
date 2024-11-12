@@ -28,6 +28,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { useSearchParams } from 'next/navigation';
+import { useRef } from 'react';
 
 const SHEET_SIDES = ['top', 'right', 'bottom', 'left'] as const;
 
@@ -41,8 +42,8 @@ export const Header = () => {
 
   const pathname = usePathname();
   const token = authStore((state) => state?.token);
-  const role = authStore((state) => state?.role);
-  const params = useSearchParams()
+  const inputRef:any = useRef(null)
+
 
   const { data: querySearchData } = useQuery({
     queryKey: ['query-search-data', valueInput],
@@ -71,7 +72,7 @@ export const Header = () => {
       <nav className={`${pathname.startsWith('/event/dashboard') || pathname.startsWith('/event-organizer') ? 'hidden' : 'block'} lg:px-20 w-full lg:py-2 fixed z-20`}
       >
         <section className="h-14 lg:h-20 top-0 px-5 items-center text-white justify-between flex lg:rounded-xl bg-blue-950 relative">
-          {isBlur && (
+          {isBlur && valueInput && (
             <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10"></div>
           )}
           <div className="lg:hidden">
@@ -117,16 +118,13 @@ export const Header = () => {
                 src={Logo}
               />
             </Link>
-            <div className="font-bold text-sm flex">
-              <h1>
-                Loyalty Points(0)
-              </h1>
-              {/* LOYALTY POINTS HARUS DIGANTI NANTI DARI AUTH PROVIDER DAN CONTROLLERNYA DIHAPUS, INI UNTUK SEMENTARA */}
-            </div>
+
           </div>
           <div className="relative z-30">
             <input
-              onBlur={() => setIsBlur(false)}
+              ref={inputRef}
+              onBlur={() =>
+                {inputRef?.current?.value ? setIsBlur(true) : setIsBlur(false)}}
               onFocus={() => setIsBlur(true)}
               type="text"
               placeholder="Search..."
@@ -139,17 +137,17 @@ export const Header = () => {
               {isBlur && valueInput && (
                 <div className='flex flex-col'>
                   <div className='w-full px-4 py-5'>
-                    <h1 className='border-b-4 border-yellow-500 pb-3'>Hasil Penelusuran</h1>
+                    <h1 className='border-b-2 border-yellow-500 pb-3'>Hasil Penelusuran</h1>
                   </div>
                   {querySearchData?.map((item: any, index: any) => {
                     return (
                       <div
                         key={index}
                         className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white"
-                        onClick={() =>
-                          router.push(
-                            `/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`,
-                          )
+                        onClick={() => {
+                          router.push(`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`)
+                          setValueInput('')
+                        }
                         }
                       >
                         <div className='grid grid-cols-2'>
@@ -172,7 +170,7 @@ export const Header = () => {
 
           <div className="hidden lg:flex gap-5 items-center px-5">
             <div className="  hover:text-slate-300 transition-all duration-200 ease-in-out">
-              <Link href={'/event/explore'} className="flex items-center gap-1">
+              <Link href={'/event-organizer/register'} className="flex items-center gap-1">
                 <FaRegCalendarAlt />
                 <button className="font-bold text-sm">Buat Event</button>
               </Link>

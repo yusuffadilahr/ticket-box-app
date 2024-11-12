@@ -6,13 +6,13 @@ import { encodeToken } from '@/utils/token.sign';
 import fs from 'fs';
 import { compile } from 'handlebars';
 import { transporter } from '@/utils/transporter';
-import { addMonths } from 'date-fns';
+import { addMonths, addHours } from 'date-fns';
 import bcrypt from 'bcrypt'
 
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = nanoid(8);
-    const dateNow = new Date();
+    const dateNow = addHours(new Date(),7);
     const verificationCode = nanoid(6);
 
     const date = `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`;
@@ -78,7 +78,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
           userIdRefferal: dataRegisterUser.id,
           discount: 0.1,
           isUsed: false,
-          expiredDate: addMonths(dateNow, 3),
+          expiredDate: addHours(addMonths(dateNow, 3),7),
         },
       });
 
@@ -87,7 +87,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
           data: {
             userIdRefferalMatch: checkedRefferal?.id,
             point: 10000,
-            expiredDate: addMonths(dateNow, 3),
+            expiredDate: addHours(addMonths(dateNow, 3),7),
           },
         });
       } else {
@@ -95,7 +95,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
           where: { id: pointsRecord?.id },
           data: {
             point: pointsRecord?.point + 10000,
-            expiredDate: addMonths(dateNow, 3),
+            expiredDate: addHours(addMonths(dateNow, 3),7),
           },
         });
       }
@@ -103,7 +103,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
 
     res.status(201).json({
       error: false,
-      message: 'Berhasil membuat data',
+      message: 'Berhasil membuat data, silahkan cek email untuk verifikasi.',
       data: { firstName, lastName, email, phoneNumber },
     });
   } catch (error) {

@@ -10,7 +10,7 @@ export const tokenValidation = async (req: Request, res: Response, next: NextFun
         console.log(token, '<<< verify token');
         
         if (!token) {
-            throw { msg: 'Token is missing', status: 401 };
+            throw { msg: 'Harap melakukan login terlebih dahulu', status: 401 };
         }
         const decodedToken: any = await decodeToken(token)
         console.log(decodedToken, "<<<< decoded")

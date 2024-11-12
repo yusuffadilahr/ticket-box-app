@@ -1,6 +1,7 @@
 'use client'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import dynamic from "next/dynamic"
+import Link from "next/link"
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
@@ -35,9 +36,11 @@ export default function OrganizerDashboard() {
         <main className="flex">
             <section className="h-screen w-full px-8 space-y-10 p-10">
                 <div className='flex justify-end gap-8'>
-                    <button className='px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
-                        + Buat Event
-                    </button>
+                    <Link href="/event/dashboard/create" className='flex items-center px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
+                        <button className="">
+                            + Buat Event
+                        </button>
+                    </Link>
                     <Avatar className=' border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300'>
                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                         <AvatarFallback>CN</AvatarFallback>
