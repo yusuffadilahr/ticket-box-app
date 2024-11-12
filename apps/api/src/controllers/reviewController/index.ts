@@ -61,7 +61,14 @@ export const createReviewUser = async (req: Request, res: Response, next: NextFu
 
 export const getReviewUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { eventId } = req.body
+        const {
+            eventId,
+            page = '1',
+            limit_data = '8'
+        } = req.body
+
+        const offset = Number(limit_data) * (Number(page) - 1);
+        
         const dataReview = await prisma.reviews.findMany({
             where: {
                 eventId
@@ -69,12 +76,26 @@ export const getReviewUser = async (req: Request, res: Response, next: NextFunct
             include: {
                 event: true,
                 users: true
-            }
+            },
+            take: Number(limit_data),
+            skip: offset
         })
+
+
+        const totalCount = await prisma.reviews.count({
+            where: {
+                eventId
+            }
+        });
+
+        const totalPage = Math.ceil(Number(totalCount) / Number(limit_data));
+
         res.status(201).json({
             error: false,
             message: 'Berhasil Mendapatkan Data Review',
-            data: dataReview
+            data: {
+                dataReview, totalPage
+            }
         })
 
     } catch (error) {

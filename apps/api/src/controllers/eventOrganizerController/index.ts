@@ -4,60 +4,15 @@ import bcrypt from 'bcrypt';
 import { hashPassword, comparePassword } from '@/utils/passwordHash';
 import { nanoid } from 'nanoid';
 import { encodeToken } from '@/utils/token.sign';
+import { compile } from 'handlebars';
+import fs, { readFileSync } from 'fs'
+import { transporter } from '@/utils/transporter';
 
-// EO CONTROLLER
-export const keepAuthUserOrganizer = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const eventOrganizerRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { userId } = req.body;
-    const searchData = await prisma.eventOrganizer.findMany({
-      where: { id: userId },
-    });
-    if (searchData.length == 0)
-      throw { msg: 'Data tidak tersedia', status: 404 };
+    const { organizerName, ownerName, email, password, phoneNumber, identityNumber } = req.body;
+    if (!organizerName || !ownerName || !email || !password || !phoneNumber || !identityNumber) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
 
-    res.status(200).json({
-      error: false,
-      message: 'Data berhasil didapatkan!',
-      data: {
-        organizerName: searchData[0].organizerName,
-        ownerName: searchData[0].ownerName,
-        email: searchData[0].email,
-        role: searchData[0].role,
-        profilePicture: searchData[0].profilePicture,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const eventOrganizerRegister = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const {
-      organizerName,
-      ownerName,
-      email,
-      password,
-      phoneNumber,
-      identityNumber,
-    } = req.body;
-    if (
-      !organizerName ||
-      !ownerName ||
-      !email ||
-      !password ||
-      !phoneNumber ||
-      !identityNumber
-    )
-      throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
     const checkedEmail = await prisma.users.findMany({
       where: { email },
     });
@@ -98,32 +53,22 @@ export const eventOrganizerRegister = async (
   }
 };
 
-export const eventOrganizerLogin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const eventOrganizerLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password)
-      throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
+    if (!email || !password) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
+
     const checkUser = await prisma.eventOrganizer.findMany({
       where: {
         email: email,
       },
     });
-    if (checkUser.length == 0)
-      throw { msg: 'email belum teregistrasi', status: 400 };
-    const isComparePassword = await comparePassword(
-      password,
-      checkUser[0].password,
-    );
-    if (!isComparePassword) throw { msg: 'Password tidak valid!', status: 400 };
 
-    const token = await encodeToken({
-      id: checkUser[0].id,
-      role: checkUser[0].role,
-    });
+    if (checkUser.length == 0) throw { msg: 'email belum teregistrasi', status: 400 };
+    const isComparePassword = await comparePassword(password, checkUser[0]?.password);
+
+    if (!isComparePassword) throw { msg: 'Password tidak valid!', status: 400 };
+    const token = await encodeToken({ id: checkUser[0]?.id, role: checkUser[0]?.role });
 
     res.status(200).json({
       error: false,
@@ -131,53 +76,87 @@ export const eventOrganizerLogin = async (
       data: {
         email,
         token,
-        organizerName: checkUser[0].organizerName,
-        ownerName: checkUser[0].ownerName,
-        profilePicture: checkUser[0].profilePicture,
-        role: checkUser[0].role,
+        organizerName: checkUser[0]?.organizerName,
+        ownerName: checkUser[0]?.ownerName,
+        profilePicture: checkUser[0]?.profilePicture,
+        role: checkUser[0]?.role,
       }, // token
     });
   } catch (error) {
     next(error);
   }
- 
+
 };
 
+export const forgotPasswordOrganizer = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body
 
-export const resetPasswordOrganizer = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+    const findUser = await prisma.eventOrganizer.findFirst({
+      where: {
+        email
+      }
+    })
+
+    if (!findUser) throw { msg: 'User tidak ada', status: 404 }
+
+    const token = await encodeToken({ id: findUser?.id, role: findUser?.role })
+
+    await prisma.eventOrganizer.update({
+      data: { forgotPasswordToken: token },
+      where: { email: email }
+    })
+
+    const emailHtml = readFileSync('./src/public/emailSend/email.html', 'utf-8')
+    let emailToUser: any = await compile(emailHtml)
+    emailToUser = emailToUser({
+      email: email,
+      url: `http://localhost:3000/event-organizer/forgot-password/${token}`
+    })
+
+    await transporter.sendMail({
+      to: email,
+      subject: 'Lupa Password?',
+      html: emailToUser
+    })
+
+    res.status(200).json({
+      error: false,
+      message: 'Berhasil, Cek email secara berkala!',
+      data: {}
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export const resetPasswordOrganizer = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, existingPassword, password } = req.body;
     const { authorization } = req.headers;
-    // console.log(authorization)
 
     const token = authorization?.split(' ')[1]!;
 
     const findUser = await prisma.eventOrganizer.findFirst({
       where: {
         id: userId,
+        forgotPasswordToken: token
       },
-    });
+    })
 
-    const match = await comparePassword(
-      existingPassword,
-      findUser?.password as string,
-    );
-    const samePassword = await comparePassword(
-      password,
-      findUser?.password as string,
-    );
+    if (!findUser?.id) throw { msg: "Link sudah tidak berlaku", status: 406 }
+
+    const match = await comparePassword(existingPassword, findUser?.password as string);
+    const samePassword = await comparePassword(password, findUser?.password as string);
 
     if (!match) throw { msg: 'Password anda salah', status: 406 };
-    if (samePassword)
-      throw { msg: 'Harap masukan password yang berbeda', status: 406 };
+    if (samePassword) throw { msg: 'Harap masukan password yang berbeda', status: 406 };
 
-    await prisma.users.update({
+    await prisma.eventOrganizer.update({
       data: {
         password: await hashPassword(password),
+        forgotPasswordToken: null
       },
       where: {
         id: userId,
@@ -188,20 +167,75 @@ export const resetPasswordOrganizer = async (
       error: false,
       message: 'Berhasil merubah password!',
       data: {},
-    });
+    })
   } catch (error) {
     next(error);
   }
 };
 
-export const getOrganizerProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-try {
-  
-} catch (error) {
-  
+export const getUserByEvent = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.body
+
+    const findEvent = await prisma.event.findMany({
+      where: { eventOrganizerId: userId }
+    })
+
+    if (findEvent.length == 0) throw { msg: 'Belum memiliki event', status: 404 }
+
+    const findIdEvent = findEvent.map((event) => event.id)
+
+    const findUserTransaction = await prisma.transactions.findMany({
+      where: {
+        eventId: {
+          in: findIdEvent,
+        }
+      },
+      include: {
+        users: true
+      }
+    })
+
+    if (findUserTransaction.length == 0) throw { msg: 'Belum ada data yang harus ditampilkan', status: 404 }
+
+    res.status(200).json({
+      error: false,
+      message: 'Berhasil mendapatkan data user yang terdaftar dalam event!',
+      data: findUserTransaction
+    })
+
+  } catch (error) {
+    next(error)
+  }
 }
+
+export const getTotalAmountUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.body
+
+    const findTransaction = await prisma.transactions.aggregate({
+      _sum: {
+        totalPrice: true
+      },
+      where: { eventOrganizerId: userId }
+    })
+
+    const findEvent = await prisma.event.findMany({
+      where: {
+        eventOrganizerId: userId
+      }
+    })
+
+    res.status(200).json({
+      error: false,
+      message: 'Berhasil mendapatkan',
+      data: {
+        totalAmount: findTransaction._sum.totalPrice,
+        findEvent
+      }
+    })
+
+  } catch (error) {
+    next(error)
+  }
 }

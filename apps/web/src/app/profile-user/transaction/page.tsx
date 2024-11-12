@@ -36,8 +36,18 @@ export default function ProfileTransaction() {
             setReviewText("");
             setRating('');
         }
-})
+    })
 
+    const { data: reviewData } = useQuery({
+        queryKey: ['review-data'],
+        queryFn: async () => {
+            const res = await instance.get('/review/');
+            console.log(res.data.data,'<<<<<<<<<<')
+            return res.data.data
+        }
+    })
+
+    
 
     const { data: getTransactionData } = useQuery({
         queryKey: ['get-transaction-data'],
@@ -51,6 +61,10 @@ export default function ProfileTransaction() {
     const openReviewDialog = (eventId: string) => {
         setSelectedEventId(eventId);
         setIsDialogOpen(true);
+    };
+
+    const isEventReviewed = (eventId: string) => {
+        return Array.isArray(reviewData) && reviewData.some((review: any) => review.eventId === eventId);
     };
 
 
@@ -91,24 +105,40 @@ export default function ProfileTransaction() {
                                             0
                                         );
 
-                                    
+
+
                                         return (
-                                        <tr key={index} className="border-b">
-                                            <td className="px-6 py-4 text-sm text-gray-600">{item.id}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">{item.event.eventName}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">{item.createdAt.split('T')[0]}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">
-                                               {totalQuantity}
-                                            </td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.transactionStatus[0]?.status}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">{item.totalPrice}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">
-                                                    <button
-                                                        onClick={() => openReviewDialog(item.event.id)}
-                                                        className="text-blue-500 hover:underline"
-                                                    >
-                                                        Review Event
-                                                    </button>
+                                            <tr key={index} className="border-b">
+                                                <td className="px-6 py-4 text-sm text-gray-600">{item.id}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">{item.event.eventName}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">{item.createdAt.split('T')[0]}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {totalQuantity}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {item.transactionStatus[0]?.status === 'WAITING_FOR_PAYMENT'
+                                                        ? 'Menunggu Pembayaran'
+                                                        : item.transactionStatus[0]?.status === 'PAID'
+                                                            ? 'Berhasil'
+                                                            : item.transactionStatus[0]?.status === 'CANCELLED'
+                                                                ? 'Batal'
+                                                                : item.transactionStatus[0]?.status === 'EXPIRED'
+                                                                    ? 'Pembayaran Gagal'
+                                                                    : item.transactionStatus[0]?.status
+                                                    }
+                                                    </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">{item.totalPrice}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {isEventReviewed(item.event.id) ? (
+                                                        <span className="text-green-500">Event Reviewed</span>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => openReviewDialog(item.event.id)}
+                                                            className="text-blue-500 hover:underline"
+                                                        >
+                                                            Submit Review
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         );

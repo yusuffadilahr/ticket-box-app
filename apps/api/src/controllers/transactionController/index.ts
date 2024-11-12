@@ -27,7 +27,12 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         if (!dataEvent) throw { msg: "Event tidak ditemukan", status: 404 }
 
         let totalPembayaran = 0;
+
+
         const dataDetails = ticketDetails?.map((item: any, i: any) => {
+
+            // if (item.quantity > ticket.seatAvailable) throw { msg: `Tiket yang dibeli dengan id = ${item.ticketId} melebihi kuota`, status: 400 };
+            
             const subtotal = item.quantity * item.price
             const totalDiscount = item.quantity * item.discount
             totalPembayaran += subtotal
@@ -120,6 +125,15 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             data: dataArrTransacDetail
         })
 
+        for (const item of ticketDetails) {
+            await prisma.tickets.update({
+                where: { id: item.ticketId },
+                data: { seatAvailable: { decrement: item.quantity } }
+            });
+        }
+
+
+
         const query = await mysqlConnection()
         await query.query(`
             CREATE EVENT transaction_${transactionId.id}
@@ -168,7 +182,13 @@ export const getTransaction = async (req: Request, res: Response, next: NextFunc
             where: { userId : userId },
             include: {
                 transactionDetail: true,
-                event: true,
+                event: {
+                    include: {
+                        Reviews: {
+                            where: { userId: userId }
+                        },
+                    },
+                },
                 transactionStatus:true
             }
         })

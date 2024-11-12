@@ -4,9 +4,20 @@ import { FaHome, FaTicketAlt, FaChartBar, FaUser, FaKey, FaSignOutAlt } from 're
 import { MdOutlineFeedback } from "react-icons/md";
 
 import Link from 'next/link';
+import authStore from '@/zustand/authstore';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 
 export const SidebarMenu = () => {
+    const logout = authStore((state) => state.setAuth)
+    const router = useRouter()
+    const handleLogout = () => {
+        logout({ token: '' })
+        Cookies.remove('role')
+        Cookies.remove('token')
+        router.push('/event-organizer/login')
+    }
     return (
         <section className="fixed h-screen bg-blue-950 w-2/12 z-20 pt-2">
             <div className="text-white min-h-screen p-5">
@@ -24,19 +35,23 @@ export const SidebarMenu = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <button className="flex items-center space-x-3 py-2 px-4 rounded bg-blue-800">
-                        <FaHome className="text-lg" />
-                        <Link href="/event/dashboard"><span className='text-xs'>Dashboard</span></Link>
-                    </button>
+                    <Link href="/event/dashboard">
+                        <button className="flex items-center space-x-3 py-2 px-4 rounded bg-blue-800">
+                            <FaHome className="text-lg" />
+                            <span className='text-xs'>Dashboard</span>
+                        </button>
+                    </Link>
 
                     <div className="text-gray-400 uppercase text-xs tracking-wider pt-7">
                         Management Event
                     </div>
 
-                    <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-                        <FaTicketAlt className="text-lg" />
-                        <Link href="/event/dashboard/list-event"><span className='text-xs'>Event Saya</span></Link>
-                    </button>
+                    <Link href="/event/dashboard/list-event">
+                        <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
+                            <FaTicketAlt className="text-lg" />
+                            <span className='text-xs'>Event Saya</span>
+                        </button>
+                    </Link>
 
                     <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
                         <FaTicketAlt className="text-lg" />
@@ -81,7 +96,7 @@ export const SidebarMenu = () => {
                         <span className='text-xs'>Withdraw</span>
                     </button> */}
 
-                    <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
+                    <button onClick={handleLogout} className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
                         <FaSignOutAlt className="text-lg" />
                         <span className='text-xs'>Keluar</span>
                     </button>

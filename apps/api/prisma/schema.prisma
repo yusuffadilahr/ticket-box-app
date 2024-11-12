@@ -133,7 +133,7 @@ model Users {
   password            String
   role                String  @default("user")
   phoneNumber         String
-  identityNumber      Int     @unique
+  identityNumber      String     @unique
   profilePicture      String?
   isVerified          Boolean
   verifyCode          String
@@ -162,6 +162,7 @@ model EventOrganizer {
   email          String  @unique
   password       String
   role           String  @default("EO")
+  forgotPasswordToken String? @db.LongText
   phoneNumber    String
   identityNumber String? @unique
   profilePicture String
@@ -320,7 +321,7 @@ model TransactionDetail {
   id             Int     @id @default(autoincrement())
   transactionsId String?
   ticketId       Int
-  price          Int //subtotal per tiket
+  price          Int
   discount       Int
   quantity       Int
 

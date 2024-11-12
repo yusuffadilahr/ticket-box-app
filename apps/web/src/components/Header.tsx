@@ -28,6 +28,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { useSearchParams } from 'next/navigation';
+import { useRef } from 'react';
 
 const SHEET_SIDES = ['top', 'right', 'bottom', 'left'] as const;
 
@@ -41,8 +42,8 @@ export const Header = () => {
 
   const pathname = usePathname();
   const token = authStore((state) => state?.token);
-  const role = authStore((state) => state?.role);
-  const params = useSearchParams()
+  const inputRef:any = useRef(null)
+
 
   const { data: querySearchData } = useQuery({
     queryKey: ['query-search-data', valueInput],
@@ -68,11 +69,10 @@ export const Header = () => {
 
   return (
     <>
-      <nav
-        className={`${pathname.startsWith('/event/dashboard') ? 'hidden' : 'block'} lg:px-20 w-full lg:py-2 fixed z-20`}
+      <nav className={`${pathname.startsWith('/event/dashboard') || pathname.startsWith('/event-organizer') ? 'hidden' : 'block'} lg:px-20 w-full lg:py-2 fixed z-20`}
       >
         <section className="h-14 lg:h-20 top-0 px-5 items-center text-white justify-between flex lg:rounded-xl bg-blue-950 relative">
-          {isBlur && (
+          {isBlur && valueInput && (
             <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10"></div>
           )}
           <div className="lg:hidden">
@@ -118,11 +118,13 @@ export const Header = () => {
                 src={Logo}
               />
             </Link>
-    
+
           </div>
           <div className="relative z-30">
             <input
-              onBlur={() => setIsBlur(false)}
+              ref={inputRef}
+              onBlur={() =>
+                {inputRef?.current?.value ? setIsBlur(true) : setIsBlur(false)}}
               onFocus={() => setIsBlur(true)}
               type="text"
               placeholder="Search..."
@@ -142,10 +144,10 @@ export const Header = () => {
                       <div
                         key={index}
                         className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white"
-                        onClick={() =>
-                          router.push(
-                            `/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`,
-                          )
+                        onClick={() => {
+                          router.push(`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`)
+                          setValueInput('')
+                        }
                         }
                       >
                         <div className='grid grid-cols-2'>
@@ -190,15 +192,13 @@ export const Header = () => {
                 </>
               ) : (
                 <>
-                  <Link
-                    href={'/user/register'}
-                    className={`py-2 hover:text-slate-300 border border-white px-5 rounded-xl transition-all duration-200 ease-in-ou ${pathname.startsWith('/auth/event-organizer/login-organizer') ? 'hidden' : 'block'}`}
+                  <Link href={'/user/register'}
+                    className={`py-2 hover:text-slate-300 border border-white px-5 rounded-xl transition-all duration-200 ease-in-ou ${pathname.startsWith('/event-organizer/login') ? 'hidden' : 'block'}`}
                   >
                     Register
                   </Link>
-                  <Link
-                    href={'/user/login'}
-                    className={`py-2 px-5 rounded-xl bg-blue-700 hover:bg-blue-800 transition-all duration-200 ease-in-out ${pathname.startsWith('/auth/event-organizer/login-organizer') ? 'hidden' : 'block'}`}
+                  <Link href={'/user/login'}
+                    className={`py-2 px-5 rounded-xl bg-blue-700 hover:bg-blue-800 transition-all duration-200 ease-in-out ${pathname.startsWith('/event-organizer/login') ? 'hidden' : 'block'}`}
                   >
                     Masuk
                   </Link>

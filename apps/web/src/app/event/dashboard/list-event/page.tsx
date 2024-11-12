@@ -44,14 +44,10 @@ export default function EventTable() {
     const router = useRouter();
     const searchParams = useSearchParams()
     const pathname = usePathname();
-    const queryClient = useQueryClient();
 
     const params = new URLSearchParams(searchParams)
     const [searchInput, setSearchInput] = useState(params.get('search') || '');
     const [page, setPage] = useState(Number(params.get('page')) || 1);
-    // 
-
-
 
     const { data: getEventList, refetch } = useQuery({
         queryKey: ['get-event-list', searchInput, page],
@@ -76,9 +72,9 @@ export default function EventTable() {
         }
     });
 
+    console.log(getEventList, "<<<<<<<<<< gas")
 
     const debounceSearch = useDebouncedCallback((values) => {
-
         setSearchInput(values);
         setPage(1)
 

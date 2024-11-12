@@ -12,7 +12,7 @@ const authStore = create(
       phoneNumber: '',
       profilePicture: '',
       referralCode: '',
-      identityNumber: null,
+      identityNumber: '',
       isVerified: null,
       ownerName: '',
       organizerName: '',

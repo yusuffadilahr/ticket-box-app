@@ -60,6 +60,13 @@ const EventForm = () => {
                     startEvent: '',
                     endEvent: '',
                     categoryId: '',
+                    price: 0,
+                    ticketName: '',
+                    ticketType: '',
+                    seatAvailable: 0,
+                    discount: 0,
+                    startDate: '',
+                    endDate: '',
                     tickets: [],
                 }}
 
@@ -106,7 +113,7 @@ const EventForm = () => {
             >
                 {({ values, setFieldValue }) => (
                     <Form className=''>
-                        <section className="bg-white flex flex-col justify-center rounded-xl h-[590px] w-full border border-gray-200 shadow-lg p-5">
+                        <section className="bg-white flex flex-col justify-center rounded-xl h-fit pb-24 w-full border border-gray-200 shadow-lg p-5">
                             <div className="flex justify-center font-bold text-2xl pb-5">
                                 Event
                             </div>
@@ -132,7 +139,7 @@ const EventForm = () => {
                                         className="border border-gray-500 rounded-md p-2"
                                     >
                                         <option disabled value="">
-                                            -- Select Category --
+                                            -- Pilih Kategori --
                                         </option>
                                         {getCategory?.length > 0 &&
                                             getCategory?.map((item: any, i: any) => (
@@ -206,7 +213,8 @@ const EventForm = () => {
                                             const checked = e.target.checked;
                                             setIsPaid(checked);
                                             setFieldValue("isPaid", checked);
-                                            setFieldValue("price", checked ? 0 : values.price);
+                                            setFieldValue("price", checked ? values.price : 0);
+                                            setFieldValue("discount", checked ? values.discount : 0);
                                         }}
                                         defaultChecked={values.isPaid}
                                     />
@@ -216,6 +224,7 @@ const EventForm = () => {
                                     <ReactQuill
                                         value={values.description}
                                         onChange={(html) => setFieldValue('description', html)}
+                                        className="h-full w-full"
                                     />
                                 </div>
                             </div>
@@ -242,9 +251,6 @@ const EventForm = () => {
                                         }
                                         className="mx-auto"
                                     />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="gambar1" component="div" className='text-xs text-red-600' />
-                                    </div>
                                 </label>
                                 <label className="text-sm border border-gray-300 rounded-md p-3 text-center">
                                     <b>Gambar 2</b>: Ukuran 500 x 500px tidak lebih dari 1Mb
@@ -252,6 +258,7 @@ const EventForm = () => {
                                     <input
                                         type="file"
                                         accept="image/*"
+                                        name='gambar2'
                                         onChange={(event: any) =>
                                             setFieldValue(
                                                 'images[1]',
@@ -266,6 +273,8 @@ const EventForm = () => {
                                     <input
                                         type="file"
                                         accept="image/*"
+                                        name='gambar3'
+
                                         onChange={(event: any) =>
                                             setFieldValue(
                                                 'images[2]',
@@ -274,6 +283,10 @@ const EventForm = () => {
                                         }
                                     />
                                 </label>
+                            </div>
+
+                            <div className='h-1'>
+                                <ErrorMessage name="gambar1" component="div" className='text-xs text-red-600' />
                             </div>
                         </div>
 
@@ -287,14 +300,14 @@ const EventForm = () => {
                                     <Field
                                         name="ticketName"
                                         placeholder="Nama Tiket"
-                                        value={newTicket.ticketName}
+                                        // value={newTicket.ticketName}
                                         className="border border-gray-500 rounded-md p-2"
-                                        onChange={(e: any) =>
-                                            setNewTicket({
-                                                ...newTicket,
-                                                ticketName: e.target.value,
-                                            })
-                                        }
+                                    // onChange={(e: any) =>
+                                    //     setNewTicket({
+                                    //         ...newTicket,
+                                    //         ticketName: e.target.value,
+                                    //     })
+                                    // }
                                     />
                                     <div className='h-1'>
                                         <ErrorMessage name="ticketName" component="div" className='text-xs text-red-600' />
@@ -307,13 +320,13 @@ const EventForm = () => {
                                         placeholder="Tipe Tiket"
                                         className="border border-gray-500 rounded-md p-2"
 
-                                        value={newTicket.ticketType}
-                                        onChange={(e: any) =>
-                                            setNewTicket({
-                                                ...newTicket,
-                                                ticketType: e.target.value,
-                                            })
-                                        }
+                                    // value={newTicket.ticketType}
+                                    // onChange={(e: any) =>
+                                    //     setNewTicket({
+                                    //         ...newTicket,
+                                    //         ticketType: e.target.value,
+                                    //     })
+                                    // }
                                     />
                                     <div className='h-1'>
                                         <ErrorMessage name="ticketType" component="div" className='text-xs text-red-600' />
@@ -329,13 +342,13 @@ const EventForm = () => {
                                             type="number"
                                             className="border border-gray-500 rounded-md p-2"
 
-                                            value={newTicket.price}
-                                            onChange={(e: any) =>
-                                                setNewTicket({
-                                                    ...newTicket,
-                                                    price: Number(e.target.value),
-                                                })
-                                            }
+                                        // value={newTicket.price}
+                                        // onChange={(e: any) =>
+                                        //     setNewTicket({
+                                        //         ...newTicket,
+                                        //         price: Number(e.target.value),
+                                        //     })
+                                        // }
                                         />
                                         <div className='h-1'>
                                             <ErrorMessage name="price" component="div" className='text-xs text-red-600' />
@@ -350,13 +363,13 @@ const EventForm = () => {
                                         type="number"
                                         className="border border-gray-500 rounded-md p-2"
 
-                                        value={newTicket.seatAvailable}
-                                        onChange={(e: any) =>
-                                            setNewTicket({
-                                                ...newTicket,
-                                                seatAvailable: Number(e.target.value),
-                                            })
-                                        }
+                                    // value={newTicket.seatAvailable}
+                                    // onChange={(e: any) =>
+                                    //     setNewTicket({
+                                    //         ...newTicket,
+                                    //         seatAvailable: Number(e.target.value),
+                                    //     })
+                                    // }
                                     />
                                     <div className='h-1'>
                                         <ErrorMessage name="seatAvailable" component="div" className='text-xs text-red-600' />
@@ -372,28 +385,31 @@ const EventForm = () => {
                                             type="number"
                                             className="border border-gray-500 rounded-md p-2"
 
-                                            value={newTicket.discount}
-                                            onChange={(e: any) =>
-                                                setNewTicket({
-                                                    ...newTicket,
-                                                    discount: Number(e.target.value),
-                                                })
-                                            }
+                                        // value={newTicket.discount}
+                                        // onChange={(e: any) =>
+                                        //     setNewTicket({
+                                        //         ...newTicket,
+                                        //         discount: Number(e.target.value),
+                                        //     })
+                                        // }
                                         />
+                                        <ErrorMessage name="discount" component="div" className='text-xs text-red-600' />
+
                                     </div>
                                 )}
                                 <div className="flex flex-col col-span-2">
                                     <label className=" text-sm">Tanggal Mulai</label>
                                     <Field
                                         name="startDate"
-                                        type="datetime-local" value={newTicket.startDate}
+                                        type="datetime-local"
+                                        // value={newTicket.startDate}
                                         className="border border-gray-500 rounded-md p-2"
-                                        onChange={(e: any) =>
-                                            setNewTicket({
-                                                ...newTicket,
-                                                startDate: e.target.value,
-                                            })
-                                        }
+                                    // onChange={(e: any) =>
+                                    //     setNewTicket({
+                                    //         ...newTicket,
+                                    //         startDate: e.target.value,
+                                    //     })
+                                    // }
                                     />
                                     <div className='h-1'>
                                         <ErrorMessage name="startDate" component="div" className='text-xs text-red-600' />
@@ -406,10 +422,10 @@ const EventForm = () => {
                                         type="datetime-local"
                                         className="border border-gray-500 rounded-md p-2"
 
-                                        value={newTicket.endDate}
-                                        onChange={(e: any) =>
-                                            setNewTicket({ ...newTicket, endDate: e.target.value })
-                                        }
+                                    // value={newTicket.endDate}
+                                    // onChange={(e: any) =>
+                                    //     setNewTicket({ ...newTicket, endDate: e.target.value })
+                                    // }
                                     />
                                     <div className='h-1'>
                                         <ErrorMessage name="endDate" component="div" className='text-xs text-red-600' />
@@ -419,21 +435,40 @@ const EventForm = () => {
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setFieldValue('tickets', [...values.tickets, newTicket]);
-                                    setNewTicket({
-                                        price: 0,
-                                        ticketName: '',
-                                        ticketType: '',
-                                        seatAvailable: 0,
-                                        discount: 0,
-                                        startDate: '',
-                                        endDate: '',
-                                    });
+                                    console.log(values)
+                                    setFieldValue('tickets', [...values.tickets, {
+                                        price: values.price,
+                                        ticketName: values.ticketName,
+                                        ticketType: values.ticketType,
+                                        seatAvailable: values.seatAvailable,
+                                        discount: values.discount,
+                                        startDate: values.startDate,
+                                        endDate: values.endDate,
+                                    }]);
+                                    setFieldValue('price', 0);
+                                    setFieldValue('ticketName', '');
+                                    setFieldValue('ticketType', '');
+                                    setFieldValue('seatAvailable', 0);
+                                    setFieldValue('discount', 0);
+                                    setFieldValue('startDate', '');
+                                    setFieldValue('endDate', '');
+
+                                    // setNewTicket({
+                                    //     price: 0,
+                                    //     ticketName: '',
+                                    //     ticketType: '',
+                                    //     seatAvailable: 0,
+                                    //     discount: 0,
+                                    //     startDate: '',
+                                    //     endDate: '',
+                                    // });
                                 }}
                                 className="bg-blue-500 text-white rounded-md p-3 mt-4 flex justify-center"
                             >
+
                                 Tambah Tiket
                             </button>
+                            <ErrorMessage name="tickets" component="div" className='text-xs text-red-600' />
                         </div>
 
                         <div>
@@ -483,7 +518,7 @@ const EventForm = () => {
                                                     </span>
                                                 </div>
                                             ) : (
-                                                `Rp.${ticket.price}`
+                                                    `Rp${ticket.price.toLocaleString("id-ID")}`
                                             )}
                                         </p>
                                         <div className="flex items-center space-x-4">

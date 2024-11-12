@@ -3,7 +3,7 @@ export interface IDataRegister {
     firstName: string,
     lastName: string,
     phoneNumber: string,
-    identityNumber: number | null
+    identityNumber: string
     password: string,
-    referralBody: string | null
+    referralBody: string
 }
