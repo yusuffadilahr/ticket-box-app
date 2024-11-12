@@ -72,7 +72,7 @@ const EventForm = () => {
 
                 validateOnChange={true}
                 validateOnBlur={true}
-                validationSchema={EventSchema}
+                // validationSchema={EventSchema}
                 onSubmit={(values: any) => {
                     console.log([values]);
                     const fd = new FormData();

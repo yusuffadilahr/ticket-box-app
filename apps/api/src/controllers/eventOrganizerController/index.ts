@@ -183,16 +183,12 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
 
     if (findEvent.length == 0) throw { msg: 'Belum memiliki event', status: 404 }
 
-    const findIdEvent = findEvent.map((event) => event.id)
-
     const findUserTransaction = await prisma.transactions.findMany({
       where: {
-        eventId: {
-          in: findIdEvent,
-        }
+        eventOrganizerId: userId
       },
       include: {
-        users: true
+        transactionDetail: true
       }
     })
 

@@ -14,22 +14,20 @@ import { usePathname, useRouter } from 'next/navigation';
 import CarousellEvent from '@/components/carousell/carousellEvent';
 import Link from 'next/link';
 import authStore from '@/zustand/authstore';
-import { CiMusicNote1 } from "react-icons/ci";
-import { PiPersonSimpleWalkThin } from "react-icons/pi";
-import { CiTrophy } from "react-icons/ci";
-import { CiMicrophoneOn } from "react-icons/ci";
-import { GiBlackBook } from "react-icons/gi";
-import { IoTicketOutline } from "react-icons/io5";
-
-
+import { CiMusicNote1 } from 'react-icons/ci';
+import { PiPersonSimpleWalkThin } from 'react-icons/pi';
+import { CiTrophy } from 'react-icons/ci';
+import { CiMicrophoneOn } from 'react-icons/ci';
+import { GiBlackBook } from 'react-icons/gi';
+import Cookies from 'js-cookie';
 
 export default function Home() {
   const router = useRouter();
   const [eventData, setEventData] = useState<any[]>([]);
   const [valueInput, setValueInput] = useState<string>('');
   const token = authStore((state) => state.token);
-  const setAuth = authStore((state)=> state.setAuth)
-  const role = authStore((state)=> state.role)
+  const setAuth = authStore((state) => state.setAuth);
+  const role = authStore((state) => state.role);
   const pathname = usePathname();
 
   const { mutate: mutateSearchData } = useMutation({
@@ -98,28 +96,48 @@ export default function Home() {
   const { data: queryGetCarousel } = useQuery({
     queryKey: ['get-event-data-carousel'],
     queryFn: async () => {
-      const res = await instance.get('/event/carousel-images', {
-      });
+      const res = await instance.get('/event/carousel-images', {});
       // console.log(res)
       return res.data.data;
     },
   });
 
-  useEffect(()=> {
-    if(role && role == 'EO') {
-      router.push('/user/login')
-      setAuth({token: ''})
+  useEffect(() => {
+    if (role && role == 'EO') {
+      router.push('/user/login');
+      setAuth({ token: '' });
+      Cookies.remove('role');
+      Cookies.remove('token');
     }
-  }, [role, token])
-
+  }, [role, token]);
 
   const categoryList = [
-    { logo: "CiMusicNote1", name: "Musik", link: "http://localhost:3000/event/explore?page=1&category=1" },
-    { logo: "PiPersonSimpleWalkThin", name: "Expo", link: "http://localhost:3000/event/explore?page=1&category=2" },
-    { logo: "CiTrophy", name: "Olahraga", link: "http://localhost:3000/event/explore?page=1&category=3" },
-    { logo: "CiMicrophoneOn", name: "Komedi", link: "http://localhost:3000/event/explore?page=1&category=4" },
-    { logo: "GiBlackBook", name: "Seminar", link: "http://localhost:3000/event/explore?page=1&category=5" },
-  ]
+    {
+      logo: 'CiMusicNote1',
+      name: 'Musik',
+      link: 'http://localhost:3000/event/explore?page=1&category=1',
+    },
+    {
+      logo: 'PiPersonSimpleWalkThin',
+      name: 'Expo',
+      link: 'http://localhost:3000/event/explore?page=1&category=2',
+    },
+    {
+      logo: 'CiTrophy',
+      name: 'Olahraga',
+      link: 'http://localhost:3000/event/explore?page=1&category=3',
+    },
+    {
+      logo: 'CiMicrophoneOn',
+      name: 'Komedi',
+      link: 'http://localhost:3000/event/explore?page=1&category=4',
+    },
+    {
+      logo: 'GiBlackBook',
+      name: 'Seminar',
+      link: 'http://localhost:3000/event/explore?page=1&category=5',
+    },
+  ];
 
   const iconComponents = {
     CiMusicNote1: CiMusicNote1,
@@ -146,108 +164,27 @@ export default function Home() {
           </div>
         </h1>
       </div>
-      
-      <section className='w-full h-fit px-20'>
-      <h1 className="text-2xl font-bold text-center">Category</h1>
-        <div className='flex justify-center gap-5 mt-5'>
+
+      <section className="w-full h-fit px-20">
+        <h1 className="text-2xl font-bold text-center">Category</h1>
+        <div className="flex justify-center gap-5 mt-5">
           {categoryList?.map((item, index) => {
-            const IconComponent: any = iconComponents[item.logo]; // Get the correct icon component
+            const IconComponent: any = iconComponents[item?.logo]; // Get the correct icon component
             return (
-              <Link key = { index } href={item.link}>
-                <div  className='flex flex-col items-center gap-2'>
+              <Link key={index} href={item.link}>
+                <div className="flex flex-col items-center gap-2">
                   <div>
-                    <IconComponent className='rounded-full p-4 border-2 hover:bg-yellow-500 transition-all duration-300 border-blue-900 text-blue-900 w-[80px] h-[80px]' />
+                    <IconComponent className="rounded-full p-4 border-2 hover:bg-yellow-500 transition-all duration-300 border-blue-900 text-blue-900 w-[80px] h-[80px]" />
                   </div>
-                  <div className='flex justify-center  font-bold text-blue-900'>{item.name}</div>
+                  <div className="flex justify-center  font-bold text-blue-900">
+                    {item.name}
+                  </div>
                 </div>
               </Link>
-            )
-          })
-
-          }
-
-
-          {/* <div className='flex flex-col'>
-            <div><CiMusicNote1 className='rounded-full p-4  border-2 border-blue-900 text-blue-900 w-[80px] h-[80px]' /></div>
-            <div className='flex justify-center font-bold text-blue-900'>Musik</div>
-          </div>
-          <div className='flex flex-col'>
-            <div><PiPersonSimpleWalkThin className='rounded-full p-4  border-2 border-blue-900 text-blue-900 w-[80px] h-[80px]' /></div>
-            <div className='flex justify-center font-bold text-blue-900'>Expo</div>
-          </div>
-          <div className='flex flex-col'>
-            <div><CiTrophy className='rounded-full p-4  border-2 border-blue-900 text-blue-900 w-[80px] h-[80px]' /></div>
-            <div className='flex justify-center font-bold text-blue-900'> sport</div>
-          </div>
-          <div className='flex flex-col'>
-            <div><CiMicrophoneOn className='rounded-full p-4  border-2 border-blue-900 text-blue-900 w-[80px] h-[80px]' /></div>
-            <div className='flex justify-center font-bold text-blue-900'>standup</div>
-
-          </div>
-          <div className='flex flex-col'>
-            <div><GiBlackBook className='rounded-full p-4  border-2 border-blue-900 text-blue-900 w-[80px] h-[80px]' /></div>
-            <div className='flex justify-center font-bold text-blue-900'> Seminar</div>
-
-          </div> */}
+            );
+          })}
         </div>
       </section>
-      {/* <div className=" px-20 bg-white h-52 ">
-        <div className="relative w-full h-full">
-          <Image
-            src="https://networksites.livenationinternational.com/networksites/lnxx-event-discovery-placeholder.jpg"
-            // height={300}
-            // width={300}
-            layout="fill"
-            className="object-cover opacity-30"
-            alt="concert"
-          />
-          <div className="absolute w-full h-full flex flex-col justify-center items-center gap-5">
-            <div className="font-bold text-xl text-black drop-shadow-md flex items-center gap-5">
-              🎉<span>Cari Event Seru Disini !</span>🎉
-            </div>
-
-            <div className="relative">
-              <input
-                value={valueInput}
-                type="text"
-                placeholder="Search..."
-                className="
-                focus:outline-none
-                bg-white pr-10 pl-4 py-3 text-sm rounded-md shadow-md sm:w-[300px] lg:w-[700px]"
-                onChange={(e) => {
-                  debounce(e.target.value);
-                  setValueInput(e.target.value);
-                }}
-              />
-              <ul className="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto">
-                {eventData?.map((item, index) => {
-                  return (
-                    <li
-                      key={index}
-                      className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white"
-                      onClick={() =>
-                        router.push(
-                          `/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`,
-                        )
-                      }
-                    >
-                      {item?.eventName} - {item?.location} -{' '}
-                      {item?.tickets[0]?.price}
-                    </li>
-                  );
-                })}
-              </ul>
-
-              <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-                <FaSearch className="text-gray-400 h-5 w-5 cursor-pointer" />
-              </span>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-     
-
       <div className="relative w-full  flex justify-center items-center">
         <div className="w-full px-2 lg:px-20 h-[900px] lg:h-[700px] ">
           <Image
@@ -275,9 +212,13 @@ export default function Home() {
                   >
                     <div className="w-full lg:h-36">
                       <Image
-                        src={ item?.EventImages[0]?.eventImageUrl?.includes('https://')
-                          ? item.EventImages[0].eventImageUrl
-                          : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
+                        src={
+                          item?.EventImages[0]?.eventImageUrl?.includes(
+                            'https://',
+                          )
+                            ? item.EventImages[0].eventImageUrl
+                            : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
+                        }
                         height={142}
                         width={142}
                         alt="testing"
@@ -288,7 +229,11 @@ export default function Home() {
                       <div className="flex flex-col gap-2">
                         <h1 className="flex items-center gap-2 text-xs lg:text-sm text-gray-500">
                           <IoLocationSharp />
-                          {item?.location.length > 20 ? <h1>{item?.location.slice(0, 20)}...</h1> : item?.location}
+                          {item?.location.length > 20 ? (
+                            <h1>{item?.location.slice(0, 20)}...</h1>
+                          ) : (
+                            item?.location
+                          )}
                         </h1>
                         <h1 className="flex items-center gap-2 text-xs lg:text-sm text-gray-500 font-normal">
                           <FaCalendarAlt />
@@ -300,7 +245,11 @@ export default function Home() {
                         </h1>
                       </div>
                       <h1 className="text-black text-sm lg:text-base mt-2 font-bold">
-                        {item?.eventName.length > 20 ? <h1>{item?.eventName.slice(0, 24)}...</h1> : item?.eventName}
+                        {item?.eventName.length > 20 ? (
+                          <h1>{item?.eventName.slice(0, 24)}...</h1>
+                        ) : (
+                          item?.eventName
+                        )}
                       </h1>
                       <h1 className="text-xs lg:text-sm  mt-2 bottom-0 text-gray-500 font-normal">
                         Mulai dari{' '}
@@ -321,8 +270,10 @@ export default function Home() {
               );
             })}
           </div>
-          <Link href={"http://localhost:3000/event/explore?page=1&category=4"} className="flex justify-center">
-            
+          <Link
+            href={'http://localhost:3000/event/explore?page=1&category=4'}
+            className="flex justify-center"
+          >
             <button className="text-white border rounded-md p-2  hover:bg-white hover:text-black transition-all duration-200 ease-in-out">
               Lihat Lebih Lanjut
             </button>
@@ -338,7 +289,6 @@ export default function Home() {
           </span>
           <div className="mt-4">
             <CarousellEvent data={queryGetDataNewest} />
-            {/* <CarousellNewestEvent queryGetDataNewest={queryGetDataNewest} /> */}
           </div>
         </h1>
       </div>
@@ -348,11 +298,9 @@ export default function Home() {
           Musik Terbaru
           <div className="mt-4">
             <CarousellEvent data={queryGetCategoryMusic} />
-            {/* <CarousellNewestEvent queryGetDataNewest={queryGetDataNewest} /> */}
           </div>
         </h1>
       </div>
-
 
       <div className="px-8 lg:px-20 mt-8 flex justify-center">
         <Image
