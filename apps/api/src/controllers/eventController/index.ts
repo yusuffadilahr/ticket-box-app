@@ -2,6 +2,7 @@ import { prisma } from "@/connection";
 import fs from 'fs'
 import { NextFunction, Request, Response } from "express";
 import { addHours } from "date-fns";
+import { cloudinaryUpload } from "@/utils/cloudinary";
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -24,16 +25,19 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
                 }
             })
 
-            const imagesArr = imagesUpload?.images?.map((item: any) => {
+            const imagesArr = await Promise.all(imagesUpload?.images?.map(async (item: any) => {
+                const result: any = await cloudinaryUpload(item?.buffer)
+
                 return {
-                    eventImageUrl: item.filename,
-                    eventsId: event.id
+                    eventImageUrl: result?.res,
+                    eventsId: event?.id
                 }
-            })
+            }))
 
             await tx.eventImages.createMany({
                 data: imagesArr
             })
+
             if (dataArrayTikcet.length == 0) throw { msg: 'tiket wajib diisi', status: 400 }
             const dataTicket = dataArrayTikcet?.map((tik: any) => {
                 return {
@@ -61,11 +65,6 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
         })
 
     } catch (error) {
-        const imagesUpload: any = req.files
-
-        imagesUpload?.images.forEach((itm: any) => {
-            fs.rmSync(itm.path)
-        })
         next(error)
     }
 }
@@ -335,13 +334,22 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 where: { eventsId: findEvent?.id }
             })
 
-            console.log('<<<<< sampe mana 6')
-            const imagesArr = imagesUploaded?.images?.map((item: any) => {
+            // console.log('<<<<< sampe mana 6')
+            // const imagesArr = imagesUploaded?.images?.map((item: any) => {
+            //     return {
+            //         eventImageUrl: item.filename,
+            //         eventsId: updatedEvent.id
+            //     }
+            // })
+
+            const imagesArr = await Promise.all(imagesUploaded?.images?.map(async(item: any) => {
+                const result: any = await cloudinaryUpload(item?.buffer)
+
                 return {
-                    eventImageUrl: item.filename,
-                    eventsId: updatedEvent.id
+                    eventImageUrl: result?.res,
+                    eventsId: updatedEvent?.id
                 }
-            })
+            }))
 
             console.log('<<<<< sampe mana 7')
             await tx.eventImages.createMany({

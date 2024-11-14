@@ -8,6 +8,7 @@ import { compile } from 'handlebars';
 import { transporter } from '@/utils/transporter';
 import { addMonths, addHours } from 'date-fns';
 import bcrypt from 'bcrypt'
+import { cloudinaryUpload } from '@/utils/cloudinary';
 
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -39,8 +40,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
         verifyCode: verificationCode,
         phoneNumber,
         identityNumber,
-        profilePicture:
-          'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+        profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
         referralCode: refferal,
       },
     });
@@ -136,7 +136,7 @@ export const signInWithGoogle = async (req: Request, res: Response, next: NextFu
     if (findEmail) {
       res.status(200).json({
         error: false,
-        message: 'Login Berhasil',
+        message: 'Login menggunakan Google berhasil!',
         data: { token }
       })
     } else {
@@ -160,7 +160,7 @@ export const signInWithGoogle = async (req: Request, res: Response, next: NextFu
 
       res.status(201).json({
         error: false,
-        message: 'telah terbuat',
+        message: 'Register menggunakan Google berhasil!',
         data: {
           token,
           email,
@@ -426,9 +426,16 @@ export const updateProfileUser = async (req: Request, res: Response, next: NextF
     const { userId, firstName, lastName, phoneNumber, identityNumber } = req.body;
     // if (firstName || lastName || phoneNumber || identityNumber) throw { msg: 'Harus diisi', status: 400 }
 
+    console.log('>>>>>>>> 430', req.files)
+    const imagesUploaded = await Promise.all(imagesUpload?.images.map(async (item: any) => {
+      const result: any = await cloudinaryUpload(item?.buffer)
+
+      return await result?.res!
+    }))
+
     await prisma.users.update({
       data: {
-        profilePicture: imagesUpload?.images[0]?.filename,
+        profilePicture: imagesUploaded[0],
         firstName,
         lastName,
         phoneNumber,
