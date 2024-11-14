@@ -124,7 +124,7 @@ export default function Page() {
                                 <input type="checkbox" name="checkbox" id="checkbox" />
                                 <h1 className="pl-3 text-sm md:text-base">Ingat saya</h1>
                             </div>
-                            <Link href={'/auth/user/forgot-password'} className='text-sm md:text-base'>Lupa kata sandi?</Link>
+                            <Link href={'/user/forgot-password'} className='text-sm md:text-base'>Lupa kata sandi?</Link>
                         </div>
                         <Link
                             href="/user/register"

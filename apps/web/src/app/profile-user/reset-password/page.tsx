@@ -9,8 +9,14 @@ import { FaEyeSlash } from 'react-icons/fa';
 import { useMutation } from "@tanstack/react-query";
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { resetPasswordProfile } from "@/features/reset-password-profile/schema/resetPasswordProfile";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function ProfileResetPass() {
+    const [existingPasswordVisible, setExistingPasswordVisible] = useState<boolean>(false);
+    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+    const [confirmationPasswordVisible, setConfirmationPasswordVisible] = useState<boolean>(false);
+    const router = useRouter()
 
     const { mutate: mutateResetPasswordProfile } = useMutation({
         mutationFn: async ({ existingPassword, password }: { existingPassword: string, password: string }) => {
@@ -21,16 +27,14 @@ export default function ProfileResetPass() {
         },
         onSuccess: (res) => {
             console.log(res)
+            toast.success('Berhasil mengubah password!')
+            router.push('/')
         },
         onError: (err) => {
+            toast.error('Gagal!')
             console.log(err)
         }
     })
-
-
-    const [existingPasswordVisible, setExistingPasswordVisible] = useState<boolean>(false);
-    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-    const [confirmationPasswordVisible, setConfirmationPasswordVisible] = useState<boolean>(false);
 
     const toggleExistingPasswordVisibility = () => {
         setExistingPasswordVisible(!existingPasswordVisible);
@@ -69,7 +73,7 @@ export default function ProfileResetPass() {
                         }}
                     >
                         <Form className='flex flex-col justify-center items-center w-full'>
-                            <main className="flex justify-center flex-col w-[80%] md:w-[60%] lg:w-[45%]  space-y-5">
+                            <main className="flex justify-center flex-col w-[80%] md:w-[60%] lg:w-[100%]  space-y-5">
                                 <div id="password-input" className="relative">
                                     <div className="flex gap-2 items-center">
                                         <label>

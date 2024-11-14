@@ -1,11 +1,8 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useState } from 'react';
 import Link from 'next/link';
-import { loginSchema } from '@/features/login/schema/loginSchema';
 import { ErrorMessage } from 'formik';
 import toast from 'react-hot-toast';
 import instance from '@/utils/axiosInstance/axiosInstance';
@@ -33,7 +30,8 @@ export default function Page() {
 
     return (
         <main className="h-svh md:h-lvh flex justify-center items-center">
-            <section className="w-[800px] h-[500px] justify-center items-center flex rounded-xl">
+            <section className='w-full h-fit flex justify-center items-center'>
+            <div className="justify-center w-[50%] bg-white shadow-md py-10 items-center flex rounded-xl flex-col">
                 <Formik
                     initialValues={{
                         email: '',
@@ -69,9 +67,9 @@ export default function Page() {
                         >
                             Kirim
                         </button>
-
                     </Form>
                 </Formik>
+            </div>
             </section>
         </main>
     );

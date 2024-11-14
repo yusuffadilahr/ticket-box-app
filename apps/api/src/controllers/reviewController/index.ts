@@ -47,58 +47,54 @@ export const createReviewUser = async (req: Request, res: Response, next: NextFu
             message: 'Berhasil',
             data: {}
         })
-        //         id         Int    @id @default(autoincrement())
-        //   rating     Int
-        //   reviewText String
-        //   feedback   String
-        //   eventId    Int
-        //   userId     String
+     
     } catch (error) {
         next(error)
     }
 }
 
 
-export const getReviewUser = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const {
-            eventId,
-            page = '1',
-            limit_data = '8'
-        } = req.body
+    export const getReviewUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
 
-        const offset = Number(limit_data) * (Number(page) - 1);
-        
-        const dataReview = await prisma.reviews.findMany({
-            where: {
-                eventId
-            },
-            include: {
-                event: true,
-                users: true
-            },
-            take: Number(limit_data),
-            skip: offset
-        })
+            const { id } = req.params
+
+            // const { page = '1', limit_data = '4' } = req.query;
 
 
-        const totalCount = await prisma.reviews.count({
-            where: {
-                eventId
-            }
-        });
+            // const offset = Number(limit_data) * (Number(page) - 1);
 
-        const totalPage = Math.ceil(Number(totalCount) / Number(limit_data));
+            const dataReview = await prisma.reviews.findMany({
+                where: {
+                    eventId: Number(id)
+                },
+                include: {
+                    event: true,
+                    users: true
+                },
+                // take: Number(limit_data),
+                // skip: offset
+            })
 
-        res.status(201).json({
-            error: false,
-            message: 'Berhasil Mendapatkan Data Review',
-            data: {
-                dataReview, totalPage
-            }
-        })
 
-    } catch (error) {
-        next(error)
+            // const totalCount = await prisma.reviews.count({
+            //     where: {
+            //         eventId: Number(id)
+            //     }
+            // });
+
+            // const totalPage = Math.ceil(Number(totalCount) / Number(limit_data));
+
+            res.status(201).json({
+                error: false,
+                message: 'Berhasil Mendapatkan Data Review',
+                data: {
+                    dataReview,
+                    // totalPage
+                }
+            })
+
+        } catch (error) {
+            next(error)
+        }
     }
-}

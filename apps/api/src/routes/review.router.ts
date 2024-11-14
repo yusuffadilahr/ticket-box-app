@@ -5,6 +5,6 @@ import { createReviewUser, getReviewUser } from "@/controllers/reviewController"
 const reviewRouter = Router()
 
 reviewRouter.post('/', tokenValidation, createReviewUser)
-reviewRouter.get('/', tokenValidation, getReviewUser)
+reviewRouter.get('/:id', tokenValidation, getReviewUser)
 
 export default reviewRouter

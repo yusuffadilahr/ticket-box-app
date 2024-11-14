@@ -36,7 +36,7 @@ export default function OrganizerDashboard() {
         <main className="flex">
             <section className="h-screen w-full px-8 space-y-10 p-10">
                 <div className='flex justify-end gap-8'>
-                    <Link href="/event/dashboard/create" className='flex items-center px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
+                    <Link href="/event/dashboard/c" className='flex items-center px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
                         <button className="">
                             + Buat Event
                         </button>

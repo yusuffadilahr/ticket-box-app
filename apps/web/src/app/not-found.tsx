@@ -18,7 +18,7 @@ export default function NotFound() {
                         404 <span className="font-normal">Page Not Found!</span>
                     </h1>
                     <p className="text-sm md:text-lg lg:text-2xl text-gray-700 mt-4">
-                        Oops! It seems like the page you're looking for doesn't exist.
+                        Oops! It seems like the page you&apos;re looking for does&apos;nt exist.
                     </p>
                     <p className="text-xs md:text-base lg:text-lg text-gray-500 mt-2">
                         The link might be broken, or the page may have been removed.

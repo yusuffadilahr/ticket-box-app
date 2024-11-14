@@ -29,7 +29,8 @@ export default function Page() {
 
     return (
         <main className="h-svh md:h-lvh flex justify-center items-center">
-            <section className="w-[800px] h-[500px] justify-center items-center flex rounded-xl">
+            <section className="w-full h-fit flex justify-center items-center">
+            <div className="justify-center w-[50%] bg-white shadow-md py-10 items-center flex rounded-xl flex-col">
                 <Formik
                     initialValues={{
                         email: '',
@@ -56,18 +57,19 @@ export default function Page() {
                                 id="email"
                                 placeholder="Email..."
                                 className="py-2 text-sm mt-3 rounded-lg px-4 border focus:outline-none active:border focus:border-yellow-400"
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="text-white text-sm rounded-lg w-full py-2 bg-yellow-500 hover:bg-yellow-600"
-                        >
-                            Kirim
-                        </button>
-
-                    </Form>
-                </Formik>
+                                />
+                                </div>
+                                
+                                <button
+                                type="submit"
+                                className="text-white text-sm rounded-lg w-full py-2 bg-yellow-500 hover:bg-yellow-600"
+                                >
+                                Kirim
+                                </button>
+                                
+                                </Form>
+                                </Formik>
+                                </div>
             </section>
         </main>
     );

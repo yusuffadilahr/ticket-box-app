@@ -53,7 +53,6 @@ export default function AvatarHover() {
                         <div className=" font-bold text-blue-800 flex  flex-col items-center space-x-2 mb-2" >
                             <div className="flex items-center"><FaStar /> Loyalty Points :</div>
                             <div className="text-lg"> {loyaltyPoints}</div>
-                            
                         </div>
                         
                         <Link href="/profile-user/profile" className="flex justify-center">

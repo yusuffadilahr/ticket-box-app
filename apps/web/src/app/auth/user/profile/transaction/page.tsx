@@ -101,7 +101,7 @@ export default function ProfileTransaction() {
                                                {totalQuantity}
                                             </td>
                                                 <td className="px-6 py-4 text-sm text-gray-600">{item.transactionStatus[0].status}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">{item.totalPrice}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">Rp{item.totalPrice.toLocaleString("id-ID")}</td>
                                             <td className="px-6 py-4 text-sm text-gray-600">
                                                     <button
                                                         onClick={() => openReviewDialog(item.event.id)}

@@ -19,12 +19,13 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+
 export default function Explore({ searchParams }: { searchParams: any }) {
     const categoryEvent = [
         { id: 1, category: "Musik" },
         "Expo", "Olahraga", "Komedi", "Seminar"]
-    
-    
+
+
     const params = useSearchParams();
     const [searchInput, setSearchInput] = useState(params.get('search') || '');
     const [limitData, setLimitData] = useState(8);
@@ -39,7 +40,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
 
 
     const router = useRouter();
-    const paramsUrl = new URLSearchParams(params);
+    // const paramsUrl = new URLSearchParams(params);
     const pathname = usePathname();
 
     const { data: queryGetCategory } = useQuery({
@@ -63,20 +64,20 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                     // category: searchParams.category || selectedCategory,
                     category: selectedCategory,
                     minPrice: minPrice ?? 0,
-                    maxPrice: maxPrice ?? 99999999,
+                    maxPrice: maxPrice ?? 999999999,
                     location: location,
                     dateFrom: dateFrom ?? '',
                     dateUntil: dateUntil ?? '',
                 },
             });
+            console.log(res.data.data, '<><><><><><>')
             return res.data.data
-            // console.log(res.data.data)
         }
     });
 
     const debounce = useDebouncedCallback((values) => {
-            setSearchInput(values);
-            setPage(1);
+        setSearchInput(values);
+        setPage(1);
     }, 500);
 
 
@@ -124,6 +125,8 @@ export default function Explore({ searchParams }: { searchParams: any }) {
         } else {
             currentUrl.delete(`location`)
         }
+
+
 
         router.push(`${pathname}?${currentUrl.toString()}`)
     }, [page, searchInput, selectedCategory, minPrice, maxPrice, dateFrom, dateUntil, location])
@@ -185,50 +188,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                                 </div>
                                             )
                                         })
-                                  }
-                                  
-                                  
-                                  
-                                    {/* <div>
-                                        <div className="flex flex-col space-y-2 mt-2">
-                                            <label className="flex items-center space-x-2">
-                                                <input
-                                                    type="radio"
-                                                    name="category"
-                                                    value={1}
-                                                    onChange={(e) =>
-                                                        setSelectedCategory(parseInt(e.target.value))
-                                                    }
-                                                    className="form-radio text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <span>Music</span>
-                                            </label>
-                                            <label className="flex items-center space-x-2">
-                                                <input
-                                                    type="radio"
-                                                    name="category"
-                                                    value={2}
-                                                    onChange={(e) =>
-                                                        setSelectedCategory(parseInt(e.target.value))
-                                                    }
-                                                    className="form-radio text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <span>Sports</span>
-                                            </label>
-                                            <label className="flex items-center space-x-2">
-                                                <input
-                                                    type="radio"
-                                                    name="category"
-                                                    value={6}
-                                                    onChange={(e) =>
-                                                        setSelectedCategory(parseInt(e.target.value))
-                                                    }
-                                                    className="form-radio text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <span>Art</span>
-                                            </label>
-                                        </div>
-                                    </div> */}
+                                    }
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-2">
@@ -312,11 +272,11 @@ export default function Explore({ searchParams }: { searchParams: any }) {
             <div className="flex flex-col">
                 <section className="w-fit ">
                     <div className="grid grid-cols-4 gap-3">
-                        {querySearchData?.eventSearch?.map((item: any, index: any) => {
-                            return (
+                        {
+                            querySearchData?.eventSearch?.map((item, index) => (
                                 <Card key={index} className="h-[200px] lg:h-fit pb-4">
                                     <Link
-                                        href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`}
+                                        href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}
                                     >
                                         <CardContent className="flex items-center justify-center w-full h-full rounded-2xl">
                                             <div className="bg-white w-[180px] lg:w-full lg:h-full rounded-2xl">
@@ -327,7 +287,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                                             : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
                                                         height={142}
                                                         width={142}
-                                                        alt="testing"
+                                                        alt="Event Image"
                                                         className="w-full lg:h-32 object-cover rounded-t-2xl"
                                                     />
                                                 </div>
@@ -339,15 +299,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                                         </h1>
                                                         <h1 className="flex items-center gap-2 text-xs lg:text-sm text-gray-500 font-normal">
                                                             <FaCalendarAlt />
-                                                            {item?.startEvent
-                                                                .split('T')[0]
-                                                                .split('-')
-                                                                .join('/')}{' '}
-                                                            -{' '}
-                                                            {item?.endEvent
-                                                                .split('T')[0]
-                                                                .split('-')
-                                                                .join('/')}
+                                                            {item?.startEvent.split('T')[0].split('-').join('/')} - {item?.endEvent.split('T')[0].split('-').join('/')}
                                                         </h1>
                                                     </div>
                                                     {item?.eventName.length > 20 ? (
@@ -359,31 +311,35 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                                             {item?.eventName}
                                                         </h1>
                                                     )}
-                                                    <h1 className="text-xs lg:text-sm  mt-2 bottom-0 text-gray-500 font-normal">
-                                                        Mulai dari{' '}
+                                                    <h1 className="text-xs lg:text-sm mt-2 bottom-0 text-gray-500 font-normal">
+                                                        Mulai dari
                                                     </h1>
-                                                    <div className=" flex justify-between">
-                                                        <h1 className="text-sm lg:text-base   bottom-0 text-orange-600 font-bold">
-                                                            {' '}
-                                                            RP. {item?.tickets[0]?.price}
+                                                    <div className="flex justify-between">
+                                                        <h1 className="text-sm lg:text-base bottom-0 text-orange-600 font-bold">
+                                                            Rp{item?.minimumPrice.toLocaleString("id-ID")}
                                                         </h1>
-                                                        <h1 className="text-xs lg:text-sm   bottom-0 text-green-500">
-                                                            {' '}
-                                                            Tiket Tersedia
-                                                        </h1>
+                                                        {item?.seatAvailability > 0 ?
+                                                            <h1 className="text-xs lg:text-sm bottom-0 text-green-500">
+                                                                Tiket Tersedia
+                                                            </h1>
+                                                            :
+                                                            <h1 className="text-xs lg:text-sm bottom-0 text-red-500">
+                                                                Tiket Habis
+                                                            </h1>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
                                         </CardContent>
                                     </Link>
                                 </Card>
-                            );
-                        })}
+                            ))
+                        }
                     </div>
                 </section>
                 <section className="flex justify-center mt-6">
-                        {querySearchData?.eventSearch.length > 0 ? 
-                       Array(querySearchData?.totalPage).fill(0).map((item, index) => {
+                    {querySearchData?.eventSearch.length > 0 ?
+                        Array(querySearchData?.totalPage).fill(0).map((item, index) => {
                             return (
                                 <button
                                     key={index}
@@ -394,7 +350,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                 </button>
                             );
                         })
-                        : "Data Tidak Ditemukan"} 
+                        : "Data Tidak Ditemukan"}
                 </section>
             </div>
         </main>

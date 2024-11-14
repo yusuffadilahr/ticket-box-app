@@ -27,7 +27,9 @@ export default function RootLayout({ children }: ILayoutChildren) {
           <Header />
           <Toaster position="top-center" reverseOrder={false} />
           <AuthProvider>
-              <HOCLoading>{children}</HOCLoading>
+            <HOCLoading>
+              {children}
+            </HOCLoading>
           </AuthProvider>
           <Footer />
         </TanstackProviders>

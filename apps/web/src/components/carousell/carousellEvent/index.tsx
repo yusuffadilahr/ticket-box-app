@@ -55,7 +55,7 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                     <CarouselItem key={index} className=" basis-1/2 lg:basis-1/4">
                         <div className="p-1">
                             <Card className="h-[250px] lg:h-fit pb-2 rounded-2xl">
-                                <Link href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`}>
+                                <Link href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}>
                                     <CardContent className="flex items-center justify-center">
                                         <div className='w-full lg:h-44'>
                                             <Image

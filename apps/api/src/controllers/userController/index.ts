@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { prisma } from '@/connection';
 import { hashPassword, comparePassword } from '@/utils/passwordHash';
 import { nanoid } from 'nanoid';
-import { encodeToken } from '@/utils/token.sign';
-import fs from 'fs';
+import { decodeToken, encodeToken } from '@/utils/token.sign';
+import fs, { readFileSync } from 'fs';
 import { compile } from 'handlebars';
 import { transporter } from '@/utils/transporter';
 import { addMonths, addHours } from 'date-fns';
@@ -244,7 +244,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
       let compiledHtml: any = await compile(emailHtml);
       compiledHtml = compiledHtml({
         email: email,
-        url: `http://localhost:3000/auth/user/forgot-password/${token}`,
+        url: `http://localhost:3000/user/forgot-password/${token}`,
       });
 
       await transporter.sendMail({
@@ -291,6 +291,18 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
       },
     });
 
+    const emailSucces = readFileSync('./src/public/emailSend/resetPasswordSucces.html', 'utf-8')
+    let sendEmail: any = await compile(emailSucces)
+    sendEmail = sendEmail({
+      firstName: findUser?.firstName,
+      url: 'http://localhost:3000/user/login'
+    })
+
+    await transporter.sendMail({
+      to: findUser?.email,
+      html: sendEmail
+    })
+
     res.status(200).json({
       error: false,
       message: 'Berhasil merubah password!',
@@ -325,8 +337,7 @@ export const resetPasswordProfile = async (req: Request, res: Response, next: Ne
     );
 
     if (!match) throw { msg: 'Password existing anda salah', status: 406 };
-    if (samePassword)
-      throw { msg: 'Harap masukan password yang berbeda', status: 406 };
+    if (samePassword) throw { msg: 'Harap masukan password yang berbeda', status: 406 };
 
     await prisma.users.update({
       data: {
@@ -394,6 +405,18 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
       },
       where: { id: findUser?.id },
     });
+    
+    const emailSucces = readFileSync('./src/public/emailSend/verifyEmailSucces.html', 'utf-8')
+    let sendEmail: any = await compile(emailSucces)
+    sendEmail = sendEmail({
+      firstName: findUser?.firstName,
+      url: 'http://localhost:3000/'
+    })
+
+    await transporter.sendMail({
+      to: findUser?.email,
+      html: sendEmail
+    })
 
     res.status(200).json({
       error: false,
@@ -404,3 +427,42 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
     next(error);
   }
 };
+
+export const sendVerifyEmailUser = async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {authorization} = req.headers
+    const token: any = authorization?.split(' ')[1] as string
+    
+    const decodedToken = await decodeToken(token) as any
+    const userId = decodedToken?.data?.id
+    
+    const findUser = await prisma.users.findFirst({
+      where: {id: userId}
+    })
+
+    if(!findUser) throw {msg: 'User tidak ditemukan', status: 404}
+
+    const emailHTML = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8');
+    let compiledHtml: any = await compile(emailHTML);
+    compiledHtml = compiledHtml({
+      firstName: findUser?.firstName,
+      email: findUser?.email,
+      url: `http://localhost:3000/user/verification-user/${findUser?.verifyCode}-TBX-${token}`,
+      verifCode: findUser?.verifyCode
+    });
+
+    await transporter.sendMail({
+      to: findUser?.email,
+      subject: 'Verifikasi dirimu sekarang!',
+      html: compiledHtml
+    })
+
+    res.status(200).json({
+      error: false,
+      message: 'Harap cek email secara berkala!',
+      data: {}
+    })
+  } catch (error) {
+    next(error)
+  }
+}
