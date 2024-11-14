@@ -1,129 +1,18 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
-
-// Table Users{
-//   id uuid [pk]
-//   username string 
-//   email string 
-//   password string
-//   refferalCode string
-//   profilePictureUrl string
-//   totalPoint int 
-// }
-
-// Table EventOrganizer{
-//   id uuid [pk]
-//   companyName string 
-//   phoneNumber string 
-//   pic string 
-// }
-
-// Table RefferalPoints{
-//   id int [pk]
-//   point int 
-//   expiry datetime 
-//   usersId uuid [ref: > Users.id]
-// }
-
-// Table RefferalDiscounts{
-//   id int [pk]
-//   discount int 
-//   expiry datetime 
-//   isUsed boolean
-//   usersId uuid [ref: > Users.id]
-// }
-
-// Table Events{
-//   id int [pk]
-//   name string 
-//   type EventType
-//   locationName string
-//   location string 
-//   url string
-//   description string 
-//   categoryId int [ref: > Category.id] 
-//   startDate datetime 
-//   endDate datetime 
-//   isPaid boolean
-//   capacity int
-//   eo uuid [ref: > EventOrganizer.id]
-// }
-
-// Table EventTickets{
-//   id int [pk]
-//   name string 
-//   price int 
-//   available int 
-//   bookSeat int
-//   discount int 
-//   discountStart date
-//   discountExpiry date 
-//   startDate datetime
-//   endDate datetime
-//   eventsId int [ref: > Events.id]
-// }
-
-// enum EventType{
-//   ONLINE
-//   OFFLINE
-// }
-
-// Table Category{
-//   id int [pk]
-//   name string
-// }
-
-// Table EventImages{
-//   id int [pk]
-//   url string
-
-//   eventsId int [ref: > Events.id]
-// }
-
-// Table Transactions{
-//   id int [pk]
-//   eventId int [ref: > Events.id]
-//   totalPrice int
-//   usersId uuid [ref: > Users.id]
-// }
-
-// Table TransactionDetails{
-//   id int [pk]
-//   transactionsId int [ref: > Transactions.id]
-//   ticketId int [ref: > EventTickets.id]
-//   price int 
-//   qty int
-// }
-
-// Table TransactionStatus{
-//   id int [pk]
-//   status Status 
-//   transactionsId int [ref: > Transactions.id] 
-//   createdAt datetime
-// }
-
-// enum Status{
-//   WAITING_FOR_PAYMENT
-//   PAID
-//   CANCELLED
-// }
-
-// Table Reviews{
-//   usersId uuid [ref: > Users.id]
-//   eventsId int [ref: > Events.id]
-//   comments string
-//   rating int 
-//   feedback string
-// }
 
 model Users {
   id                  String   @id @default(uuid())
@@ -132,14 +21,14 @@ model Users {
   email               String   @unique
   password            String
   role                String   @default("user")
-  phoneNumber         String?  @db.LongText
-  identityNumber      String?  @db.LongText
+  phoneNumber         String?  @db.Text
+  identityNumber      String?  @db.Text
   profilePicture      String?
   isVerified          Boolean
   verifyCode          String
   referralCode        String   @unique
   isGoogleRegister    Boolean? @default(false)
-  forgotPasswordToken String?  @db.LongText
+  forgotPasswordToken String?  @db.Text
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -157,17 +46,17 @@ model Users {
 // User organizer tugasnya itu CRUD/Dashboard
 
 model EventOrganizer {
-  id                  String  @id @default(uuid())
+  id                  String   @id @default(uuid())
   organizerName       String // soundproject
   ownerName           String
-  email               String  @unique
+  email               String   @unique
   password            String
-  role                String  @default("EO")
-  forgotPasswordToken String? @db.LongText
+  role                String   @default("EO")
+  forgotPasswordToken String?  @db.Text
   phoneNumber         String
   isVerified          Boolean?
   verifyCode          String?
-  identityNumber      String? @unique
+  identityNumber      String?  @unique
   profilePicture      String
 
   createdAt DateTime  @default(now())
@@ -185,7 +74,7 @@ model Event {
   eventName        String
   location         String
   locationUrl      String
-  description      String   @db.LongText
+  description      String   @db.Text
   isPaid           Boolean
   startEvent       DateTime
   endEvent         DateTime
@@ -284,8 +173,8 @@ model ReferalDiscounts {
 model Reviews {
   id         Int    @id @default(autoincrement())
   rating     Int
-  reviewText String @db.LongText
-  feedback   String @db.LongText
+  reviewText String @db.Text
+  feedback   String @db.Text
   eventId    Int
   userId     String
 
