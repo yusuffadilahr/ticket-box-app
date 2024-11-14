@@ -4,6 +4,9 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,18 +20,19 @@ datasource db {
 
 
 model Users {
-  id                  String  @id @default(uuid())
+  id                  String   @id @default(uuid())
   firstName           String
   lastName            String
-  email               String  @unique
+  email               String   @unique
   password            String
-  role                String  @default("user")
-  phoneNumber         String
-  identityNumber      String     @unique
+  role                String   @default("user")
+  phoneNumber         String?  @db.Text
+  identityNumber      String?  @db.Text
   profilePicture      String?
   isVerified          Boolean
   verifyCode          String
   referralCode        String  @unique
+  isGoogleRegister    Boolean? @default(false)
   forgotPasswordToken String? @db.Text
 
   createdAt DateTime  @default(now())
@@ -55,6 +59,8 @@ model EventOrganizer {
   role           String  @default("EO")
   forgotPasswordToken String? @db.Text
   phoneNumber    String
+  isVerified  Boolean?
+  verifyCode String?
   identityNumber String? @unique
   profilePicture String
 

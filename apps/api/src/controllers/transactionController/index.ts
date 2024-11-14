@@ -48,6 +48,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
 
             // if (item.quantity > ticket.seatAvailable) throw { msg: `Tiket yang dibeli dengan id = ${item.ticketId} melebihi kuota`, status: 400 };
 
+
             const subtotal = item.quantity * item.price
             const totalDiscount = item.quantity * item.discount
             totalPembayaran += subtotal
@@ -91,6 +92,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             const findUserRefferal = await prisma.points.findFirst({
                 where: {
                     userIdRefferalMatch: userId,
+
 
                 }
             })
@@ -165,6 +167,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
 
         const paymentToken = await snap.createTransaction({
             payment_type: 'bank_transfer',
+
             transaction_details: {
                 order_id: transactionId.id.toString(),
                 gross_amount: totalPembayaran,

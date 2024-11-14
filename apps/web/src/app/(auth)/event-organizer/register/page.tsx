@@ -12,10 +12,11 @@ import { useMutation } from "@tanstack/react-query";
 import { IRegisterOrganizer } from "./type";
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { toast } from "react-hot-toast";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 export default function RegisterOrganizer() {
+    const router = useRouter()
     const pathname = usePathname()
     const { mutate: handleRegister, isPending } = useMutation({
         mutationFn: async ({ organizerName, ownerName, email, password, phoneNumber, identityNumber }: IRegisterOrganizer) => {
@@ -25,12 +26,12 @@ export default function RegisterOrganizer() {
         },
         onSuccess: (res) => {
             console.log(res)
-            toast.success(res.data.message)
-
+            toast.success(res?.data?.message)
+            router.push('/event-organizer/login')
         },
-        onError: (err) => {
-            console.log(err)
-            toast.error('gagal')
+        onError: (err: any) => {
+            console.log(err?.response?.data?.message)
+            toast.error(err?.response?.data?.message)
         }
     })
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);

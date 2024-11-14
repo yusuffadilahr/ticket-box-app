@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { EventSchema } from '@/features/event/schema/eventSchemas';
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
-import { toast } from 'react-hot-toast'
+import { toast } from 'react-hot-toast';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -16,39 +16,39 @@ import { Tooltip } from 'react-tooltip';
 
 
 const EventForm = () => {
-    const { mutate: mutationCreateEvent } = useMutation({
-        mutationFn: async (values: FormData) => {
-            console.log(values);
-            return await instance.post('/event/new-event', values);
-        },
-        onSuccess: (res) => {
-            toast.success('beerhasil')
-            console.log(res);
-        },
-        onError: (error) => {
-            toast.error('error bro')
-            console.log(error);
-        },
-    });
-    const { data: getCategory } = useQuery({
-        queryKey: ['get-category'],
-        queryFn: async () => {
-            const res = await instance.get('/category');
-            return res.data.data;
-        },
-    });
+  const { mutate: mutationCreateEvent } = useMutation({
+    mutationFn: async (values: FormData) => {
+      console.log(values);
+      return await instance.post('/event/new-event', values);
+    },
+    onSuccess: (res) => {
+      toast.success('beerhasil');
+      console.log(res);
+    },
+    onError: (error) => {
+      toast.error('error bro');
+      console.log(error);
+    },
+  });
+  const { data: getCategory } = useQuery({
+    queryKey: ['get-category'],
+    queryFn: async () => {
+      const res = await instance.get('/category');
+      return res.data.data;
+    },
+  });
 
-    const [newTicket, setNewTicket] = useState({
-        price: 0,
-        ticketName: '',
-        ticketType: '',
-        seatAvailable: 0,
-        discount: 0,
-        startDate: '',
-        endDate: '',
-    });
+  const [newTicket, setNewTicket] = useState({
+    price: 0,
+    ticketName: '',
+    ticketType: '',
+    seatAvailable: 0,
+    discount: 0,
+    startDate: '',
+    endDate: '',
+  });
 
-    const [isPaid, setIsPaid] = useState(true)
+  const [isPaid, setIsPaid] = useState(true);
 
     return (
         <main className="bg-white p-5 px-20">
@@ -88,98 +88,111 @@ const EventForm = () => {
                     fd.append('artist', values.artist);
                     fd.append('categoryId', values.categoryId);
 
-                    const ticketsEvent = values?.tickets!.map(
-                        (ticket: any, index: any) => {
-                            return {
-                                price: Number(ticket.price),
-                                ticketName: ticket.ticketName,
-                                ticketType: ticket.ticketType,
-                                seatAvailable: Number(ticket.seatAvailable),
-                                version: ticket.version,
-                                discount: Number(ticket.discount),
-                                startDate: new Date(ticket.startDate),
-                                endDate: new Date(ticket.endDate),
-                            };
-                        },
-                    );
+          const ticketsEvent = values?.tickets!.map(
+            (ticket: any, index: any) => {
+              return {
+                price: Number(ticket.price),
+                ticketName: ticket.ticketName,
+                ticketType: ticket.ticketType,
+                seatAvailable: Number(ticket.seatAvailable),
+                version: ticket.version,
+                discount: Number(ticket.discount),
+                startDate: new Date(ticket.startDate),
+                endDate: new Date(ticket.endDate),
+              };
+            },
+          );
 
-                    console.log(ticketsEvent);
-                    fd.append(`tickets`, JSON.stringify(ticketsEvent));
+          console.log(ticketsEvent);
+          fd.append(`tickets`, JSON.stringify(ticketsEvent));
 
-                    values.images.forEach((image: any, index: any) => {
-                        fd.append(`images`, image);
-                    });
+          values.images.forEach((image: any, index: any) => {
+            fd.append(`images`, image);
+          });
 
-                    mutationCreateEvent(fd);
-                }}
-            >
-                {({ values, setFieldValue }) => (
-                    <Form className=''>
-                        <section className="bg-white flex flex-col justify-center rounded-xl h-fit pb-24 w-full border border-gray-200 shadow-lg p-5">
-                            <div className="flex justify-center font-bold text-2xl pb-5">
-                                Event
-                            </div>
-                            <div className="grid grid-cols-2 gap-4 px-40">
-                                <div className="flex flex-col relative">
-                                    <label className=" text-sm">Nama Event</label>
-                                    <Field
-                                        name="eventName"
-                                        placeholder="Nama Acara"
-                                        className="border border-gray-500 rounded-md p-2"
-                                    />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="eventName" component="div" className='text-xs text-red-600' />
-                                    </div>
-
-                                </div>
-                                <div className="flex flex-col">
-                                    <label className=" text-sm">Kategori</label>
-                                    <Field
-                                        as="select"
-                                        name="categoryId"
-                                        placeholder="ID Kategori"
-                                        className="border border-gray-500 rounded-md p-2"
-                                    >
-                                        <option disabled value="">
-                                            -- Pilih Kategori --
-                                        </option>
-                                        {getCategory?.length > 0 &&
-                                            getCategory?.map((item: any, i: any) => (
-                                                <option value={item?.id} key={i}>
-                                                    {item?.Category}
-                                                </option>
-                                            ))}
-                                    </Field>
-                                    <div className='h-1'>
-                                        <ErrorMessage name="categoryId" component="div" className='text-xs text-red-600' />
-                                    </div>
-                                </div>
-                                <div className="flex flex-col">
-                                    <label className=" text-sm">
-                                        Event Start Date
-                                    </label>
-                                    <Field
-                                        name="startEvent"
-                                        placeholder="Tanggal Mulai"
-                                        type="datetime-local"
-                                        className="border border-gray-500 rounded-md p-2"
-                                    />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="startEvent" component="div" className='text-xs text-red-600' />
-                                    </div>
-                                </div>
-                                <div className="flex flex-col">
-                                    <label className=" text-sm">Event End Date</label>
-                                    <Field
-                                        name="endEvent"
-                                        placeholder="Tanggal Akhir"
-                                        type="datetime-local"
-                                        className="border border-gray-500 rounded-md p-2"
-                                    />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="endEvent" component="div" className='text-xs text-red-600' />
-                                    </div>
-                                </div>
+          mutationCreateEvent(fd);
+        }}
+      >
+        {({ values, setFieldValue }) => (
+          <Form className="">
+            <section className="bg-white flex flex-col justify-center rounded-xl h-fit pb-24 w-full border border-gray-200 shadow-lg p-5">
+              <div className="flex justify-center font-bold text-2xl pb-5">
+                Event
+              </div>
+              <div className="grid grid-cols-2 gap-4 px-40">
+                <div className="flex flex-col relative">
+                  <label className=" text-sm">Nama Event</label>
+                  <Field
+                    name="eventName"
+                    placeholder="Nama Acara"
+                    className="border border-gray-500 rounded-md p-2"
+                  />
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="eventName"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <label className=" text-sm">Kategori</label>
+                  <Field
+                    as="select"
+                    name="categoryId"
+                    placeholder="ID Kategori"
+                    className="border border-gray-500 rounded-md p-2"
+                  >
+                    <option disabled value="">
+                      -- Pilih Kategori --
+                    </option>
+                    {getCategory?.length > 0 &&
+                      getCategory?.map((item: any, i: any) => (
+                        <option value={item?.id} key={i}>
+                          {item?.Category}
+                        </option>
+                      ))}
+                  </Field>
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="categoryId"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <label className=" text-sm">Event Start Date</label>
+                  <Field
+                    name="startEvent"
+                    placeholder="Tanggal Mulai"
+                    type="datetime-local"
+                    className="border border-gray-500 rounded-md p-2"
+                  />
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="startEvent"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <label className=" text-sm">Event End Date</label>
+                  <Field
+                    name="endEvent"
+                    placeholder="Tanggal Akhir"
+                    type="datetime-local"
+                    className="border border-gray-500 rounded-md p-2"
+                  />
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="endEvent"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
 
                                 <div className="flex flex-col">
                                     <label className=" text-sm">Lokasi</label>
@@ -206,32 +219,32 @@ const EventForm = () => {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-center gap-5 col-span-2">
-                                    <label className=" text-sm">Berbayar</label>
-                                    <Field
-                                        type="checkbox"
-                                        name="isPaid"
-                                        className="border border-gray-500 rounded-md p-2"
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                            const checked = e.target.checked;
-                                            setIsPaid(checked);
-                                            setFieldValue("isPaid", checked);
-                                            setFieldValue("price", checked ? values.price : 0);
-                                            setFieldValue("discount", checked ? values.discount : 0);
-                                        }}
-                                        defaultChecked={values.isPaid}
-                                    />
-                                </div>
-                                <div className="flex flex-col col-span-2">
-                                    <label className="font-bold text-sm">Deskripsi</label>
-                                    <ReactQuill
-                                        value={values.description}
-                                        onChange={(html) => setFieldValue('description', html)}
-                                        className="h-full w-full"
-                                    />
-                                </div>
-                            </div>
-                        </section>
+                <div className="flex items-center justify-center gap-5 col-span-2">
+                  <label className=" text-sm">Berbayar</label>
+                  <Field
+                    type="checkbox"
+                    name="isPaid"
+                    className="border border-gray-500 rounded-md p-2"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const checked = e.target.checked;
+                      setIsPaid(checked);
+                      setFieldValue('isPaid', checked);
+                      setFieldValue('price', checked ? values.price : 0);
+                      setFieldValue('discount', checked ? values.discount : 0);
+                    }}
+                    defaultChecked={values.isPaid}
+                  />
+                </div>
+                <div className="flex flex-col col-span-2">
+                  <label className="font-bold text-sm">Deskripsi</label>
+                  <ReactQuill
+                    value={values.description}
+                    onChange={(html) => setFieldValue('description', html)}
+                    className="h-full w-full"
+                  />
+                </div>
+              </div>
+            </section>
 
                         <div className="bg-white flex flex-col mt-8 px-10 rounded-xl h-fit w-full border border-gray-200 shadow-lg p-5">
                             <h3 className="flex justify-center font-bold text-2xl pb-5">
@@ -281,137 +294,160 @@ const EventForm = () => {
 
                         </div>
 
-                        <div className="px-40 rounded-xl  mt-8 h-fit w-full border border-gray-200 shadow-lg p-5" >
-                            <h3 className="flex justify-center font-bold text-2xl mt-8 pb-5">
-                                Tambah Tiket Baru
-                            </h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="flex flex-col col-span-2">
-                                    <label className=" text-sm">Nama Tiket</label>
-                                    <Field
-                                        name="ticketName"
-                                        placeholder="Nama Tiket"
-                                        // value={newTicket.ticketName}
-                                        className="border border-gray-500 rounded-md p-2"
-                                    // onChange={(e: any) =>
-                                    //     setNewTicket({
-                                    //         ...newTicket,
-                                    //         ticketName: e.target.value,
-                                    //     })
-                                    // }
-                                    />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="ticketName" component="div" className='text-xs text-red-600' />
-                                    </div>
-                                </div>
-                                <div className="flex flex-col col-span-2">
-                                    <label className=" text-sm">Tipe Tiket</label>
-                                    <Field
-                                        name="ticketType"
-                                        placeholder="Tipe Tiket"
-                                        className="border border-gray-500 rounded-md p-2"
+            <div className="px-40 rounded-xl  mt-8 h-fit w-full border border-gray-200 shadow-lg p-5">
+              <h3 className="flex justify-center font-bold text-2xl mt-8 pb-5">
+                Tambah Tiket Baru
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col col-span-2">
+                  <label className=" text-sm">Nama Tiket</label>
+                  <Field
+                    name="ticketName"
+                    placeholder="Nama Tiket"
+                    // value={newTicket.ticketName}
+                    className="border border-gray-500 rounded-md p-2"
+                    // onChange={(e: any) =>
+                    //     setNewTicket({
+                    //         ...newTicket,
+                    //         ticketName: e.target.value,
+                    //     })
+                    // }
+                  />
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="ticketName"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col col-span-2">
+                  <label className=" text-sm">Tipe Tiket</label>
+                  <Field
+                    name="ticketType"
+                    placeholder="Tipe Tiket"
+                    className="border border-gray-500 rounded-md p-2"
 
-                                    // value={newTicket.ticketType}
-                                    // onChange={(e: any) =>
-                                    //     setNewTicket({
-                                    //         ...newTicket,
-                                    //         ticketType: e.target.value,
-                                    //     })
-                                    // }
-                                    />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="ticketType" component="div" className='text-xs text-red-600' />
-                                    </div>
-                                </div>
+                    // value={newTicket.ticketType}
+                    // onChange={(e: any) =>
+                    //     setNewTicket({
+                    //         ...newTicket,
+                    //         ticketType: e.target.value,
+                    //     })
+                    // }
+                  />
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="ticketType"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
 
-                                {isPaid && (
-                                    <div className="flex flex-col col-span-2">
-                                        <label className=" text-sm">Harga</label>
-                                        <Field
-                                            name="price"
-                                            placeholder="Harga"
-                                            type="number"
-                                            className="border border-gray-500 rounded-md p-2"
+                {isPaid && (
+                  <div className="flex flex-col col-span-2">
+                    <label className=" text-sm">Harga</label>
+                    <Field
+                      name="price"
+                      placeholder="Harga"
+                      type="number"
+                      className="border border-gray-500 rounded-md p-2"
 
-                                        // value={newTicket.price}
-                                        // onChange={(e: any) =>
-                                        //     setNewTicket({
-                                        //         ...newTicket,
-                                        //         price: Number(e.target.value),
-                                        //     })
-                                        // }
-                                        />
-                                        <div className='h-1'>
-                                            <ErrorMessage name="price" component="div" className='text-xs text-red-600' />
-                                        </div>
-                                    </div>
-                                )}
-                                <div className="flex flex-col col-span-2">
-                                    <label className=" text-sm">Kuota Kursi</label>
-                                    <Field
-                                        name="seatAvailable"
-                                        placeholder="Kuota Kursi"
-                                        type="number"
-                                        className="border border-gray-500 rounded-md p-2"
+                      // value={newTicket.price}
+                      // onChange={(e: any) =>
+                      //     setNewTicket({
+                      //         ...newTicket,
+                      //         price: Number(e.target.value),
+                      //     })
+                      // }
+                    />
+                    <div className="h-1">
+                      <ErrorMessage
+                        name="price"
+                        component="div"
+                        className="text-xs text-red-600"
+                      />
+                    </div>
+                  </div>
+                )}
+                <div className="flex flex-col col-span-2">
+                  <label className=" text-sm">Kuota Kursi</label>
+                  <Field
+                    name="seatAvailable"
+                    placeholder="Kuota Kursi"
+                    type="number"
+                    className="border border-gray-500 rounded-md p-2"
 
-                                    // value={newTicket.seatAvailable}
-                                    // onChange={(e: any) =>
-                                    //     setNewTicket({
-                                    //         ...newTicket,
-                                    //         seatAvailable: Number(e.target.value),
-                                    //     })
-                                    // }
-                                    />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="seatAvailable" component="div" className='text-xs text-red-600' />
-                                    </div>
-                                </div>
+                    // value={newTicket.seatAvailable}
+                    // onChange={(e: any) =>
+                    //     setNewTicket({
+                    //         ...newTicket,
+                    //         seatAvailable: Number(e.target.value),
+                    //     })
+                    // }
+                  />
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="seatAvailable"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
 
-                                {isPaid && (
-                                    <div className="flex flex-col col-span-2">
-                                        <label className=" text-sm">Diskon</label>
-                                        <Field
-                                            name="discount"
-                                            placeholder="Diskon"
-                                            type="number"
-                                            className="border border-gray-500 rounded-md p-2"
+                {isPaid && (
+                  <div className="flex flex-col col-span-2">
+                    <label className=" text-sm">Diskon</label>
+                    <Field
+                      name="discount"
+                      placeholder="Diskon"
+                      type="number"
+                      className="border border-gray-500 rounded-md p-2"
 
-                                        // value={newTicket.discount}
-                                        // onChange={(e: any) =>
-                                        //     setNewTicket({
-                                        //         ...newTicket,
-                                        //         discount: Number(e.target.value),
-                                        //     })
-                                        // }
-                                        />
-                                        <ErrorMessage name="discount" component="div" className='text-xs text-red-600' />
-
-                                    </div>
-                                )}
-                                <div className="flex flex-col col-span-2">
-                                    <label className=" text-sm">Tanggal Mulai</label>
-                                    <Field
-                                        name="startDate"
-                                        type="datetime-local"
-                                        // value={newTicket.startDate}
-                                        className="border border-gray-500 rounded-md p-2"
-                                    // onChange={(e: any) =>
-                                    //     setNewTicket({
-                                    //         ...newTicket,
-                                    //         startDate: e.target.value,
-                                    //     })
-                                    // }
-                                    />
-                                    <div className='h-1'>
-                                        <ErrorMessage name="startDate" component="div" className='text-xs text-red-600' />
-                                    </div>
-                                </div>
-                                <div className="flex flex-col col-span-2">
-                                    <label className=" text-sm">Tanggal Berakhir</label>
-                                    <Field
-                                        name="endDate"
-                                        type="datetime-local"
-                                        className="border border-gray-500 rounded-md p-2"
+                      // value={newTicket.discount}
+                      // onChange={(e: any) =>
+                      //     setNewTicket({
+                      //         ...newTicket,
+                      //         discount: Number(e.target.value),
+                      //     })
+                      // }
+                    />
+                    <ErrorMessage
+                      name="discount"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col col-span-2">
+                  <label className=" text-sm">Tanggal Mulai</label>
+                  <Field
+                    name="startDate"
+                    type="datetime-local"
+                    // value={newTicket.startDate}
+                    className="border border-gray-500 rounded-md p-2"
+                    // onChange={(e: any) =>
+                    //     setNewTicket({
+                    //         ...newTicket,
+                    //         startDate: e.target.value,
+                    //     })
+                    // }
+                  />
+                  <div className="h-1">
+                    <ErrorMessage
+                      name="startDate"
+                      component="div"
+                      className="text-xs text-red-600"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col col-span-2">
+                  <label className=" text-sm">Tanggal Berakhir</label>
+                  <Field
+                    name="endDate"
+                    type="datetime-local"
+                    className="border border-gray-500 rounded-md p-2"
 
                                     // value={newTicket.endDate}
                                     // onChange={(e: any) =>

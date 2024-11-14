@@ -13,6 +13,7 @@ interface IAuthProviderProps {
     children: ReactNode;
 }
 
+dotenv.config()
 export default function AuthProvider({ children }: IAuthProviderProps) {
     const router = useRouter()
     const pathname = usePathname()
@@ -40,6 +41,8 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
                 point: auth?.data?.data?.point,
                 discount: auth?.data?.data?.discount
             })  
+
+            console.log(auth, "<<< auth provider")
 
             const encryptRole = CryptoJS.AES.encrypt(auth?.data?.data?.role, secret_key).toString()
 

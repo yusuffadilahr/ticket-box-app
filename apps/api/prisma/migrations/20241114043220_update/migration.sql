@@ -9,12 +9,13 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'user',
-    "phoneNumber" TEXT NOT NULL,
-    "identityNumber" TEXT NOT NULL,
+    "phoneNumber" TEXT,
+    "identityNumber" TEXT,
     "profilePicture" TEXT,
     "isVerified" BOOLEAN NOT NULL,
     "verifyCode" TEXT NOT NULL,
     "referralCode" TEXT NOT NULL,
+    "isGoogleRegister" BOOLEAN DEFAULT false,
     "forgotPasswordToken" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -184,9 +185,6 @@ CREATE TABLE "transactionStatus" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_identityNumber_key" ON "users"("identityNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_referralCode_key" ON "users"("referralCode");

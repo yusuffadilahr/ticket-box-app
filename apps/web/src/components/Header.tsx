@@ -27,6 +27,8 @@ import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import Cookies from 'js-cookie';
+import { signOut } from 'firebase/auth';
+import auth from '@/utils/firebase/firebase';
 
 const SHEET_SIDES = ['top', 'right', 'bottom', 'left'] as const;
 
@@ -65,12 +67,13 @@ export const Header = () => {
     }
   }, 200);
 
-  const handleRedirectToOrganizerPage = () => {
-    setAuth({ token: '' })
-    Cookies.remove('role')
-    Cookies.remove('token')
-    router.push('/event-organizer/register')
-  }
+  const handleRedirectToOrganizerPage = async () => {
+    await signOut(auth)
+    setAuth({ token: '' });
+    Cookies.remove('role');
+    Cookies.remove('token');
+    router.push('/event-organizer/login');
+  };
 
   return (
     <>
@@ -124,10 +127,6 @@ export const Header = () => {
                 src={Logo}
               />
             </Link>
-            <div className="font-bold text-sm flex">
-              <h1>Loyalty Points(0)</h1>
-              {/* LOYALTY POINTS HARUS DIGANTI NANTI DARI AUTH PROVIDER DAN CONTROLLERNYA DIHAPUS, INI UNTUK SEMENTARA */}
-            </div>
           </div>
           <div
             className={`${pathname.startsWith('/user') ? 'hidden' : 'block'} relative z-30`}
@@ -191,7 +190,12 @@ export const Header = () => {
             <div className="  hover:text-slate-300 transition-all duration-200 ease-in-out">
               <div className="flex items-center gap-1">
                 <FaRegCalendarAlt />
-                <button onClick={handleRedirectToOrganizerPage} className="font-bold text-sm">Buat Event</button>
+                <button
+                  onClick={handleRedirectToOrganizerPage}
+                  className="font-bold text-sm"
+                >
+                  Buat Event
+                </button>
               </div>
             </div>
             <div className="hover:text-slate-300 transition-all duration-200 ease-in-out">

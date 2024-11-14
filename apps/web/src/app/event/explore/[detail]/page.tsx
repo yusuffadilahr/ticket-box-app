@@ -1,9 +1,7 @@
 'use client';
 import {FaArrowRight, FaArrowLeft, FaStar } from 'react-icons/fa';
 
-import contohgambar from './../../../../../gagagugu.jpg';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -33,9 +31,6 @@ interface IParams {
     };
 }
 
-// const loadSnap = dynamic(() => import('@/utils/midtrans'), { ssr: false });
-
-
 export default function EventDetail({ params }: IParams) {
     const router = useRouter()
     const { detail } = params;
@@ -64,7 +59,7 @@ export default function EventDetail({ params }: IParams) {
 
 
     const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
-    const [pointsToDeduct, setPointsToDeduct] = useState(0); // New state for points deduction
+    const [pointsToDeduct, setPointsToDeduct] = useState(0);
     const [useReferralDiscount, setUseReferralDiscount] = useState(false);
 
 
@@ -101,11 +96,26 @@ export default function EventDetail({ params }: IParams) {
         onSuccess: (res) => {
             console.log(res)
             router.push(res?.data?.data?.paymentToken?.redirect_url)
+            router.push(res?.data?.data?.paymentToken?.redirect_url)
         },
         onError: (err) => {
             console.log(err)
         }
     })
+
+    useEffect(() => {
+        if (queryDataDetailEvent?.tickets?.length > 0) {
+            setTicketQuantities(new Array(queryDataDetailEvent.tickets.length).fill(0));
+        }
+    }, [queryDataDetailEvent?.tickets]);
+
+
+
+    useEffect(() => {
+        if (queryDataDetailEvent?.tickets?.length > 0) {
+            setTicketQuantities(new Array(queryDataDetailEvent.tickets.length).fill(0));
+        }
+    }, [queryDataDetailEvent?.tickets]);
 
 
 
@@ -131,6 +141,13 @@ export default function EventDetail({ params }: IParams) {
     };
 
     const decrement = (index: number) => {
+        setTicketQuantities((prevQuantities) => {
+            const newQuantities = [...prevQuantities];
+
+            newQuantities[index] = Math.max((newQuantities[index] || 0) - 1, 0);
+
+            return newQuantities;
+        });
         setTicketQuantities((prevQuantities) => {
             const newQuantities = [...prevQuantities];
 

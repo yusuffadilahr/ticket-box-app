@@ -16,14 +16,13 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export const SidebarMenu = () => {
-  const logout = authStore((state) => state.setAuth);
+  const logout = authStore((state) => state.resetAuth);
   const ownerName = authStore((state) => state.ownerName);
   const organizerName = authStore((state) => state.organizerName);
   const profilePicture = authStore((state) => state.profilePicture);
-  console.log(profilePicture);
   const router = useRouter();
   const handleLogout = () => {
-    logout({ token: '' });
+    authStore.getState().resetAuth()
     Cookies.remove('role');
     Cookies.remove('token');
     router.push('/event-organizer/login');
@@ -46,20 +45,20 @@ export const SidebarMenu = () => {
               width={500}
               height={500}
               alt="foto-profil"
-              className='rounded-full'
+              className="rounded-full"
             />
           </div>
           <div>
-            <p className="font-semibold">{ownerName ? ownerName : 'Admin'}</p>
-            <p className="text-sm text-gray-300">
-              {organizerName ? organizerName : 'Organizer'}
+            <p className="font-semibold">{ownerName ? ownerName.split(' ')[0] : 'Admin'}</p>
+            <p className="text-xs w-full text-gray-300">
+              {organizerName?.length > 8 ? <h1>{organizerName?.slice(0, 8)}..</h1> : organizerName}
             </p>
           </div>
         </div>
 
         <div className="space-y-2">
           <Link href="/event/dashboard">
-            <button className="flex items-center space-x-3 py-2 px-4 rounded bg-blue-800">
+            <button className="flex items-center w-full space-x-3 py-2 px-4 rounded bg-blue-800">
               <FaHome className="text-lg" />
               <span className="text-xs">Dashboard</span>
             </button>
@@ -76,15 +75,19 @@ export const SidebarMenu = () => {
             </button>
           </Link>
 
-          <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-            <FaTicketAlt className="text-lg" />
-            <span className="text-xs">Penjualan Tiket</span>
-          </button>
+          <Link href="/event/dashboard/penjualan-tiket">
+            <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
+              <FaTicketAlt className="text-lg" />
+              <span className="text-xs">Penjualan Tiket</span>
+            </button>
+          </Link>
 
-          <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-            <FaChartBar className="text-xs" />
-            <span className="text-xs">Laporan Penjualan</span>
-          </button>
+          <Link href="/event/dashboard/report">
+            <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
+              <FaChartBar className="text-xs" />
+              <span className="text-xs">Laporan Penjualan</span>
+            </button>
+          </Link>
 
           {/* <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
                         <FaFileAlt className="text-lg" />
@@ -100,17 +103,21 @@ export const SidebarMenu = () => {
             Akun
           </div>
 
-          <button className="flex items-center space-x-3 w-full py-2 px-4 hover:bg-blue-700 rounded">
-            <FaUser className="text-lg" />
-            <span className="text-xs">Informasi Dasar</span>
-          </button>
+          <Link href="/event/dashboard/profile-event-organizer/profile">
+            <button className="flex items-center space-x-3 w-full py-2 px-4 hover:bg-blue-700 rounded">
+              <FaUser className="text-lg" />
+              <span className="text-xs">Informasi Dasar</span>
+            </button>
+          </Link>
 
-          <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-            <FaKey className="text-lg" />
-            <Link href="/event/dashboard/reset-password">
-              <span className="text-xs">Kata sandi</span>
-            </Link>
-          </button>
+          <Link href="/event/dashboard/profile-event-organizer/reset-password">
+            <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
+              <FaKey className="text-lg" />
+              <Link href="/event/dashboard/profile-event-organizer/reset-password">
+                <span className="text-xs">Kata sandi</span>
+              </Link>
+            </button>
+          </Link>
 
           {/* <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
                         <FaMoneyBillWave className="text-lg" />
