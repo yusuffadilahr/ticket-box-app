@@ -8,6 +8,7 @@ import { compile } from 'handlebars';
 import { transporter } from '@/utils/transporter';
 import { addMonths, addHours } from 'date-fns';
 import bcrypt from 'bcrypt'
+import { cloudinaryUpload } from '@/utils/cloudinary';
 
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -425,6 +426,29 @@ export const updateProfileUser = async (req: Request, res: Response, next: NextF
     const imagesUpload: any = req.files;
     const { userId, firstName, lastName, phoneNumber, identityNumber } = req.body;
     // if (firstName || lastName || phoneNumber || identityNumber) throw { msg: 'Harus diisi', status: 400 }
+
+    // if(req.files) {
+    //   files = Array.isArray(req.files)
+    //     ? req.files
+    //     : req.files['images']
+    // }
+
+    // const imagesUploaded = []
+    // for (const image of imagesUpload!) {
+    //   const result: any = await cloudinaryUpload(image.buffer)
+    //   console.log(result)
+    //   imagesUploaded.push(result.res!)
+    // }
+
+
+    console.log('>>>>>>>> 430', req.files)
+    const imagesUploaded = await Promise.all(imagesUpload?.images.map(async (item: any) => {
+      const result: any = await cloudinaryUpload(item?.buffer)
+
+      return await result?.res!
+    }))
+
+    console.log(imagesUploaded[0], "<<<<<<<<<<<<<< 436")
 
     await prisma.users.update({
       data: {

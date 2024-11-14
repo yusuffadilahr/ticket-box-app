@@ -38,7 +38,7 @@ export const Header = () => {
   const [isBlur, setIsBlur] = useState(false);
   const [valueInput, setValueInput] = useState<string>('');
   const token = authStore((state) => state?.token);
-  const setAuth = authStore((state) => state.setAuth);
+  const setAuth = authStore((state) => state.setAuth)
   const router = useRouter();
 
   const pathname = usePathname();
@@ -158,7 +158,7 @@ export const Header = () => {
                         className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white"
                         onClick={() => {
                           router.push(
-                            `/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`,
+                            `/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase().split(' ').join('-')}`,
                           );
                           setValueInput('');
                         }}

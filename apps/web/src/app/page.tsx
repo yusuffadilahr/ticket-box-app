@@ -149,16 +149,16 @@ export default function Home() {
 
   return (
     <main className="space-y-8">
-      <div className="w-full sm:h-[800px] lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
+      <div className="w-full sm:h-[700px] lg:h-[750px] sm:px-2 lg:px-28 pt-20 lg:pt-28">
         <CarouselSlider data={queryGetCarousel} />
       </div>
 
       <div className=" px-12 lg:px-20">
         <h1 className="text-2xl font-bold">
           Top Seller
-          <span className="pl-3 text-blue-500 font-normal text-sm">
+          {/* <span className="pl-3 text-blue-500 font-normal text-sm">
             Lihat Semua
-          </span>
+          </span> */}
           <div className="mt-4">
             <CarousellEvent data={queryGetDataTopSell} />
           </div>
@@ -208,7 +208,7 @@ export default function Home() {
                   className="bg-white w-[180px] rounded-2xl lg:w-[280px] lg:h-fit pb-1"
                 >
                   <Link
-                    href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')} ${item.eventName.toLowerCase()}`}
+                    href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}
                   >
                     <div className="w-full lg:h-36">
                       <Image
@@ -284,9 +284,9 @@ export default function Home() {
       <div className="px-12 lg:px-20">
         <h1 className="text-2xl font-bold">
           Event Terbaru
-          <span className="pl-3 text-blue-500 font-normal text-sm">
+          {/* <span className="pl-3 text-blue-500 font-normal text-sm">
             Lihat Semua
-          </span>
+          </span> */}
           <div className="mt-4">
             <CarousellEvent data={queryGetDataNewest} />
           </div>

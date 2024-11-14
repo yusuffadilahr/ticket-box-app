@@ -115,7 +115,7 @@ export const findEvent = async (req: Request, res: Response, next: NextFunction)
                 dateFrom ? { startEvent: { gte: new Date(dateFrom as string) } } : {},
 
                 dateUntil ? { endEvent: { lte: new Date(dateUntil as string) } } : {},
-            ].filter(item => Object.keys(item).length) // Remove empty conditions
+            ].filter(item => Object.keys(item).length)
         };
 
         const eventSearch = await prisma.event.findMany({
@@ -129,21 +129,52 @@ export const findEvent = async (req: Request, res: Response, next: NextFunction)
             skip: offset
         });
 
+
+        const eventDataWithDetails = eventSearch.map(event => {
+            let minPriceForEvent: number | null = null;
+            event.tickets.forEach(ticket => {
+                if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
+                    minPriceForEvent = ticket.price;
+                }
+            });
+
+            let totalSeatsAvailable = 0;
+            event.tickets.forEach(ticket => {
+                totalSeatsAvailable += ticket.seatAvailable;
+            });
+
+            return {
+                ...event,
+                minimumPrice: minPriceForEvent,
+                seatAvailability: totalSeatsAvailable,
+            };
+        });
+
+
+
         const totalCount = await prisma.event.count({
             where: whereConditions
         });
 
         const totalPage = Math.ceil(Number(totalCount) / Number(limit_data));
 
-        if (eventSearch.length === 0 && event) {
+        // if (eventSearch.length === 0 && event) {
+        //     throw { msg: 'Event tidak tersedia', status: 404 };
+        // }
+
+        if (eventDataWithDetails.length === 0 && event) {
             throw { msg: 'Event tidak tersedia', status: 404 };
         }
 
         res.status(200).json({
             error: false,
             message: "Berhasil menampilkan data event!",
-            data: { eventSearch, totalPage }
+            data: {
+                totalPage,
+                eventSearch: eventDataWithDetails,
+            }
         });
+
     } catch (error) {
         next(error);
     }
@@ -350,8 +381,8 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
             console.log('<<<<< sampe mana 8')
 
-            findEvent?.EventImages?.forEach((item: any) => {
-                fs.rmSync(`src/public/images/${item.eventImageUrl}`)
+            findEvent?.EventImages?.forEach((item:any) => {
+                fs.rmSync(`/src/public/images/${item.eventImageUrl}`)
             })
         })
 

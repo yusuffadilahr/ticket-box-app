@@ -64,10 +64,9 @@ export default function ProfileTransaction() {
     };
 
     const isEventReviewed = (eventId: string) => {
-        return Array.isArray(reviewData) && reviewData.some((review: any) => review.eventId === eventId);
+        return Array.isArray(reviewData?.dataReview) &&
+            reviewData.dataReview.some((review: any) => review.eventId === eventId);
     };
-
-
 
 
     return (
@@ -127,7 +126,7 @@ export default function ProfileTransaction() {
                                                                     : item.transactionStatus[0]?.status
                                                     }
                                                     </td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.totalPrice}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">Rp{item.totalPrice.toLocaleString("id-ID")}</td>
                                                 <td className="px-6 py-4 text-sm text-gray-600">
                                                     {isEventReviewed(item.event.id) ? (
                                                         <span className="text-green-500">Event Reviewed</span>

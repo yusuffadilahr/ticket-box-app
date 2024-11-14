@@ -7,32 +7,6 @@ const hashPassword = async (password) => {
   return await bcrypt.hash(password, saltRound);
 };
 
-
-
-
-const categoryEvent = [
-  {
-    id: 1,
-    Category: 'Music',
-  },
-  {
-    id: 2,
-    Category: 'Expo',
-  },
-  {
-    id: 3,
-    Category: 'Sport',
-  },
-  {
-    id: 4,
-    Category: 'Comedy',
-  },
-  {
-    id: 5,
-    Category: 'Seminar',
-  },
-];
-
 const dataEvent = [
   {
     // id: 1,
@@ -1151,15 +1125,6 @@ const ticketArr = [
 
 async function main() {
   let eventIndex = 0; // Initialize event index to track the current event
-
-
-
-  for (let i = 0; i < categoryEvent.length; i++) {
-    const category = categoryEvent[i];
-    await prisma.category.create({
-      data: category,
-    });
-  }
 
   // Loop through each event organizer
   for (let i = 0; i < dataEventOrganizer.length; i++) {

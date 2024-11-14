@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from "express";
 export const handleMidtransNotification = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const notification = req.body;
-        console.log(req.body, '<<<<< test notif')
+        // console.log(req.body, '<<<<< test notif')
         const transactionStatus = notification.transaction_status;
         const orderId = notification.order_id;
 

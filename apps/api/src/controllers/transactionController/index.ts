@@ -9,20 +9,20 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         const { userId, ticketDetails, referralDiscount = 0, referralPoints = 0 } = req.body
         const { id } = req.params
 
-        const findTicketId = ticketDetails.map((item: any) => {
-            return {
-                id: item.ticketId
-            }
-        })
-        console.log(findTicketId, "<<<<<<<<<<<<<<<<<<<<<<<<<<< seat available cek line 13")
+        // const findTicketId = ticketDetails.map((item: any) => {
+        //     return {
+        //         id: item.ticketId
+        //     }
+        // })
+        // console.log(findTicketId, "<<<<<<<<<<<<<<<<<<<<<<<<<<< seat available cek line 13")
 
-        const findTicket = await prisma.tickets.findMany({
-            where: {
-                OR: findTicketId
-            }
-        })
+        // const findTicket = await prisma.tickets.findMany({
+        //     where: {
+        //         OR: findTicketId
+        //     }
+        // })
 
-        console.log(findTicket, "<<< ini data ticket boss!!")
+        // console.log(findTicket, "<<< ini data ticket boss!!")
 
         const dataUser = await prisma.users.findUnique({
             where: {
@@ -47,6 +47,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         const dataDetails = ticketDetails?.map((item: any, i: any) => {
 
             // if (item.quantity > ticket.seatAvailable) throw { msg: `Tiket yang dibeli dengan id = ${item.ticketId} melebihi kuota`, status: 400 };
+
 
             const subtotal = item.quantity * item.price
             const totalDiscount = item.quantity * item.discount
@@ -91,6 +92,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             const findUserRefferal = await prisma.points.findFirst({
                 where: {
                     userIdRefferalMatch: userId,
+
 
                 }
             })
@@ -151,17 +153,21 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
 
         const query = await mysqlConnection()
         await query.query(`
+   
+
             CREATE EVENT transaction_${transactionId.id}
-            ON SCHEDULE AT NOW() + INTERVAL 1 MINUTE
+            ON SCHEDULE AT NOW() + INTERVAL 15 MINUTE
             DO 
             BEGIN
-                INSERT INTO transactionstatus (status, transactionsId) VALUES ('EXPIRED', ${transactionId.id});
-            END
+                INSERT INTO transactionstatus (status, transactionsId, updatedAt) VALUES ('EXPIRED', '${transactionId.id}', utc_timestamp());
+            END;
         `);
+        // DELIMITER ;
 
 
         const paymentToken = await snap.createTransaction({
             payment_type: 'bank_transfer',
+
             transaction_details: {
                 order_id: transactionId.id.toString(),
                 gross_amount: totalPembayaran,
@@ -172,10 +178,6 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 phone: dataUser?.phoneNumber,
             }
         });
-
-
-
-
 
         res.status(200).json({
             error: false,
