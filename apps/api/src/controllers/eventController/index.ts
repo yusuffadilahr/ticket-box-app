@@ -9,7 +9,7 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
         const { eventName, location, description, isPaid, locationUrl, startEvent, endEvent, categoryId, userId, tickets } = req.body
         const dataArrayTikcet = JSON.parse(tickets)
 
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: any) => {
             const event = await tx.event.create({
                 data: {
                     eventName,
@@ -34,17 +34,18 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
             await tx.eventImages.createMany({
                 data: imagesArr
             })
-
+            if (dataArrayTikcet.length == 0) throw { msg: 'tiket wajib diisi', status: 400 }
             const dataTicket = dataArrayTikcet?.map((tik: any) => {
                 return {
-                    price: Number(tik.price),
-                    ticketName: tik.ticketName,
-                    ticketType: tik.ticketType,
-                    seatAvailable: Number(tik.seatAvailable),
-                    eventId: Number(event.id),
-                    discount: Number(tik.discount),
-                    startDate: addHours(new Date(tik.startDate), 7),
-                    endDate: addHours(new Date(tik.endDate), 7),
+                    price: Number(tik?.price),
+                    ticketName: tik?.ticketName,
+                    ticketType: tik?.ticketType,
+                    totalSeat: Number(tik?.seatAvailable),
+                    seatAvailable: Number(tik?.seatAvailable),
+                    eventId: Number(event?.id),
+                    discount: Number(tik?.discount),
+                    startDate: addHours(new Date(tik?.startDate), 7),
+                    endDate: addHours(new Date(tik?.endDate), 7),
                 }
             })
 
@@ -206,27 +207,39 @@ export const getNewestEvent = async (req: Request, res: Response, next: NextFunc
 
 export const getBestSellingEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const bestSellingEvents = await prisma.event.findMany({
+        const transactionQuantities = await prisma.transactionDetail.groupBy({
+            by: ['ticketId'],
+            _sum: { quantity: true },
+            orderBy: { _sum: { quantity: 'desc' } },
             take: 10,
-            orderBy: {
-                Transactions: {
-                    _count: 'desc'
-                }
+        });
+
+        const topEventIds = await prisma.tickets.findMany({
+            where: {
+                id: { in: transactionQuantities.map((t: any) => t.ticketId) },
+            },
+            select: { eventId: true },
+        });
+
+        const bestSellingEvents = await prisma.event.findMany({
+            where: {
+                id: { in: topEventIds.map((t: any) => t.eventId) },
             },
             include: {
                 EventImages: true,
-                tickets: true
-            }
-        })
+                tickets: true,
+            },
+        });
 
-        if (!bestSellingEvents.length) throw { msg: 'Data tidak tersedia', status: 404 }
+        if (!bestSellingEvents.length) throw { msg: 'Data belum tersedia', status: 404 };
+
         res.status(200).json({
             error: false,
-            message: "Berhasil mendapatkan data event terlaris!",
-            data: bestSellingEvents
-        })
+            message: 'Berhasil mendapatkan data event terlaris!',
+            data: bestSellingEvents,
+        });
     } catch (error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -287,7 +300,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
         console.log('<<<<< sampe mana 1')
 
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: any) => {
             const findUser = await tx.event.findMany({
                 where: { eventOrganizerId: userId }
             })
@@ -337,7 +350,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
             console.log('<<<<< sampe mana 8')
 
-            findEvent?.EventImages?.forEach((item) => {
+            findEvent?.EventImages?.forEach((item: any) => {
                 fs.rmSync(`src/public/images/${item.eventImageUrl}`)
             })
         })
@@ -413,7 +426,7 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
         const { id } = req.params;
         const { userId } = req.body
 
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: any) => {
             const findImage = await tx.eventImages.findMany({
                 where: { eventsId: Number(id) }
             })
@@ -435,7 +448,7 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
                 },
             });
 
-            findImage.forEach((item) => {
+            findImage.forEach((item: any) => {
                 fs.rmSync(`src/public/images/${item?.eventImageUrl}`)
             })
         })

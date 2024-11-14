@@ -12,7 +12,7 @@ import bcrypt from 'bcrypt'
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = nanoid(8);
-    const dateNow = addHours(new Date(),7);
+    const dateNow = addHours(new Date(), 7);
     const verificationCode = nanoid(6);
 
     const date = `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`;
@@ -78,7 +78,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
           userIdRefferal: dataRegisterUser.id,
           discount: 0.1,
           isUsed: false,
-          expiredDate: addHours(addMonths(dateNow, 3),7),
+          expiredDate: addHours(addMonths(dateNow, 3), 7),
         },
       });
 
@@ -87,7 +87,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
           data: {
             userIdRefferalMatch: checkedRefferal?.id,
             point: 10000,
-            expiredDate: addHours(addMonths(dateNow, 3),7),
+            expiredDate: addHours(addMonths(dateNow, 3), 7),
           },
         });
       } else {
@@ -95,7 +95,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
           where: { id: pointsRecord?.id },
           data: {
             point: pointsRecord?.point + 10000,
-            expiredDate: addHours(addMonths(dateNow, 3),7),
+            expiredDate: addHours(addMonths(dateNow, 3), 7),
           },
         });
       }
@@ -111,23 +111,84 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
+export const signInWithGoogle = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = nanoid(8);
+    const verificationCode = nanoid(6);
+
+    const date = `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`;
+    const refferal = `TBX-${id}-${date}`;
+
+    const { firstName, lastName, email, profilePicture } = req.body;
+
+    const findEmailInEventOrganizer = await prisma.eventOrganizer.findFirst({
+      where: { email: email }
+    })
+
+    if (findEmailInEventOrganizer) throw { msg: 'Email sudah terpakai', status: 400 }
+
+    const findEmail = await prisma.users.findFirst({
+      where: { email: email }
+    })
+
+    const token = await encodeToken({ id: findEmail?.id as string, role: findEmail?.role as string })
+
+    if (findEmail) {
+      res.status(200).json({
+        error: false,
+        message: 'Login Berhasil',
+        data: { token }
+      })
+    } else {
+      const newUser = await prisma.users.create({
+        data: {
+          firstName,
+          lastName,
+          email: email,
+          password: await hashPassword('@googlesign123'),
+          role: 'user',
+          isVerified: Boolean(true),
+          verifyCode: verificationCode,
+          phoneNumber: 'Belum terisi',
+          identityNumber: 'Belum terisi',
+          profilePicture: profilePicture,
+          referralCode: refferal,
+          isGoogleRegister: true
+        }
+      })
+      const token = await encodeToken({ id: newUser?.id as string, role: newUser?.role as string })
+
+      res.status(201).json({
+        error: false,
+        message: 'telah terbuat',
+        data: {
+          token,
+          email,
+          firstName: newUser?.firstName,
+          lastName: newUser?.lastName,
+          role: newUser?.role,
+          phoneNumber: newUser?.phoneNumber,
+          profilePicture: newUser?.profilePicture,
+          identityNumber: newUser?.identityNumber,
+          refferalCode: newUser?.referralCode,
+        }
+      })
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password)
-      throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
-    const checkUser = await prisma.users.findMany({
-      where: {
-        email: email,
-      },
-    });
-    if (checkUser.length == 0)
-      throw { msg: 'email belum teregistrasi', status: 400 };
-    const isComparePassword = await comparePassword(
-      password,
-      checkUser[0].password,
-    );
-    console.log(isComparePassword);
+    if (!email || !password) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
+    const checkUser = await prisma.users.findMany({ where: { email: email } });
+
+    if (checkUser.length == 0) throw { msg: 'email belum teregistrasi', status: 400 };
+    const isComparePassword = await comparePassword(password, checkUser[0].password)
+
     if (!isComparePassword) throw { msg: 'Password anda Salah!', status: 400 };
 
     const token = await encodeToken({
@@ -209,6 +270,7 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         phoneNumber: dataEventOrganizer[0]?.phoneNumber,
         profilePicture: dataEventOrganizer[0]?.profilePicture,
         identityNumber: dataEventOrganizer[0]?.identityNumber,
+        isVerified: dataEventOrganizer[0]?.isVerified
       } : {},
     });
   } catch (error) {
@@ -405,7 +467,7 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
       },
       where: { id: findUser?.id },
     });
-    
+
     const emailSucces = readFileSync('./src/public/emailSend/verifyEmailSucces.html', 'utf-8')
     let sendEmail: any = await compile(emailSucces)
     sendEmail = sendEmail({
@@ -428,19 +490,19 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const sendVerifyEmailUser = async(req: Request, res: Response, next: NextFunction) => {
+export const sendVerifyEmailUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {authorization} = req.headers
+    const { authorization } = req.headers
     const token: any = authorization?.split(' ')[1] as string
-    
+
     const decodedToken = await decodeToken(token) as any
     const userId = decodedToken?.data?.id
-    
+
     const findUser = await prisma.users.findFirst({
-      where: {id: userId}
+      where: { id: userId }
     })
 
-    if(!findUser) throw {msg: 'User tidak ditemukan', status: 404}
+    if (!findUser) throw { msg: 'User tidak ditemukan', status: 404 }
 
     const emailHTML = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8');
     let compiledHtml: any = await compile(emailHTML);

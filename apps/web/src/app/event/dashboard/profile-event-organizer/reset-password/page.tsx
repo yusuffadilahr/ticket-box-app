@@ -6,6 +6,7 @@ import { FaEyeSlash } from 'react-icons/fa';
 import { useMutation } from "@tanstack/react-query";
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { resetPasswordProfile } from "@/features/reset-password-profile/schema/resetPasswordProfile";
+import toast from "react-hot-toast";
 
 export default function OrganizerResetPass() {
 
@@ -17,9 +18,11 @@ export default function OrganizerResetPass() {
             })
         },
         onSuccess: (res) => {
+            toast.success(res?.data?.message)
             console.log(res)
         },
-        onError: (err) => {
+        onError: (err: any) => {
+            toast.error(err?.response?.data?.message)
             console.log(err)
         }
     })
@@ -40,13 +43,10 @@ export default function OrganizerResetPass() {
     };
 
     return (
-        <main className="pt-28 w-full">
-
-
+        <main className="lg:pt-20 w-full">
             <section className="flex justify-center w-full">
- 
-                <section className="w-3/4 bg-white rounded-lg shadow-lg ml-5 p-5">
-                    <h2 className="text-xl font-semibold mb-5 flex justify-center">Ganti Password</h2>
+                <section className="w-3/4 bg-white rounded-lg shadow-lg ml-5 p-5 h-fit py-10">
+                    <h2 className="text-xl font-semibold mb-5 flex">Ganti Password</h2>
                     <Formik
                         validationSchema={resetPasswordProfile}
                         initialValues={{
@@ -62,7 +62,7 @@ export default function OrganizerResetPass() {
                         }}
                     >
                         <Form className='flex flex-col justify-center items-center w-full'>
-                            <main className="flex justify-center flex-col w-[80%] md:w-[60%] lg:w-[45%]  space-y-5">
+                            <main className="flex justify-center flex-col w-[80%] md:w-[60%] lg:w-full space-y-5">
                                 <div id="password-input" className="relative">
                                     <div className="flex gap-2 items-center">
                                         <label>

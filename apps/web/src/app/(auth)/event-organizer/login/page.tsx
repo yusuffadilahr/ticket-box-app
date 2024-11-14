@@ -18,25 +18,32 @@ import authStore from '@/zustand/authstore';
 export default function Page() {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const setAuth = authStore((state) => state.setAuth);
-  const router = useRouter()
+  const router = useRouter();
   const { mutate: handleLogin, isPending } = useMutation({
-    mutationFn: async ({ email, password }: { email: string, password: string }) => {
-      return await instance.post('/auth/login/event-organizer', { email, password });
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      return await instance.post('/auth/login/event-organizer', {
+        email,
+        password,
+      });
     },
     onSuccess: (res) => {
-      toast.success('Login Berhasil');
+      toast.success(res?.data?.message);
       setAuth({ token: res.data.data.token });
       console.log(res);
-      router.push('/event/dashboard')
-      console.log('nyampe mana ---- << --')
+      router.push('/event/dashboard');
+      console.log('nyampe mana ---- << --');
     },
-    onError: (error) => {
-      toast.error('error')
-      console.log('err');
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message);
       console.log(error);
     },
   });
-
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);

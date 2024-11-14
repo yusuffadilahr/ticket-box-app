@@ -1,8 +1,6 @@
 'use client';
 
-import contohgambar from './../../../../../gagagugu.jpg';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -32,9 +30,6 @@ interface IParams {
     };
 }
 
-// const loadSnap = dynamic(() => import('@/utils/midtrans'), { ssr: false });
-
-
 export default function EventDetail({ params }: IParams) {
     const router = useRouter()
     const { detail } = params;
@@ -49,7 +44,7 @@ export default function EventDetail({ params }: IParams) {
     });
 
     const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
-    const [pointsToDeduct, setPointsToDeduct] = useState(0); // New state for points deduction
+    const [pointsToDeduct, setPointsToDeduct] = useState(0);
     const [useReferralDiscount, setUseReferralDiscount] = useState(false);
 
     const toggleReferralDiscount = () => setUseReferralDiscount(!useReferralDiscount);
@@ -84,29 +79,42 @@ export default function EventDetail({ params }: IParams) {
         },
         onSuccess: (res) => {
             console.log(res)
-            // router.push(res?.data?.data?.paymentToken?.redirect_url)
+            router.push(res?.data?.data?.paymentToken?.redirect_url)
         },
         onError: (err) => {
             console.log(err)
         }
     })
 
-    const increment = (index: number) => {
-        const newQuantities = [...ticketQuantities];
-        const seatAvailable = queryDataDetailEvent.tickets[index]?.seatAvailable || 0
+    useEffect(() => {
+        if (queryDataDetailEvent?.tickets?.length > 0) {
+            setTicketQuantities(new Array(queryDataDetailEvent.tickets.length).fill(0));
+        }
+    }, [queryDataDetailEvent?.tickets]);
 
-        if (
-            (newQuantities[index] || 0) < seatAvailable
-        ) {
+    const increment = (index: number) => {
+        setTicketQuantities((prevQuantities) => {
+            const newQuantities = [...prevQuantities]
+            const seatAvailable = queryDataDetailEvent?.tickets[index]?.seatAvailable || 0 
+
             newQuantities[index] = (newQuantities[index] || 0) + 1;
-            setTicketQuantities(newQuantities);
-        };
-    }
+
+            if (newQuantities[index] > seatAvailable) {
+                newQuantities[index] = seatAvailable; 
+            }
+
+            return newQuantities;
+        });
+    };
 
     const decrement = (index: number) => {
-        const newQuantities = [...ticketQuantities];
-        newQuantities[index] = Math.max((newQuantities[index] || 0) - 1, 0);
-        setTicketQuantities(newQuantities);
+        setTicketQuantities((prevQuantities) => {
+            const newQuantities = [...prevQuantities];
+
+            newQuantities[index] = Math.max((newQuantities[index] || 0) - 1, 0);
+
+            return newQuantities;
+        });
     };
 
     const totalTickets = ticketQuantities.reduce((total, qty) => total + qty, 0);

@@ -3,13 +3,14 @@ import { prisma } from '@/connection';
 import bcrypt from 'bcrypt';
 import { hashPassword, comparePassword } from '@/utils/passwordHash';
 import { nanoid } from 'nanoid';
-import { encodeToken } from '@/utils/token.sign';
+import { decodeToken, encodeToken } from '@/utils/token.sign';
 import { compile } from 'handlebars';
 import fs, { readFileSync } from 'fs'
 import { transporter } from '@/utils/transporter';
 
 export const eventOrganizerRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const verifyCodeUser = nanoid(6)
     const { organizerName, ownerName, email, password, phoneNumber, identityNumber } = req.body;
     if (!organizerName || !ownerName || !email || !password || !phoneNumber || !identityNumber) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
 
@@ -21,11 +22,11 @@ export const eventOrganizerRegister = async (req: Request, res: Response, next: 
       where: { email },
     });
 
-    if (checkedEmail.length != 0 || checkedEmailEventOrganize.length != 0)
+    if (checkedEmail?.length != 0 || checkedEmailEventOrganize?.length != 0)
       throw { msg: 'Email sudah terpakai', status: 400 };
     const hashed = await hashPassword(password);
 
-    await prisma.eventOrganizer.create({
+    const dataUser = await prisma.eventOrganizer.create({
       data: {
         organizerName,
         ownerName,
@@ -34,14 +35,32 @@ export const eventOrganizerRegister = async (req: Request, res: Response, next: 
         role: 'EO',
         phoneNumber,
         identityNumber,
-        profilePicture:
-          'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+        isVerified: false,
+        verifyCode: verifyCodeUser,
+        profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
       },
     });
 
+    const sendToken = await encodeToken({ id: dataUser?.id, role: dataUser?.role })
+
+    const dataEmail = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8')
+    let compiledHtml: any = await compile(dataEmail)
+    compiledHtml = compiledHtml({
+      firstName: dataUser?.ownerName,
+      email: email,
+      url: `http://localhost:3000/event-organizer/verification-user/${dataUser?.verifyCode}-TBX-${sendToken}`,
+      verifCode: dataUser?.verifyCode
+    });
+
+    await transporter.sendMail({
+      to: email,
+      subject: 'Verifikasi Email Anda untuk melanjutkan!',
+      html: compiledHtml
+    })
+
     res.status(201).json({
       error: false,
-      message: 'Berhasil membuat data',
+      message: 'Registrasi berhasil. Silakan periksa email Anda untuk verifikasi.',
       data: {
         organizerName,
         ownerName,
@@ -52,6 +71,89 @@ export const eventOrganizerRegister = async (req: Request, res: Response, next: 
     next(error);
   }
 };
+
+export const sendVerifyEmailUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { authorization } = req.headers
+    const token: any = authorization?.split(' ')[1] as string
+
+    const decodedToken = await decodeToken(token) as any
+    const userId = decodedToken?.data?.id
+
+    const findUser = await prisma.eventOrganizer.findFirst({
+      where: { id: userId }
+    })
+
+    if (!findUser) throw { msg: 'User tidak ditemukan', status: 404 }
+
+    const sendToken = await encodeToken({ id: findUser?.id, role: findUser?.role })
+
+    const dataEmail = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8')
+    let compiledHtml: any = await compile(dataEmail)
+    compiledHtml = compiledHtml({
+      firstName: findUser?.ownerName,
+      email: findUser?.email,
+      url: `http://localhost:3000/event-organizer/verification-user/${findUser?.verifyCode}-TBX-${sendToken}`,
+      verifCode: findUser?.verifyCode
+    });
+
+    await transporter.sendMail({
+      to: findUser?.email,
+      subject: 'Verifikasi dirimu sekarang!',
+      html: compiledHtml
+    })
+
+    res.status(200).json({
+      error: false,
+      message: 'Harap cek email secara berkala!',
+      data: {}
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const verifyEmailUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId, verificationCode } = req.body;
+
+    const findUser = await prisma.eventOrganizer.findFirst({
+      where: {
+        AND: [{ id: userId }, { verifyCode: verificationCode }],
+      },
+    });
+
+    if (!findUser) throw { msg: 'Data tidak valid', status: 404 };
+
+    await prisma.eventOrganizer.update({
+      data: {
+        isVerified: true,
+      },
+      where: { id: findUser?.id },
+    });
+
+    const emailSucces = readFileSync('./src/public/emailSend/verifyEmailSucces.html', 'utf-8')
+    let sendEmail: any = await compile(emailSucces)
+    sendEmail = sendEmail({
+      firstName: findUser?.ownerName,
+      url: 'http://localhost:3000/event/dashboard'
+    })
+
+    await transporter.sendMail({
+      to: findUser?.email,
+      subject: `Halo ${findUser?.ownerName}, Selamat datang!`,
+      html: sendEmail
+    })
+
+    res.status(200).json({
+      error: false,
+      message: 'Email berhasil diverifikasi.',
+      data: {}
+    })
+  } catch (error) {
+    next(error);
+  }
+}
 
 export const eventOrganizerLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -64,7 +166,7 @@ export const eventOrganizerLogin = async (req: Request, res: Response, next: Nex
       },
     });
 
-    if (checkUser.length == 0) throw { msg: 'email belum teregistrasi', status: 400 };
+    if (checkUser.length == 0) throw { msg: 'Email belum teregistrasi', status: 400 };
     const isComparePassword = await comparePassword(password, checkUser[0]?.password);
 
     if (!isComparePassword) throw { msg: 'Password tidak valid!', status: 400 };
@@ -72,7 +174,7 @@ export const eventOrganizerLogin = async (req: Request, res: Response, next: Nex
 
     res.status(200).json({
       error: false,
-      message: 'Berhasil login',
+      message: 'Selamat datang kembali, Anda telah berhasil login.',
       data: {
         email,
         token,
@@ -85,7 +187,6 @@ export const eventOrganizerLogin = async (req: Request, res: Response, next: Nex
   } catch (error) {
     next(error);
   }
-
 };
 
 export const forgotPasswordOrganizer = async (req: Request, res: Response, next: NextFunction) => {
@@ -122,7 +223,7 @@ export const forgotPasswordOrganizer = async (req: Request, res: Response, next:
 
     res.status(200).json({
       error: false,
-      message: 'Berhasil, Cek email secara berkala!',
+      message: 'Berhasil, Harap cek email secara berkala!',
       data: {}
     })
   } catch (error) {
@@ -150,8 +251,8 @@ export const resetPasswordOrganizer = async (req: Request, res: Response, next: 
     const match = await comparePassword(existingPassword, findUser?.password as string);
     const samePassword = await comparePassword(password, findUser?.password as string);
 
-    if (!match) throw { msg: 'Password anda salah', status: 406 };
-    if (samePassword) throw { msg: 'Harap masukan password yang berbeda', status: 406 };
+    if (!match) throw { msg: 'Password lama anda salah!', status: 406 };
+    if (samePassword) throw { msg: 'Harap masukan password yang berbeda!', status: 406 };
 
     await prisma.eventOrganizer.update({
       data: {
@@ -163,9 +264,75 @@ export const resetPasswordOrganizer = async (req: Request, res: Response, next: 
       },
     });
 
+    const emailSucces = readFileSync('./src/public/emailSend/resetPasswordSucces.html', 'utf-8')
+    let sendEmail: any = await compile(emailSucces)
+    sendEmail = sendEmail({
+      firstName: findUser?.ownerName,
+      url: 'http://localhost:3000/event-organizer/login'
+    })
+
+    await transporter.sendMail({
+      to: findUser?.email,
+      subject: 'Berhasil mengganti password!',
+      html: sendEmail
+    })
+
+
     res.status(200).json({
       error: false,
-      message: 'Berhasil merubah password!',
+      message: 'Berhasil merubah password, silahkan login!',
+      data: {},
+    })
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetPasswordOnLogin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId, existingPassword, password } = req.body;
+
+    const findUser = await prisma.eventOrganizer.findFirst({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!findUser?.id) throw { msg: "User tidak ditemukan!", status: 404 }
+
+    const match = await comparePassword(existingPassword, findUser?.password as string);
+    const samePassword = await comparePassword(password, findUser?.password as string);
+
+    if (!match) throw { msg: 'Password lama anda salah!', status: 406 };
+    if (samePassword) throw { msg: 'Harap masukan password yang berbeda!', status: 406 };
+
+    await prisma.eventOrganizer.update({
+      data: {
+        password: await hashPassword(password),
+        forgotPasswordToken: null
+      },
+      where: {
+        id: userId,
+      },
+    });
+
+    const emailSucces = readFileSync('./src/public/emailSend/resetPasswordSucces.html', 'utf-8')
+    let sendEmail: any = await compile(emailSucces)
+    sendEmail = sendEmail({
+      firstName: findUser?.ownerName,
+      url: 'http://localhost:3000/event-organizer/login'
+    })
+
+    await transporter.sendMail({
+      to: findUser?.email,
+      subject: 'Berhasil mengganti password!',
+      html: sendEmail
+    })
+
+
+    res.status(200).json({
+      error: false,
+      message: 'Berhasil merubah password, silahkan login!',
       data: {},
     })
   } catch (error) {
@@ -183,21 +350,47 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
 
     if (findEvent.length == 0) throw { msg: 'Belum memiliki event', status: 404 }
 
-    const findUserTransaction = await prisma.transactions.findMany({
-      where: {
-        eventOrganizerId: userId
-      },
-      include: {
-        transactionDetail: true
-      }
+    const findUserTransaction = await prisma.transactions.groupBy({
+      by: ['userId'],
+      where: { eventOrganizerId: userId }
+      // where: {
+      //   eventOrganizerId: userId
+      // },
+      // include: {
+      //   transactionDetail: true
+      // },
+
     })
 
     if (findUserTransaction.length == 0) throw { msg: 'Belum ada data yang harus ditampilkan', status: 404 }
 
+    const dataAttendee = findUserTransaction?.map((itm) => {
+      return {
+        userId: itm.userId
+      }
+    })
+
+    const dataTotalTransaction = await prisma.transactions.findMany({
+      where: {
+        eventOrganizerId: userId
+      }
+    })
+
+    const totalAmount = await prisma.transactions.aggregate({
+      _sum: {
+        totalPrice: true
+      }
+    })
+
     res.status(200).json({
       error: false,
       message: 'Berhasil mendapatkan data user yang terdaftar dalam event!',
-      data: findUserTransaction
+      data: {
+        dataAttendee,
+        dataEventUser: findEvent,
+        dataTotalTransaction,
+        totalAmount: totalAmount?._sum?.totalPrice
+      }
     })
 
   } catch (error) {

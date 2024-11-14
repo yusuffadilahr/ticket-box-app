@@ -12,10 +12,11 @@ import { useMutation } from "@tanstack/react-query";
 import { IRegisterOrganizer } from "./type";
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { toast } from "react-hot-toast";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 export default function RegisterOrganizer() {
+    const router = useRouter()
     const pathname = usePathname()
     const { mutate: handleRegister, isPending } = useMutation({
         mutationFn: async ({ organizerName, ownerName, email, password, phoneNumber, identityNumber }: IRegisterOrganizer) => {
@@ -25,12 +26,12 @@ export default function RegisterOrganizer() {
         },
         onSuccess: (res) => {
             console.log(res)
-            toast.success(res.data.message)
-
+            toast.success(res?.data?.message)
+            router.push('/event-organizer/login')
         },
-        onError: (err) => {
-            console.log(err)
-            toast.error('gagal')
+        onError: (err: any) => {
+            console.log(err?.response?.data?.message)
+            toast.error(err?.response?.data?.message)
         }
     })
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -86,7 +87,7 @@ export default function RegisterOrganizer() {
                             identityNumber: '',
                             password: '',
                         }}
-                        // validationSchema={registerOrganizerSchema}
+                        validationSchema={registerOrganizerSchema}
                         onSubmit={(values) => {
                             console.log(values)
                             handleRegister({
@@ -109,7 +110,7 @@ export default function RegisterOrganizer() {
                                     <ErrorMessage
                                         name="organizerName"
                                         component="div"
-                                        className="text-red-500 text-sm mt-1"
+                                        className="text-red-500 text-xs mt-1"
                                     />
                                 </div>
                                 <Field
@@ -127,7 +128,7 @@ export default function RegisterOrganizer() {
                                     <ErrorMessage
                                         name="ownerName"
                                         component="div"
-                                        className="text-red-500 text-sm mt-1"
+                                        className="text-red-500 text-xs mt-1"
                                     />
                                 </div>
                                 <Field
@@ -145,7 +146,7 @@ export default function RegisterOrganizer() {
                                     <ErrorMessage
                                         name="email"
                                         component="div"
-                                        className="text-red-500 text-sm mt-1"
+                                        className="text-red-500 text-xs mt-1"
                                     />
                                 </div>
                                 <Field
@@ -161,11 +162,6 @@ export default function RegisterOrganizer() {
                                         <label>
                                             Password <span className="text-red-500">*</span>
                                         </label>
-                                        <ErrorMessage
-                                            name="password"
-                                            component="div"
-                                            className="text-red-500 text-sm mt-1"
-                                        />
                                     </div>
                                     <Field
                                         name="password"
@@ -179,17 +175,19 @@ export default function RegisterOrganizer() {
                                     >
                                         {passwordVisible ? <FaEye /> : <FaEyeSlash />}
                                     </span>
+                                    <div className="h-2">
+                                        <ErrorMessage
+                                            name="password"
+                                            component="div"
+                                            className="text-red-500 text-xs mt-1"
+                                        />
+                                    </div>
                                 </div>
                                 <div id="confirmPassword-input" className="relative w-[240px]">
                                     <div className="flex gap-5 items-center">
                                         <label>
                                             Confirm Password <span className="text-red-500">*</span>
                                         </label>
-                                        <ErrorMessage
-                                            name="confirmPassword"
-                                            component="div"
-                                            className="text-red-500 text-sm mt-1"
-                                        />
                                     </div>
                                     <Field
                                         name="confirmPassword"
@@ -203,6 +201,13 @@ export default function RegisterOrganizer() {
                                     >
                                         {confirmationPasswordVisible ? <FaEye /> : <FaEyeSlash />}
                                     </span>
+                                <div className="h-2">
+                                    <ErrorMessage
+                                        name="confirmPassword"
+                                        component="div"
+                                        className="text-red-500 text-xs mt-1"
+                                    />
+                                </div>
                                 </div>
                             </div>
                             <div id="phoneNumber-input" className=" w-[500px]">
@@ -213,7 +218,7 @@ export default function RegisterOrganizer() {
                                     <ErrorMessage
                                         name="phoneNumber"
                                         component="div"
-                                        className="text-red-500 text-sm mt-1"
+                                        className="text-red-500 text-xs mt-1"
                                     />
                                 </div>
                                 <Field
@@ -231,7 +236,7 @@ export default function RegisterOrganizer() {
                                     <ErrorMessage
                                         name="identityNumber"
                                         component="div"
-                                        className="text-red-500 text-sm mt-1"
+                                        className="text-red-500 text-xs mt-1"
                                     />
                                 </div>
                                 <Field
