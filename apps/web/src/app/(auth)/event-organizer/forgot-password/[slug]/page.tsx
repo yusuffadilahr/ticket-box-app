@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
@@ -19,6 +19,7 @@ export default function ForgotPassword({ params }: { params: Params }) {
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
     const [confirmationPasswordVisible, setConfirmationPasswordVisible] = useState<boolean>(false);
     const { slug } = params
+    const router = useRouter()
     console.log(slug)
 
     const togglePasswordVisibility = () => {
@@ -47,9 +48,11 @@ export default function ForgotPassword({ params }: { params: Params }) {
         },
         onSuccess: (res) => {
             console.log(res)
-            toast.success('Reset password success')
+            toast.success(res?.data?.message)
+            router.push('/event-organizer/login')
         },
-        onError: (err) => {
+        onError: (err: any) => {
+            toast.error(err?.response?.data?.message)
             console.log(err)
         }
     })

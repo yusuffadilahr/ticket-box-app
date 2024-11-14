@@ -47,30 +47,29 @@ export default function AvatarHover() {
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
             </HoverCardTrigger>
-            <HoverCardContent className="max-w-fit h-fit">
+            <HoverCardContent className="w-fit px-10 flex justify-start h-fit">
                 <div className="flex justify-between items-center">
-                    <div className="space-y-1 flex flex-col text-left">
-                        <div className=" font-bold text-blue-800 flex  flex-col items-center space-x-2 mb-2" >
-                            <div className="flex items-center"><FaStar /> Loyalty Points :</div>
-                            <div className="text-lg"> {loyaltyPoints}</div>
+                    <div className="space-y-1 flex flex-col w-full text-left">
+                        <div className=" font-bold text-blue-800 flex flex-col items-center space-x-2 mb-2" >
+                            <div className="flex items-center"><FaStar /> <span className='ml-1'>Loyalty Points</span></div>
+                            <div className="text-lg">{loyaltyPoints}</div>
                         </div>
-                        
-                        <Link href="/profile-user/profile" className="flex justify-center">
+                        <Link href="/profile-user/profile" className="flex py-1">
                             <button className="text-base hover:font-bold transition-all duration-300 ">
                                 View Profile
                             </button>
                         </Link>
-                        <Link href="/profile-user/reset-password" className="flex justify-center">
+                        <Link href="/profile-user/reset-password" className="flex py-1">
                             <button className="text-base hover:font-bold transition-all duration-300">
                                 Reset Password
                             </button>
                         </Link>
-                        <Link href="/profile-user/transaction" className="flex justify-center">
+                        <Link href="/profile-user/transaction" className="flex py-1">
                             <button className="text-base hover:font-bold transition-all duration-300">
                                 My Tickets
                             </button>
                         </Link>
-                        <button onClick={handleLogout} className="text-base text-red-600 font-bold">
+                        <button onClick={handleLogout} className="text-base flex py-1 w-full text-red-600 font-bold">
                             Log Out
                         </button>
 

@@ -6,12 +6,27 @@ import snap from "@/utils/midtransInstance/midtransInstance";
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { userId, ticketDetails, referralDiscount = 0 , referralPoints = 0 } = req.body
+        const { userId, ticketDetails, referralDiscount = 0, referralPoints = 0 } = req.body
         const { id } = req.params
 
+        const findTicketId = ticketDetails.map((item: any) => {
+            return {
+                id: item.ticketId
+            }
+        })
+        console.log(findTicketId, "<<<<<<<<<<<<<<<<<<<<<<<<<<< seat available cek line 13")
+
+        const findTicket = await prisma.tickets.findMany({
+            where: {
+                OR: findTicketId
+            }
+        })
+
+        console.log(findTicket, "<<< ini data ticket boss!!")
+
         const dataUser = await prisma.users.findUnique({
-            where : {
-                id : userId
+            where: {
+                id: userId
             }
         })
 
@@ -32,7 +47,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         const dataDetails = ticketDetails?.map((item: any, i: any) => {
 
             // if (item.quantity > ticket.seatAvailable) throw { msg: `Tiket yang dibeli dengan id = ${item.ticketId} melebihi kuota`, status: 400 };
-            
+
             const subtotal = item.quantity * item.price
             const totalDiscount = item.quantity * item.discount
             totalPembayaran += subtotal
@@ -44,7 +59,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 quantity: item.quantity,
                 // discount: item.discount,
                 discount: totalDiscount,
-                expiredAt: addHours(new Date(),7)
+                expiredAt: addHours(new Date(), 7)
             }
         })
 
@@ -56,7 +71,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 }
             })
 
-            if (addHours(new Date(),7) >= findUserDiscount?.expiredDate!) throw { msg: 'ERROR', status: 404 }
+            if (addHours(new Date(), 7) >= findUserDiscount?.expiredDate!) throw { msg: 'ERROR', status: 404 }
 
             if (findUserDiscount) {
                 const discountUser = findUserDiscount.discount * totalPembayaran
@@ -76,11 +91,11 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             const findUserRefferal = await prisma.points.findFirst({
                 where: {
                     userIdRefferalMatch: userId,
-  
+
                 }
             })
 
-            if (addHours(new Date(),7) >= findUserRefferal?.expiredDate!) throw { msg: 'ERROR', status: 404 }
+            if (addHours(new Date(), 7) >= findUserRefferal?.expiredDate!) throw { msg: 'ERROR', status: 404 }
 
             if (findUserRefferal) {
                 const totalPoints = findUserRefferal?.point - referralPoints
@@ -145,15 +160,15 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         `);
 
 
-        const paymentToken = await snap.createTransaction ({
-            payment_type: 'bank_transfer',  
+        const paymentToken = await snap.createTransaction({
+            payment_type: 'bank_transfer',
             transaction_details: {
-                order_id: transactionId.id.toString(),  
-                gross_amount: totalPembayaran,  
+                order_id: transactionId.id.toString(),
+                gross_amount: totalPembayaran,
             },
             customer_details: {
-                first_name: dataUser?.firstName,  
-                email: dataUser?.email, 
+                first_name: dataUser?.firstName,
+                email: dataUser?.email,
                 phone: dataUser?.phoneNumber,
             }
         });
@@ -179,7 +194,7 @@ export const getTransaction = async (req: Request, res: Response, next: NextFunc
     try {
         const { userId } = req.body
         const dataTransaction = await prisma.transactions.findMany({
-            where: { userId : userId },
+            where: { userId: userId },
             include: {
                 transactionDetail: true,
                 event: {
@@ -189,7 +204,7 @@ export const getTransaction = async (req: Request, res: Response, next: NextFunc
                         },
                     },
                 },
-                transactionStatus:true
+                transactionStatus: true
             }
         })
 

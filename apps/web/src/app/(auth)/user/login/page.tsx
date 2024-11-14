@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
 import { useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
 import { loginSchema } from '@/features/login/schema/loginSchema';
@@ -12,11 +12,13 @@ import instance from '@/utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
 import authStore from '@/zustand/authstore';
 import Cookies from 'js-cookie'
+import {GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut} from 'firebase/auth'
+import auth from '@/utils/firebase/firebase';
 
+const provider = new GoogleAuthProvider()
 export default function Page() {
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
     const router = useRouter()
-    const token = authStore((state) => state.token)
     const setAuth = authStore((state) => state.setAuth)
 
     const togglePasswordVisibility = () => {
@@ -29,8 +31,7 @@ export default function Page() {
         },
         onSuccess: (res) => {
             console.log(res)
-            toast.success(res.data.message)
-            router.push('/')
+            toast.success(res?.data?.message)
             setAuth({
                 token: res?.data?.data?.token,
                 firstName: res?.data?.data?.firstName,
@@ -43,6 +44,7 @@ export default function Page() {
                 identityNumber: res?.data?.data?.identityNumber
             })
             Cookies.set('token', res?.data?.data?.token, { expires: 1 })
+            router.push('/')
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message)
@@ -50,9 +52,64 @@ export default function Page() {
         }
     })
 
+    const {mutate: handleLoginGoogle} = useMutation({
+        mutationFn: async({firstName,lastName, email, profilePicture}: {
+            firstName:string,
+            lastName:string,
+            email:string,
+            profilePicture:string
+        }) => {
+            return await instance.post('/auth/login/auth-google', {
+                firstName, 
+                lastName, 
+                email, 
+                profilePicture
+            })
+        },
+        onSuccess: (res) => {
+            setAuth({
+                token: res?.data?.data?.token,
+                firstName: res?.data?.data?.firstName,
+                lastName: res?.data?.data?.lastName,
+                role: res?.data?.data?.role,
+                phoneNumber: res?.data?.data?.phoneNumber,
+                profilePicture: res?.data?.data?.profilePicture,
+                referralCode: res?.data?.data?.referralCode,
+                totalPoint: res?.data?.data?.totalPoint,
+                identityNumber: res?.data?.data?.identityNumber
+            })
+            Cookies.set('token', res?.data?.data?.token, { expires: 1 })
+            console.log(res)
+            toast.success(res?.data?.message)
+            router.push('/')
+        },
+        onError: (err: any) => {
+            toast.error(err?.response?.data?.message)
+            console.log(err)
+        }
+    })
+
+    const {mutate: registerWithGoogle} = useMutation({
+        mutationFn: async()=> {
+            const firebase = await signInWithPopup(auth, provider)
+            return firebase
+        },
+        onSuccess: (res)=> {
+            handleLoginGoogle({
+                firstName: res?.user?.displayName?.split(' ')[0] as string, 
+                lastName: res?.user?.displayName?.split(' ')[1] as string, 
+                email:res?.user?.email as string, 
+                profilePicture: res?.user?.photoURL as string
+            })
+        }, 
+        onError: (err)=> {
+            console.log(err)
+        }
+    })
+
     return (
         <main className="h-svh md:h-lvh flex justify-center items-center">
-            <section className="w-[800px] h-[500px] justify-center items-center flex rounded-xl">
+            <section className="w-[800px] h-[500px] justify-center items-center flex flex-col rounded-xl">
                 <Formik
                     initialValues={{
                         email: '',
@@ -126,14 +183,16 @@ export default function Page() {
                             </div>
                             <Link href={'/user/forgot-password'} className='text-sm md:text-base'>Lupa kata sandi?</Link>
                         </div>
-                        <Link
-                            href="/user/register"
-                            className="text-white text-sm rounded-lg text-center w-full py-2 bg-blue-900 hover:bg-blue-950"
-                        >
-                            Daftar
-                        </Link>
                     </Form>
                 </Formik>
+            <div className='w-full px-10 mt-5 flex gap-2'>
+            <Link href="/user/register" className="text-white text-sm rounded-lg text-center w-full py-2 bg-blue-900 hover:bg-blue-950">
+                Daftar
+            </Link>
+            <button onClick={() => registerWithGoogle()} type="button" className="text-white flex items-center gap-1 text-center justify-center text-sm rounded-lg w-full py-2 bg-black disabled:bg-neutral-300 hover:bg-neutral-800">
+                <FaGoogle /> Masuk dengan Google
+            </button>
+            </div>
             </section>
         </main>
     );
