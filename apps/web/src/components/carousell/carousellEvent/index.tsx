@@ -10,46 +10,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { IoLocationSharp } from 'react-icons/io5';
 import { FaCalendarAlt } from 'react-icons/fa';
-import Autoplay from "embla-carousel-autoplay"
-import { useRef } from 'react';
-import { useEffect } from 'react';
-import EmblaCarousel from 'embla-carousel';
-import { EmblaCarouselType } from 'embla-carousel';
+
 
 
 export default function CarousellEvent({ data }: { data: any[] }) {
-    const emblaRef = useRef<HTMLDivElement>(null); // Ref for the carousel container div
-    const emblaInstance = useRef<EmblaCarouselType | null>(null); // Ref for the EmblaCarousel instance
-
-    useEffect(() => {
-        if (emblaRef.current && !emblaInstance.current) {
-            emblaInstance.current = EmblaCarousel(emblaRef.current, {
-                loop: true,
-            }, [
-                Autoplay({
-                    delay: 2000,
-                }),
-            ]);
-        }
-
-        return () => {
-            // Only try to destroy the instance if it's defined
-            if (emblaInstance.current) {
-                emblaInstance.current.destroy();
-                emblaInstance.current = null;
-            }
-        };
-    }, []);
-
-    console.log(data, '<<<<<<<<<<<<<<<<<<<<<')
-
-    // EventImages[0]?.eventImageUrl?.includes('https://'),
 
     return (
         <Carousel
-            className="w-full"
-            ref={emblaRef}
-        >
+            className="w-full"        >
             <CarouselContent>
                 {data?.map((item: any, index: any) => (
                     <CarouselItem key={index} className=" basis-1/2 lg:basis-1/4">
@@ -81,10 +49,22 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                             </h1>
                                         </div>
                                         <h1 className='text-black text-sm lg:text-base mt-2 font-bold'>{item?.eventName.length > 30 ? <h1>{item?.eventName.slice(0, 30)}...</h1> : item?.eventName}</h1>
-                                        <h1 className='text-xs lg:text-sm  mt-2 bottom-0 text-gray-500 font-normal'>Mulai dari </h1>
+                                        <h1 className='text-xs lg:text-sm  mt-2 bottom-0 text-gray-500 font-normal'>
+                                            Mulai dari
+                                        </h1>
                                         <div className=' flex justify-between'>
-                                            <h1 className='text-sm lg:text-base   bottom-0 text-orange-600 font-bold'> RP. {item?.tickets[0]?.price}</h1>
-                                            <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'> Tiket Tersedia</h1>
+                                            <h1 className='text-sm lg:text-base   bottom-0 text-orange-600 font-bold'>
+                                                Rp{item?.minimumPrice.toLocaleString("id-ID")}
+                                            </h1>
+                                            {item?.seatAvailability > 0 ?
+                                                <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'>
+                                                    Tiket Tersedia
+                                                </h1>
+                                                :
+                                                <h1 className='text-xs lg:text-sm   bottom-0 text-red-500'>
+                                                    Tiket Habis
+                                                </h1>
+                                            }
                                         </div>
                                     </div>
                                 </Link>

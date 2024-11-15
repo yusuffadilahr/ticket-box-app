@@ -1,5 +1,5 @@
 'use client';
-import {FaArrowRight, FaArrowLeft, FaStar } from 'react-icons/fa';
+import { FaArrowRight, FaArrowLeft, FaStar } from 'react-icons/fa';
 
 import Image from 'next/image';
 import {
@@ -23,6 +23,7 @@ import { IoTicketOutline } from "react-icons/io5";
 import authStore from '@/zustand/authstore';
 // import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import { divide } from 'cypress/types/lodash';
 
 
 interface IParams {
@@ -35,8 +36,8 @@ export default function EventDetail({ params }: IParams) {
     const router = useRouter()
     const { detail } = params;
     const id = detail.split('TBX')[0];
-    
-    
+
+
     const { data: queryDataDetailEvent } = useQuery({
         queryKey: ['get-detail-event'],
         queryFn: async () => {
@@ -45,7 +46,7 @@ export default function EventDetail({ params }: IParams) {
             return res.data.data[0];
         },
     });
-    
+
 
 
     const { data: queryDataReview } = useQuery({
@@ -53,7 +54,7 @@ export default function EventDetail({ params }: IParams) {
         queryFn: async () => {
             const res = await instance.get(`/review/${id}`);
             return res.data.data;
-         
+
         },
     });
 
@@ -95,7 +96,6 @@ export default function EventDetail({ params }: IParams) {
         },
         onSuccess: (res) => {
             console.log(res)
-            router.push(res?.data?.data?.paymentToken?.redirect_url)
             router.push(res?.data?.data?.paymentToken?.redirect_url)
         },
         onError: (err) => {
@@ -272,74 +272,70 @@ export default function EventDetail({ params }: IParams) {
                                 <CardTitle className="pb-4">Pilih Tiket Anda:</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                {queryDataDetailEvent?.tickets?.map((item: any, index: any) => (
-                                    <div key={index} className="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
-                                        <div className="flex  items-start">
-                                            <div>
-                                                <h3 className="text-lg font-semibold">
-                                                    {item.ticketName}
-                                                </h3>
-                                                <p className="text-gray-600 mt-1">
-                                                    {item.ticketType}
-                                                </p>
-                                                <div className="text-blue-600 mt-2">
-                                                    <span className="flex items-center">
-                                                        <MdOutlineAccessTimeFilled />
-                                                        Ends {item.endDate.split('T')[0]} • {queryDataDetailEvent?.tickets[0].endDate.split('T')[1].split('.')[0].slice(0, -3)}
-                                                    </span>
+                                {queryDataDetailEvent?.tickets?.map((item: any, index: any) => {
+                                    const isExpired = new Date() > new Date(item.endDate)
+                                    const isSoldOut = item.seatAvailable < 1;
+
+                                    return (
+
+                                        <div key={index} className="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
+                                            <div className="flex  items-start">
+                                                <div>
+                                                    <h3 className="text-lg font-semibold">
+                                                        {item.ticketName}
+                                                    </h3>
+                                                    <p className="text-gray-600 mt-1">
+                                                        {item.ticketType}
+                                                    </p>
+                                                    <div className="text-blue-600 mt-2">
+                                                        <span className="flex items-center">
+                                                            <MdOutlineAccessTimeFilled />
+                                                            Ends {item.endDate.split('T')[0]} • {queryDataDetailEvent?.tickets[0].endDate.split('T')[1].split('.')[0].slice(0, -3)}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <hr className="my-4 border-blue-300 border-dashed" />
-                                        <div className="flex justify-between items-center">
-                                            <p className="text-xl font-semibold">
-{/*                                               
-                                              
-                                                {item.discount > 0 ? (
-                                                    <div>
-                                                        <span className="line-through mr-2 text-gray-500">Rp.{item.price}</span>
-                                                        <span className="text-red-600">
-                                                            Rp{(item.price - item.discount).toLocaleString("id-ID")}
-                                                        </span>
-                                                    </div>
-                                                ) : (
-                                                    `Rp${item.price.toLocaleString("id-ID")}`
-                                                ) } */}
-                                                {
-                                                item.discount > 0 ? (
-                                                    <div>
-                                                        <span className="line-through mr-2 text-gray-500">Rp.{item.price}</span>
-                                                        <span className="text-red-600">
-                                                            Rp{(item.price - item.discount).toLocaleString("id-ID")}
-                                                        </span>
-                                                    </div>
-                                                ) : item.price == 0 ? 'Gratis'                                                    
-                                                        :
-                                                    (`Rp${item.price.toLocaleString("id-ID")}`)
-                                                }
+                                            <hr className="my-4 border-blue-300 border-dashed" />
+                                            <div className="flex justify-between items-center">
+                                                <p className="text-xl font-semibold">
 
-                                            </p>
-                                            <div className="flex items-center space-x-4">
-                                                <button
-                                                    onClick={() => decrement(index)}
-                                                    className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
-                                                >
-                                                    –
-                                                </button>
-                                                <span>{ticketQuantities[index] || 0}</span>
-                                                <button
-                                                    onClick={() => increment(index)}
-                                                    className={`text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center
-                                                     (ticketQuantities[index] || 0) >= (item.seatAvailable || 0) ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
-                                                    disabled={(ticketQuantities[index] || 0) >= (item.seatAvailable || 0)}
-                                                >
-                                                    +
-                                                </button>
+                                                    {
+                                                        item.discount > 0 ? (
+                                                            <div>
+                                                                <span className="line-through mr-2 text-gray-500">Rp.{item.price}</span>
+                                                                <span className="text-red-600">
+                                                                    Rp{(item.price - item.discount).toLocaleString("id-ID")}
+                                                                </span>
+                                                            </div>
+                                                        ) : item.price == 0 ? 'Gratis'
+                                                            :
+                                                            (`Rp${item.price.toLocaleString("id-ID")}`)
+                                                    }
+
+                                                </p>
+                                                {isExpired ? <div className='text-red-500 font-bold'>KADARLUASA</div> : isSoldOut ? <div className='text-red-500 font-bold'>TIKET HABIS</div> : 
+                                                <div className="flex items-center space-x-4">
+                                                    <button
+                                                        onClick={() => decrement(index)}
+                                                        className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
+                                                    >
+                                                        –
+                                                    </button>
+                                                    <span>{ticketQuantities[index] || 0}</span>
+                                                    <button
+                                                        onClick={() => increment(index)}
+                                                        className={`text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center
+                                                     (ticketQuantities[index] || 0) >= (item.seatAvailable || 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                        disabled={(ticketQuantities[index] || 0) >= (item.seatAvailable || 0)}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                                }
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    )
+                                })}
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -403,7 +399,7 @@ export default function EventDetail({ params }: IParams) {
                                     )
                                 })
                                 }
-                        
+
                             </CardContent>
                         </Card>
                     </TabsContent>
