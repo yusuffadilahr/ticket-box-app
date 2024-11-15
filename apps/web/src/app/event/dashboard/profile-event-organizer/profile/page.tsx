@@ -50,7 +50,7 @@ export default function Page() {
 
   if (isFetching) return (
     <main className="w-full flex flex-col h-fit gap-5">
-      <div className="w-full py-3 flex flex-col px-4 bg-neutral-200 h-18 rounded-lg"></div>
+      <div className="w-full flex flex-col px-4 bg-neutral-200 h-20 rounded-lg"></div>
       <div className="w-full flex h-fit gap-5">
         <section className="w-full items-center flex flex-col py-8 px-2 rounded-lg shadow-lg bg-neutral-200">
           <div className="flex items-center gap-5 justify-between w-full px-10">
