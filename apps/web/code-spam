@@ -470,7 +470,6 @@ import { FaRegTrashAlt } from "react-icons/fa";
 const EventForm = () => {
     const { mutate: mutationCreateEvent } = useMutation({
         mutationFn: async (values: FormData) => {
-            console.log(values);
             return await instance.post('/event/new-event', values);
         },
         onSuccess: (res) => {
@@ -528,7 +527,6 @@ const EventForm = () => {
                 validateOnBlur={true}
                 // validationSchema={EventSchema}
                 onSubmit={(values: any) => {
-                    console.log([values]);
                     const fd = new FormData();
                     fd.append('eventName', values.eventName);
                     fd.append('location', values.location);
@@ -555,7 +553,6 @@ const EventForm = () => {
                         },
                     );
 
-                    console.log(ticketsEvent);
                     fd.append(`tickets`, JSON.stringify(ticketsEvent));
 
                     values.images.forEach((image: any, index: any) => {
@@ -889,7 +886,6 @@ const EventForm = () => {
                             <button
                                 type="button"
                                 onClick={() => {
-                                    console.log(values)
                                     setFieldValue('tickets', [...values.tickets, {
                                         price: values.price,
                                         ticketName: values.ticketName,

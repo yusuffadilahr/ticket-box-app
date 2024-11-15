@@ -7,6 +7,32 @@ const hashPassword = async (password) => {
   return await bcrypt.hash(password, saltRound);
 };
 
+
+
+
+const categoryEvent = [
+  {
+    id: 1,
+    Category: 'Music',
+  },
+  {
+    id: 2,
+    Category: 'Expo',
+  },
+  {
+    id: 3,
+    Category: 'Sport',
+  },
+  {
+    id: 4,
+    Category: 'Comedy',
+  },
+  {
+    id: 5,
+    Category: 'Seminar',
+  },
+];
+
 const dataEvent = [
   {
     // id: 1,
@@ -453,7 +479,6 @@ const dataEventOrganizer = [
     organizerName: 'SEKELIK FEST',
     ownerName: 'Budiman',
     email: 'sekelik@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '628563213213',
     identityNumber: '123123123',
@@ -464,7 +489,6 @@ const dataEventOrganizer = [
     organizerName: 'RX INDONESIA',
     ownerName: 'Joni',
     email: 'rx@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '6284965423213',
     identityNumber: '234234234',
@@ -475,7 +499,6 @@ const dataEventOrganizer = [
     organizerName: 'Bengkel Space',
     ownerName: 'Toto',
     email: 'bengkel@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '622342352',
     identityNumber: '345345345',
@@ -486,7 +509,6 @@ const dataEventOrganizer = [
     organizerName: 'COMIKA EVENT',
     ownerName: 'Tomi',
     email: 'comika@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '62234234523',
     identityNumber: '456456456',
@@ -497,7 +519,6 @@ const dataEventOrganizer = [
     organizerName: 'Ismaya Live',
     ownerName: 'Jaja',
     email: 'ismaya@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '6234234235',
     identityNumber: '567575672',
@@ -508,7 +529,6 @@ const dataEventOrganizer = [
     organizerName: 'Deal Indonesia',
     ownerName: 'Celine',
     email: 'deal@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '62234234324',
     identityNumber: '678678678',
@@ -519,7 +539,6 @@ const dataEventOrganizer = [
     organizerName: 'IAM Automodified',
     ownerName: 'Rara',
     email: 'iam@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '6223424562',
     identityNumber: '789789789',
@@ -530,7 +549,6 @@ const dataEventOrganizer = [
     organizerName: 'CNCF Indonesia',
     ownerName: 'Bian',
     email: 'cncf@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '62756756756',
     identityNumber: '890890890',
@@ -541,7 +559,6 @@ const dataEventOrganizer = [
     organizerName: 'Marketeers',
     ownerName: 'Gofar',
     email: 'marketeers@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '62567568567',
     identityNumber: '235235235',
@@ -552,7 +569,6 @@ const dataEventOrganizer = [
     organizerName: 'Dilantern',
     ownerName: 'Palim',
     email: 'dilantern@gmail.com',
-    password: 'abc12345',
     role: 'EO',
     phoneNumber: '62567568567',
     identityNumber: '457457457',
@@ -781,7 +797,6 @@ const eventImages = [
 ];
 
 const ticketArr = [
-
   {
     price: 150000,
     ticketName: 'Regular',
@@ -1126,13 +1141,22 @@ const ticketArr = [
 async function main() {
   let eventIndex = 0; // Initialize event index to track the current event
 
+
+
+  for (let i = 0; i < categoryEvent.length; i++) {
+    const category = categoryEvent[i];
+    await prisma.category.create({
+      data: category,
+    });
+  }
+
   // Loop through each event organizer
   for (let i = 0; i < dataEventOrganizer.length; i++) {
     const organizer = dataEventOrganizer[i];
 
     // Create the EventOrganizer
     const createdOrganizer = await prisma.eventOrganizer.create({
-      data: organizer,
+      data: { ...organizer, password: await hashPassword('12312312') },
     });
 
     // Assign 3 events to the current organizer

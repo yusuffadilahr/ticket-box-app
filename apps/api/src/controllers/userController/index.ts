@@ -221,6 +221,7 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
     const { userId, authorizationRole } = req.body;
     let dataUser: any;
     let dataEventOrganizer: any;
+    let totalAmount: any
 
 
     if (authorizationRole == 'user') {
@@ -241,6 +242,13 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
           Transactions: true
         }
       })
+
+      totalAmount = await prisma.transactions.aggregate({
+        _sum: { totalPrice: true },
+        where: { eventOrganizerId: userId }
+      })
+
+
     }
 
     // if (dataUser?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
@@ -270,7 +278,10 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         phoneNumber: dataEventOrganizer[0]?.phoneNumber,
         profilePicture: dataEventOrganizer[0]?.profilePicture,
         identityNumber: dataEventOrganizer[0]?.identityNumber,
-        isVerified: dataEventOrganizer[0]?.isVerified
+        isVerified: dataEventOrganizer[0]?.isVerified,
+        events: dataEventOrganizer[0]?.events,
+        transactions: dataEventOrganizer[0]?.Transactions,
+        // totalAmount: totalAmount?._sum?.totalPrice
       } : {},
     });
   } catch (error) {
@@ -379,8 +390,6 @@ export const resetPasswordProfile = async (req: Request, res: Response, next: Ne
   try {
     const { userId, existingPassword, password } = req.body;
     const { authorization } = req.headers;
-    // console.log(authorization)
-
     const token = authorization?.split(' ')[1]!;
 
     const findUser = await prisma.users.findFirst({
@@ -426,7 +435,20 @@ export const updateProfileUser = async (req: Request, res: Response, next: NextF
     const { userId, firstName, lastName, phoneNumber, identityNumber } = req.body;
     // if (firstName || lastName || phoneNumber || identityNumber) throw { msg: 'Harus diisi', status: 400 }
 
-    console.log('>>>>>>>> 430', req.files)
+    // if(req.files) {
+    //   files = Array.isArray(req.files)
+    //     ? req.files
+    //     : req.files['images']
+    // }
+
+    // const imagesUploaded = []
+    // for (const image of imagesUpload!) {
+    //   const result: any = await cloudinaryUpload(image.buffer)
+    //   console.log(result)
+    //   imagesUploaded.push(result.res!)
+    // }
+
+
     const imagesUploaded = await Promise.all(imagesUpload?.images.map(async (item: any) => {
       const result: any = await cloudinaryUpload(item?.buffer)
 

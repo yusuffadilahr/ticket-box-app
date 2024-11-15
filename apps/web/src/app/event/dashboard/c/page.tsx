@@ -9,17 +9,18 @@ import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { toast } from 'react-hot-toast';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { IoAddCircleOutline } from 'react-icons/io5';
+import { FaRegTrashAlt } from "react-icons/fa";
+import { RiInformation2Fill } from "react-icons/ri";
+import { Tooltip } from 'react-tooltip';
+
 
 const EventForm = () => {
   const { mutate: mutationCreateEvent } = useMutation({
     mutationFn: async (values: FormData) => {
-      console.log(values);
       return await instance.post('/event/new-event', values);
     },
     onSuccess: (res) => {
-      toast.success('beerhasil');
+      toast.success(res?.data?.message);
       console.log(res);
     },
     onError: (error) => {
@@ -68,11 +69,11 @@ const EventForm = () => {
           endDate: '',
           tickets: [],
         }}
+
         validateOnChange={true}
         validateOnBlur={true}
-        // validationSchema={EventSchema}
+        validationSchema={EventSchema}
         onSubmit={(values: any) => {
-          console.log([values]);
           const fd = new FormData();
           fd.append('eventName', values.eventName);
           fd.append('location', values.location);
@@ -99,7 +100,6 @@ const EventForm = () => {
             },
           );
 
-          console.log(ticketsEvent);
           fd.append(`tickets`, JSON.stringify(ticketsEvent));
 
           values.images.forEach((image: any, index: any) => {
@@ -197,28 +197,21 @@ const EventForm = () => {
                     placeholder="Lokasi"
                     className="border border-gray-500 rounded-md p-2"
                   />
-                  <div className="h-1">
-                    <ErrorMessage
-                      name="location"
-                      component="div"
-                      className="text-xs text-red-600"
-                    />
+                  <div className='h-1'>
+                    <ErrorMessage name="location" component="div" className='text-xs text-red-600' />
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className=" text-sm">Lokasi Google Map</label>
+                  <label className=" text-sm flex items-center">Lokasi Google Map <a data-tooltip-id="my-tooltip" data-tooltip-content="Didapatkan dengan klik share lokasi & copy link pada lokasi di google maps"><RiInformation2Fill /></a></label>
+                  <Tooltip id="my-tooltip" />
                   <Field
                     name="locationUrl"
                     placeholder="https://maps.app.goo.gl/ACXwTUMJQ8xSTnyq7"
                     className="border border-gray-500 rounded-md p-2"
                     type="text"
                   />
-                  <div className="h-1">
-                    <ErrorMessage
-                      name="locationUrl"
-                      component="div"
-                      className="text-xs text-red-600"
-                    />
+                  <div className='h-1'>
+                    <ErrorMessage name="locationUrl" component="div" className='text-xs text-red-600' />
                   </div>
                 </div>
 
@@ -253,166 +246,48 @@ const EventForm = () => {
               <h3 className="flex justify-center font-bold text-2xl pb-5">
                 Upload Gambar Event
               </h3>
-              <div className="grid grid-cols-1 gap-4">
-                <label className="text-sm border border-gray-300 rounded-md p-3 text-center">
-                  <span>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-sm border border-gray-300 rounded-md p-3 text-center">
+                  <label >
                     <b>Gambar 1</b>: Ukuran 1170 x 570px tidak lebih dari 1Mb
                     (Format JPG, JPEG, PNG)
-                  </span>
-                  <input
-                    id="gambar1"
-                    name="gambar1"
-                    type="file"
-                    accept="image/*"
-                    onChange={(event: any) =>
-                      setFieldValue('images[0]', event?.currentTarget?.files[0])
-                    }
-                    className="hidden"
-                  />
-                  <div className="flex items-center justify-center w-full">
-                    <label
-                      htmlFor="gambar1"
-                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                    >
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg
-                          className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 16"
-                        >
-                          <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                          />
-                        </svg>
-                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="font-semibold">Click to upload</span>{' '}
-                          or drag and drop
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          SVG, PNG, JPG SVG, PNG, JPG MAX 500 x 500px tidak
-                          lebih dari 1Mb
-                        </p>
-                      </div>
-                    </label>
+                    <input
+                      id='gambar1'
+                      name='gambar1'
+                      type="file"
+                      accept="image/*"
+                      onChange={(event: any) =>
+                        setFieldValue(
+                          'images[0]',
+                          event?.currentTarget?.files[0],
+                        )
+                      }
+                      className="mx-auto"
+                    />
+                  </label>
+                  <div className='h-1'>
+                    <ErrorMessage name="gambar1" component="div" className='text-xs text-red-600' />
                   </div>
-                </label>
-                <div className="flex gap-3">
-                  <label className="text-sm border border-gray-300 rounded-md p-3 text-center">
+                </div>
+                <div className="text-sm border border-gray-300 rounded-md p-3 text-center">
+                  <label >
                     <b>Gambar 2</b>: Ukuran 500 x 500px tidak lebih dari 1Mb
                     (Format JPG, JPEG, PNG)
                     <input
                       type="file"
                       accept="image/*"
-                      name="gambar2"
+                      name='gambar2'
                       onChange={(event: any) =>
                         setFieldValue(
                           'images[1]',
                           event?.currentTarget?.files[0],
                         )
                       }
-                      className="hidden"
                     />
-                    <div className="flex items-center justify-center w-full">
-                      <label
-                        htmlFor="gambar2"
-                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                      >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg
-                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 20 16"
-                          >
-                            <path
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                            />
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span className="font-semibold">
-                              Click to upload
-                            </span>{' '}
-                            or drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            SVG, PNG, JPG SVG, PNG, JPG MAX 500 x 500px tidak
-                            lebih dari 1Mb
-                          </p>
-                        </div>
-                      </label>
-                    </div>
-                  </label>
-                  <label className="text-sm border border-gray-300 rounded-md p-3 text-center">
-                    <b>Gambar 3</b>: Ukuran 1000 x 1000px tidak lebih dari 2Mb
-                    (Format JPG, JPEG, PNG)
-                    <input
-                      type="file"
-                      accept="image/*"
-                      name="gambar3"
-                      onChange={(event: any) =>
-                        setFieldValue(
-                          'images[2]',
-                          event?.currentTarget?.files[0],
-                        )
-                      }
-                      className="hidden"
-                    />
-                    <div className="flex items-center justify-center w-full">
-                      <label
-                        htmlFor="gambar3"
-                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                      >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg
-                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 20 16"
-                          >
-                            <path
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                            />
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span className="font-semibold">
-                              Click to upload
-                            </span>{' '}
-                            or drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            SVG, PNG, JPG SVG, PNG, JPG MAX 1000 x 1000px tidak
-                            lebih dari 2MB
-                          </p>
-                        </div>
-                      </label>
-                    </div>
                   </label>
                 </div>
               </div>
 
-              <div className="h-1">
-                <ErrorMessage
-                  name="gambar1"
-                  component="div"
-                  className="text-xs text-red-600"
-                />
-              </div>
             </div>
 
             <div className="px-40 rounded-xl  mt-8 h-fit w-full border border-gray-200 shadow-lg p-5">
@@ -427,12 +302,12 @@ const EventForm = () => {
                     placeholder="Nama Tiket"
                     // value={newTicket.ticketName}
                     className="border border-gray-500 rounded-md p-2"
-                    // onChange={(e: any) =>
-                    //     setNewTicket({
-                    //         ...newTicket,
-                    //         ticketName: e.target.value,
-                    //     })
-                    // }
+                  // onChange={(e: any) =>
+                  //     setNewTicket({
+                  //         ...newTicket,
+                  //         ticketName: e.target.value,
+                  //     })
+                  // }
                   />
                   <div className="h-1">
                     <ErrorMessage
@@ -449,13 +324,13 @@ const EventForm = () => {
                     placeholder="Tipe Tiket"
                     className="border border-gray-500 rounded-md p-2"
 
-                    // value={newTicket.ticketType}
-                    // onChange={(e: any) =>
-                    //     setNewTicket({
-                    //         ...newTicket,
-                    //         ticketType: e.target.value,
-                    //     })
-                    // }
+                  // value={newTicket.ticketType}
+                  // onChange={(e: any) =>
+                  //     setNewTicket({
+                  //         ...newTicket,
+                  //         ticketType: e.target.value,
+                  //     })
+                  // }
                   />
                   <div className="h-1">
                     <ErrorMessage
@@ -475,13 +350,13 @@ const EventForm = () => {
                       type="number"
                       className="border border-gray-500 rounded-md p-2"
 
-                      // value={newTicket.price}
-                      // onChange={(e: any) =>
-                      //     setNewTicket({
-                      //         ...newTicket,
-                      //         price: Number(e.target.value),
-                      //     })
-                      // }
+                    // value={newTicket.price}
+                    // onChange={(e: any) =>
+                    //     setNewTicket({
+                    //         ...newTicket,
+                    //         price: Number(e.target.value),
+                    //     })
+                    // }
                     />
                     <div className="h-1">
                       <ErrorMessage
@@ -500,13 +375,13 @@ const EventForm = () => {
                     type="number"
                     className="border border-gray-500 rounded-md p-2"
 
-                    // value={newTicket.seatAvailable}
-                    // onChange={(e: any) =>
-                    //     setNewTicket({
-                    //         ...newTicket,
-                    //         seatAvailable: Number(e.target.value),
-                    //     })
-                    // }
+                  // value={newTicket.seatAvailable}
+                  // onChange={(e: any) =>
+                  //     setNewTicket({
+                  //         ...newTicket,
+                  //         seatAvailable: Number(e.target.value),
+                  //     })
+                  // }
                   />
                   <div className="h-1">
                     <ErrorMessage
@@ -526,13 +401,13 @@ const EventForm = () => {
                       type="number"
                       className="border border-gray-500 rounded-md p-2"
 
-                      // value={newTicket.discount}
-                      // onChange={(e: any) =>
-                      //     setNewTicket({
-                      //         ...newTicket,
-                      //         discount: Number(e.target.value),
-                      //     })
-                      // }
+                    // value={newTicket.discount}
+                    // onChange={(e: any) =>
+                    //     setNewTicket({
+                    //         ...newTicket,
+                    //         discount: Number(e.target.value),
+                    //     })
+                    // }
                     />
                     <ErrorMessage
                       name="discount"
@@ -548,12 +423,12 @@ const EventForm = () => {
                     type="datetime-local"
                     // value={newTicket.startDate}
                     className="border border-gray-500 rounded-md p-2"
-                    // onChange={(e: any) =>
-                    //     setNewTicket({
-                    //         ...newTicket,
-                    //         startDate: e.target.value,
-                    //     })
-                    // }
+                  // onChange={(e: any) =>
+                  //     setNewTicket({
+                  //         ...newTicket,
+                  //         startDate: e.target.value,
+                  //     })
+                  // }
                   />
                   <div className="h-1">
                     <ErrorMessage
@@ -570,74 +445,68 @@ const EventForm = () => {
                     type="datetime-local"
                     className="border border-gray-500 rounded-md p-2"
 
-                    // value={newTicket.endDate}
-                    // onChange={(e: any) =>
-                    //     setNewTicket({ ...newTicket, endDate: e.target.value })
-                    // }
+                  // value={newTicket.endDate}
+                  // onChange={(e: any) =>
+                  //     setNewTicket({ ...newTicket, endDate: e.target.value })
+                  // }
                   />
-                  <div className="h-1">
-                    <ErrorMessage
-                      name="endDate"
-                      component="div"
-                      className="text-xs text-red-600"
-                    />
+                  <div className='h-1'>
+                    <ErrorMessage name="endDate" component="div" className='text-xs text-red-600' />
                   </div>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => {
-                  console.log(values);
-                  setFieldValue('tickets', [
-                    ...values.tickets,
-                    {
-                      price: values.price,
-                      ticketName: values.ticketName,
-                      ticketType: values.ticketType,
-                      seatAvailable: values.seatAvailable,
-                      discount: values.discount,
-                      startDate: values.startDate,
-                      endDate: values.endDate,
-                    },
-                  ]);
+                  setFieldValue('tickets', [...values.tickets, {
+                    price: values.price,
+                    ticketName: values.ticketName,
+                    ticketType: values.ticketType,
+                    seatAvailable: values.seatAvailable,
+                    discount: values.discount,
+                    startDate: values.startDate,
+                    endDate: values.endDate,
+                  }]);
+
+                  // setNewTicket({
+                  //     price: 0,
+                  //     ticketName: '',
+                  //     ticketType: '',
+                  //     seatAvailable: 0,
+                  //     discount: 0,
+                  //     startDate: '',
+                  //     endDate: '',
+                  // });
                 }}
                 className="bg-blue-500 text-white rounded-md p-3 mt-4 flex justify-center"
               >
+
                 Tambah Tiket
               </button>
-              <ErrorMessage
-                name="tickets"
-                component="div"
-                className="text-xs text-red-600"
-              />
+              <ErrorMessage name="tickets" component="div" className='text-xs text-red-600' />
             </div>
 
             <div>
-              <h3 className="flex justify-center font-bold text-2xl mt-8 pb-5 mb-4">
-                Daftar Tiket
-              </h3>
+              <h3 className='flex justify-center font-bold text-2xl mt-8 pb-5 mb-4'>Daftar Tiket</h3>
               {values.tickets.map((ticket: any, index: any) => (
-                <div
-                  key={index}
-                  className="bg-blue-50 p-4 mb-2 rounded-lg border border-blue-200 shadow-md w-full mx-auto"
-                >
+                <div key={index} className="bg-blue-50 p-4 mb-2 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-lg font-semibold">
                         {ticket.ticketName}
                       </h3>
-                      <p className="text-gray-600 mt-1">{ticket.ticketType}</p>
+                      <p className="text-gray-600 mt-1">
+                        {ticket.ticketType}
+                      </p>
                       <div className="text-blue-600 mt-2">
                         <span className="flex items-center flex-col">
-                          <div className="flex items-center gap-1">
+                          <div className='flex items-center gap-1'>
                             <MdOutlineAccessTimeFilled />
-                            Start : {ticket.startDate.split('T')[0]} •{' '}
-                            {ticket.startDate.split('T')[1]}
+                            Start : {ticket.startDate.split('T')[0]} • {ticket.startDate.split('T')[1]}
                           </div>
-                          <div className="flex items-center gap-1">
+                          <div className='flex items-center gap-1'>
                             <MdOutlineAccessTimeFilled />
-                            End : {ticket.endDate.split('T')[0]} •{' '}
-                            {ticket.endDate.split('T')[1]}
+                            End : {ticket.endDate.split('T')[0]} • {ticket.endDate.split('T')[1]}
                           </div>
                         </span>
                       </div>
@@ -645,9 +514,7 @@ const EventForm = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        const updatedTickets = values.tickets.filter(
-                          (_: any, i: any) => i !== index,
-                        );
+                        const updatedTickets = values.tickets.filter((_: any, i: any) => i !== index);
                         setFieldValue('tickets', updatedTickets);
                       }}
                       className="text-red-500"
@@ -660,15 +527,12 @@ const EventForm = () => {
                     <p className="text-xl font-semibold">
                       {ticket.discount > 0 ? (
                         <div>
-                          <span className="line-through mr-2 text-gray-500">
-                            Rp.{ticket.price}
-                          </span>
+                          <span className="line-through mr-2 text-gray-500">Rp{ticket.price.toLocaleString("id-ID")}</span>
                           <span className="text-red-600">
-                            Rp.{ticket.price - ticket.discount}
-                          </span>
+                            Rp{(ticket.price - ticket.discount).toLocaleString("id-ID")}                                                    </span>
                         </div>
                       ) : (
-                        `Rp${ticket.price.toLocaleString('id-ID')}`
+                        `Rp${ticket.price.toLocaleString("id-ID")}`
                       )}
                     </p>
                     <div className="flex items-center space-x-4">
@@ -676,6 +540,8 @@ const EventForm = () => {
                     </div>
                   </div>
                 </div>
+
+
               ))}
             </div>
             <div className="flex justify-center mt-8">

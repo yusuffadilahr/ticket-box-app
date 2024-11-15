@@ -31,7 +31,7 @@ export const EventSchema = Yup.object().shape({
 
 
 
-    images: Yup.array().of(
+    gambar1: Yup.array().of(
         Yup.mixed<File>()
             .test('fileSize', 'Maksimum File Size 2Mb', file => {
                 const limitFileSize = 2000000

@@ -114,7 +114,7 @@ export const findEvent = async (req: Request, res: Response, next: NextFunction)
                 dateFrom ? { startEvent: { gte: new Date(dateFrom as string) } } : {},
 
                 dateUntil ? { endEvent: { lte: new Date(dateUntil as string) } } : {},
-            ].filter(item => Object.keys(item).length) // Remove empty conditions
+            ].filter(item => Object.keys(item).length)
         };
 
         const eventSearch = await prisma.event.findMany({
@@ -128,21 +128,52 @@ export const findEvent = async (req: Request, res: Response, next: NextFunction)
             skip: offset
         });
 
+
+        const eventDataWithDetails = eventSearch.map(event => {
+            let minPriceForEvent: number | null = null;
+            event.tickets.forEach(ticket => {
+                if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
+                    minPriceForEvent = ticket.price;
+                }
+            });
+
+            let totalSeatsAvailable = 0;
+            event.tickets.forEach(ticket => {
+                totalSeatsAvailable += ticket.seatAvailable;
+            });
+
+            return {
+                ...event,
+                minimumPrice: minPriceForEvent,
+                seatAvailability: totalSeatsAvailable,
+            };
+        });
+
+
+
         const totalCount = await prisma.event.count({
             where: whereConditions
         });
 
         const totalPage = Math.ceil(Number(totalCount) / Number(limit_data));
 
-        if (eventSearch.length === 0 && event) {
+        // if (eventSearch.length === 0 && event) {
+        //     throw { msg: 'Event tidak tersedia', status: 404 };
+        // }
+
+        if (eventDataWithDetails.length === 0 && event) {
             throw { msg: 'Event tidak tersedia', status: 404 };
         }
 
         res.status(200).json({
             error: false,
             message: "Berhasil menampilkan data event!",
-            data: { eventSearch, totalPage }
+            data: {
+                totalPage,
+                eventSearch: eventDataWithDetails,
+            }
         });
+
     } catch (error) {
         next(error);
     }
@@ -292,13 +323,6 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
         const { eventName, location, description, isPaid, locationUrl, startEvent, endEvent, categoryId, userId } = req.body
         const { id } = req.params
 
-        console.log(req.files)
-        console.log(eventName, "<<<<<< event Name");
-        console.log(location, "<<<<<< location");
-
-
-        console.log('<<<<< sampe mana 1')
-
         await prisma.$transaction(async (tx: any) => {
             const findUser = await tx.event.findMany({
                 where: { eventOrganizerId: userId }
@@ -306,7 +330,6 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
             if (findUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 }
 
-            console.log('<<<<< sampe mana 2')
             const updatedEvent = await tx.event.update({
                 data: {
                     eventName,
@@ -322,7 +345,6 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 where: { id: Number(id) }
             })
 
-            console.log('<<<<< sampe mana 3')
             const findEvent = await tx.event.findFirst({
                 where: { id: Number(id) },
                 include: {
@@ -334,7 +356,6 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 where: { eventsId: findEvent?.id }
             })
 
-            // console.log('<<<<< sampe mana 6')
             // const imagesArr = imagesUploaded?.images?.map((item: any) => {
             //     return {
             //         eventImageUrl: item.filename,
@@ -351,15 +372,12 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 }
             }))
 
-            console.log('<<<<< sampe mana 7')
             await tx.eventImages.createMany({
                 data: imagesArr
             })
 
-            console.log('<<<<< sampe mana 8')
-
-            findEvent?.EventImages?.forEach((item: any) => {
-                fs.rmSync(`src/public/images/${item.eventImageUrl}`)
+            findEvent?.EventImages?.forEach((item:any) => {
+                fs.rmSync(`/src/public/images/${item.eventImageUrl}`)
             })
         })
 
