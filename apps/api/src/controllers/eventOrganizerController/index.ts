@@ -7,6 +7,7 @@ import { decodeToken, encodeToken } from '@/utils/token.sign';
 import { compile } from 'handlebars';
 import fs, { readFileSync } from 'fs'
 import { transporter } from '@/utils/transporter';
+import { addHours, addMonths, endOfWeek, startOfWeek } from 'date-fns';
 
 export const eventOrganizerRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -348,21 +349,10 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
       where: { eventOrganizerId: userId }
     })
 
-    // if (findEvent.length == 0) throw { msg: 'Belum memiliki event', status: 404 }
-
     const findUserTransaction = await prisma.transactions.groupBy({
       by: ['userId'],
       where: { eventOrganizerId: userId }
-      // where: {
-      //   eventOrganizerId: userId
-      // },
-      // include: {
-      //   transactionDetail: true
-      // },
-
     })
-
-    // if (findUserTransaction.length == 0) throw { msg: 'Belum ada data yang harus ditampilkan', status: 404 }
 
     const dataAttendee = findUserTransaction?.map((itm) => {
       return {
@@ -384,6 +374,68 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
       }
     })
 
+    const dailyStatistic = await prisma.transactions.groupBy({
+      by: ['createdAt'],
+      where: { eventOrganizerId: userId },
+      _sum: {
+        totalPrice: true
+      }
+    })
+
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
+    const endWeek = endOfWeek(new Date(), { weekStartsOn: 1 })
+
+    console.log(weekStart, "<<< weekStart")
+    console.log(endWeek, "<<< endWeek")
+
+    const weeklyStatistic = await prisma.transactions.groupBy({
+      by: ['createdAt'],
+      where: {
+        createdAt: {
+          gte: weekStart,
+          lte: endWeek
+        },
+        eventOrganizerId: userId
+      },
+      _sum: {
+        totalPrice: true
+      }
+    })
+
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+
+    const monthlyStatistic = await prisma.transactions.groupBy({
+      by: ['createdAt'],
+      where: {
+        createdAt: {
+          gte: startOfMonth,
+          lte: endOfMonth
+        },
+        eventOrganizerId: userId
+      },
+      _sum: {
+        totalPrice: true
+      }
+    });
+
+    const startYear = new Date(new Date().getFullYear(), 0, 1)
+    const endYear = new Date(new Date().getFullYear(), 11, 31)
+
+    const yearlyStatistic = await prisma.transactions.groupBy({
+      by: ['createdAt'],
+      where: {
+        createdAt: {
+          gte: startYear,
+          lte: endYear
+        },
+        eventOrganizerId: userId
+      },
+      _sum: {
+        totalPrice: true
+      }
+    })
+
     res.status(200).json({
       error: false,
       message: 'Berhasil mendapatkan data user yang terdaftar dalam event!',
@@ -391,7 +443,11 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
         dataAttendee,
         dataEventUser: findEvent,
         dataTotalTransaction,
-        totalAmount: totalAmount?._sum?.totalPrice
+        totalAmount: totalAmount?._sum?.totalPrice,
+        dailyStatistic,
+        weeklyStatistic,
+        monthlyStatistic,
+        yearlyStatistic
       }
     })
 

@@ -43,9 +43,13 @@ export default function OrganizerResetPass() {
     };
 
     return (
-        <main className="lg:pt-20 w-full">
+        <main className="w-full">
+            <section className="w-full py-3 flex flex-col px-4 bg-yellow-400 rounded-lg mb-6">
+                <h1 className="font-bold text-xl text-black">Reset Password</h1>
+                <p className="w-full text-neutral-500">Dashboard / Reset Password</p>
+            </section>
             <section className="flex justify-center w-full">
-                <section className="w-3/4 bg-white rounded-lg shadow-lg ml-5 p-5 h-fit py-10">
+                <section className="w-full bg-white rounded-lg shadow-lg p-5 h-fit py-10">
                     <h2 className="text-xl font-semibold mb-5 flex">Ganti Password</h2>
                     <Formik
                         validationSchema={resetPasswordProfile}
@@ -140,7 +144,7 @@ export default function OrganizerResetPass() {
                                     type="submit"
                                     className="w-full disabled:bg-neutral-300 bg-yellow-500 rounded-lg p-2 text-white text-sm hover:bg-yellow-600"
                                 >
-                                    Update
+                                    Konfirmasi
                                 </button>
                             </main>
                         </Form>

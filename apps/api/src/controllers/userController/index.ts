@@ -488,7 +488,7 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
       },
     });
 
-    if (!findUser) throw { msg: 'data tidak valid', status: 404 };
+    if (!findUser) throw { msg: 'Data tidak valid', status: 404 };
 
     await prisma.users.update({
       data: {
@@ -506,12 +506,13 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
 
     await transporter.sendMail({
       to: findUser?.email,
+      subject: 'Kamu berhasil verifikasi!',
       html: sendEmail
     })
 
     res.status(200).json({
       error: false,
-      message: 'Berhasil',
+      message: 'Berhasil konfirmasi, silahkan login!',
       data: {}
     })
   } catch (error) {

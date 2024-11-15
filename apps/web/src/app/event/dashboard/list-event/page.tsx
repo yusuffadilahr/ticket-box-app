@@ -34,6 +34,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
+import authStore from '@/zustand/authstore';
 
 
 
@@ -59,6 +60,7 @@ export default function EventTable() {
   const params = new URLSearchParams(searchParams);
   const [searchInput, setSearchInput] = useState(params.get('search') || '');
   const [page, setPage] = useState(Number(params.get('page')) || 1);
+  const profilePicture = authStore((state) => state.profilePicture)
 
   const { data: getEventList, refetch, isFetching } = useQuery({
     queryKey: ['get-event-list', searchInput, page],
@@ -104,44 +106,48 @@ export default function EventTable() {
 
   if (isFetching) return (
     <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
+      <div className="w-full py-10 flex flex-col px-4 bg-neutral-200 rounded-lg"></div>
       <div className="flex justify-between w-full items-center">
-        <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 px-10"></div>
+        <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 w-1/2"></div>
         <div className="flex justify-end gap-8">
           <div className="px-8 py-2 font-bold text-white bg-neutral-200 rounded-lg transition-all duration-300"></div>
           <Avatar className="transition-all duration-300">
-            <AvatarImage src="" alt="@shadcn" />
+            <AvatarImage src='' alt="@shadcn" />
             <AvatarFallback>TB</AvatarFallback>
           </Avatar>
         </div>
       </div>
-      <div className='w-full p-2 mb-4 border bg-neutral-200 py-4 rounded'></div>
       <div className='w-full h-80 bg-neutral-200 rounded-lg'></div>
     </main>
   )
 
   return (
     <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
-      <div className="flex justify-between w-full items-center">
-        <h1 className="text-lg font-bold">Daftar Event</h1>
-
-        <div className="flex justify-end gap-8">
+      <div className="w-full py-3 flex flex-col px-4 bg-yellow-400 rounded-lg">
+        <h1 className="font-bold text-xl text-black">Daftar Event</h1>
+        <p className="w-full text-neutral-500">Dashboard / Daftar Event</p>
+      </div>
+      <div className='w-full flex gap-3 items-center'>
+        <div className='relative w-full'>
+          <input
+            type="text"
+            placeholder="Search events..."
+            className="w-full py-2 border px-2 border-gray-300 rounded"
+            onChange={(e) => debounceSearch(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-8 w-full justify-end">
           <Link href="/event/dashboard/c" className='flex items-center px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
             <h1 className="font-semibold">
               + Buat Event
             </h1>
           </Link>
           <Avatar className="border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src={profilePicture} alt="@shadcn" />
             <AvatarFallback>TB</AvatarFallback>
           </Avatar>
         </div>
       </div>
-      <input
-        type="text"
-        placeholder="Search events..."
-        className="w-full p-2 mb-4 border border-gray-300 rounded"
-        onChange={(e) => debounceSearch(e.target.value)}
-      />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
           <thead>
@@ -196,17 +202,12 @@ export default function EventTable() {
                     {item?.startEvent.split('T')[0]}
                   </td>
                   <td className="py-3 px-6 text-left space-x-1">
-
-
-
                     <Dialog>
                       <DialogTrigger>
-
                         <button id='view' className="bg-green-600 p-2 rounded-md">
                           <FaRegEye color="white" />
                         </button>
                         <Tooltip anchorSelect='#view' place='top' content='Lihat Tiket' />
-
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
