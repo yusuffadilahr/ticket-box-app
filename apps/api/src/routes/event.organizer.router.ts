@@ -1,4 +1,4 @@
-import { forgotPasswordOrganizer, getUserByEvent, resetPasswordOnLogin, resetPasswordOrganizer, sendVerifyEmailUser, verifyEmailUser } from "@/controllers/eventOrganizerController";
+import { forgotPasswordOrganizer, getFeedbackUser, getUserByEvent, resetPasswordOnLogin, resetPasswordOrganizer, sendVerifyEmailUser, verifyEmailUser } from "@/controllers/eventOrganizerController";
 import { tokenValidation } from "@/middlewares/verify.token";
 import { Router } from "express";
 
@@ -10,5 +10,6 @@ eventOrganizerRouter.post('/forgot-password', forgotPasswordOrganizer)
 eventOrganizerRouter.patch('/reset-password', tokenValidation, resetPasswordOrganizer)
 eventOrganizerRouter.patch('/verify-user', tokenValidation, verifyEmailUser)
 eventOrganizerRouter.get('/send-email-verify', sendVerifyEmailUser)
+eventOrganizerRouter.get('/feedback', tokenValidation, getFeedbackUser)
 
 export default eventOrganizerRouter

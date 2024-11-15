@@ -2,7 +2,9 @@ import { prisma } from "@/connection";
 import fs from 'fs'
 import { NextFunction, Request, Response } from "express";
 import { addHours } from "date-fns";
+import { cloudinaryUpload } from "@/utils/cloudinary";
 import { Prisma } from "@prisma/client";
+
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -25,16 +27,19 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
                 }
             })
 
-            const imagesArr = imagesUpload?.images?.map((item: any) => {
+            const imagesArr = await Promise.all(imagesUpload?.images?.map(async (item: any) => {
+                const result: any = await cloudinaryUpload(item?.buffer)
+
                 return {
-                    eventImageUrl: item.filename,
-                    eventsId: event.id
+                    eventImageUrl: result?.res,
+                    eventsId: event?.id
                 }
-            })
+            }))
 
             await tx.eventImages.createMany({
                 data: imagesArr
             })
+
             if (dataArrayTikcet.length == 0) throw { msg: 'tiket wajib diisi', status: 400 }
             const dataTicket = dataArrayTikcet?.map((tik: any) => {
                 return {
@@ -62,11 +67,6 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
         })
 
     } catch (error) {
-        // const imagesUpload: any = req.files
-
-        // imagesUpload?.images.forEach((itm: any) => {
-        //     fs.rmSync(itm.path)
-        // })
         next(error)
     }
 }
@@ -387,13 +387,6 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
         const { eventName, location, description, isPaid, locationUrl, startEvent, endEvent, categoryId, userId } = req.body
         const { id } = req.params
 
-        console.log(req.files)
-        console.log(eventName, "<<<<<< event Name");
-        console.log(location, "<<<<<< location");
-
-
-        console.log('<<<<< sampe mana 1')
-
         await prisma.$transaction(async (tx: any) => {
             const findUser = await tx.event.findMany({
                 where: { eventOrganizerId: userId }
@@ -401,7 +394,6 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
             if (findUser.length == 0) throw { msg: 'Data tidak tersedia', status: 404 }
 
-            console.log('<<<<< sampe mana 2')
             const updatedEvent = await tx.event.update({
                 data: {
                     eventName,
@@ -417,7 +409,6 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 where: { id: Number(id) }
             })
 
-            console.log('<<<<< sampe mana 3')
             const findEvent = await tx.event.findFirst({
                 where: { id: Number(id) },
                 include: {
@@ -429,22 +420,28 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 where: { eventsId: findEvent?.id }
             })
 
-            console.log('<<<<< sampe mana 6')
-            const imagesArr = imagesUploaded?.images?.map((item: any) => {
-                return {
-                    eventImageUrl: item.filename,
-                    eventsId: updatedEvent.id
-                }
-            })
+            // const imagesArr = imagesUploaded?.images?.map((item: any) => {
+            //     return {
+            //         eventImageUrl: item.filename,
+            //         eventsId: updatedEvent.id
+            //     }
+            // })
 
-            console.log('<<<<< sampe mana 7')
+            const imagesArr = await Promise.all(imagesUploaded?.images?.map(async(item: any) => {
+                const result: any = await cloudinaryUpload(item?.buffer)
+
+                return {
+                    eventImageUrl: result?.res,
+                    eventsId: updatedEvent?.id
+                }
+            }))
+
             await tx.eventImages.createMany({
                 data: imagesArr
             })
 
-            console.log('<<<<< sampe mana 8')
 
-            findEvent?.EventImages?.forEach((item: any) => {
+            findEvent?.EventImages?.forEach((item:any) => {
                 fs.rmSync(`/src/public/images/${item.eventImageUrl}`)
             })
         })

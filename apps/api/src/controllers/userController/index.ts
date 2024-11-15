@@ -40,8 +40,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
         verifyCode: verificationCode,
         phoneNumber,
         identityNumber,
-        profilePicture:
-          'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+        profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
         referralCode: refferal,
       },
     });
@@ -137,7 +136,7 @@ export const signInWithGoogle = async (req: Request, res: Response, next: NextFu
     if (findEmail) {
       res.status(200).json({
         error: false,
-        message: 'Login Berhasil',
+        message: 'Login menggunakan Google berhasil!',
         data: { token }
       })
     } else {
@@ -161,7 +160,7 @@ export const signInWithGoogle = async (req: Request, res: Response, next: NextFu
 
       res.status(201).json({
         error: false,
-        message: 'telah terbuat',
+        message: 'Register menggunakan Google berhasil!',
         data: {
           token,
           email,
@@ -222,6 +221,7 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
     const { userId, authorizationRole } = req.body;
     let dataUser: any;
     let dataEventOrganizer: any;
+    let totalAmount: any
 
 
     if (authorizationRole == 'user') {
@@ -242,6 +242,13 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
           Transactions: true
         }
       })
+
+      totalAmount = await prisma.transactions.aggregate({
+        _sum: { totalPrice: true },
+        where: { eventOrganizerId: userId }
+      })
+
+
     }
 
     // if (dataUser?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
@@ -271,7 +278,10 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         phoneNumber: dataEventOrganizer[0]?.phoneNumber,
         profilePicture: dataEventOrganizer[0]?.profilePicture,
         identityNumber: dataEventOrganizer[0]?.identityNumber,
-        isVerified: dataEventOrganizer[0]?.isVerified
+        isVerified: dataEventOrganizer[0]?.isVerified,
+        events: dataEventOrganizer[0]?.events,
+        transactions: dataEventOrganizer[0]?.Transactions,
+        // totalAmount: totalAmount?._sum?.totalPrice
       } : {},
     });
   } catch (error) {
@@ -380,8 +390,6 @@ export const resetPasswordProfile = async (req: Request, res: Response, next: Ne
   try {
     const { userId, existingPassword, password } = req.body;
     const { authorization } = req.headers;
-    // console.log(authorization)
-
     const token = authorization?.split(' ')[1]!;
 
     const findUser = await prisma.users.findFirst({
@@ -441,18 +449,15 @@ export const updateProfileUser = async (req: Request, res: Response, next: NextF
     // }
 
 
-    console.log('>>>>>>>> 430', req.files)
     const imagesUploaded = await Promise.all(imagesUpload?.images.map(async (item: any) => {
       const result: any = await cloudinaryUpload(item?.buffer)
 
       return await result?.res!
     }))
 
-    console.log(imagesUploaded[0], "<<<<<<<<<<<<<< 436")
-
     await prisma.users.update({
       data: {
-        profilePicture: imagesUpload?.images[0]?.filename,
+        profilePicture: imagesUploaded[0],
         firstName,
         lastName,
         phoneNumber,

@@ -60,11 +60,11 @@ export default function EventTable() {
   const [searchInput, setSearchInput] = useState(params.get('search') || '');
   const [page, setPage] = useState(Number(params.get('page')) || 1);
 
-  const { data: getEventList, refetch } = useQuery({
+  const { data: getEventList, refetch, isFetching } = useQuery({
     queryKey: ['get-event-list', searchInput, page],
     queryFn: async () => {
       const res = await instance.get(`/event/organizer-event`, {
-        params: { page, limit_data: 8, search: searchInput },
+        params: { page, limit_data: 5, search: searchInput },
       });
       console.log(res.data.data);
       return res.data.data;
@@ -97,10 +97,27 @@ export default function EventTable() {
     if (searchInput) {
       currentUrl.set('search', searchInput);
     } else {
-      currentUrl.delete('search'); // Remove the search param if it's empty
+      currentUrl.delete('search');
     }
     router.push(`${pathname}?${currentUrl.toString()}`);
   }, [page, searchInput]);
+
+  if (isFetching) return (
+    <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
+      <div className="flex justify-between w-full items-center">
+        <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 px-10"></div>
+        <div className="flex justify-end gap-8">
+          <div className="px-8 py-2 font-bold text-white bg-neutral-200 rounded-lg transition-all duration-300"></div>
+          <Avatar className="transition-all duration-300">
+            <AvatarImage src="" alt="@shadcn" />
+            <AvatarFallback>TB</AvatarFallback>
+          </Avatar>
+        </div>
+      </div>
+      <div className='w-full p-2 mb-4 border bg-neutral-200 py-4 rounded'></div>
+      <div className='w-full h-80 bg-neutral-200 rounded-lg'></div>
+    </main>
+  )
 
   return (
     <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
@@ -115,7 +132,7 @@ export default function EventTable() {
           </Link>
           <Avatar className="border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300">
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>TB</AvatarFallback>
           </Avatar>
         </div>
       </div>
@@ -165,7 +182,13 @@ export default function EventTable() {
                   <td className="py-3 px-6 text-left">
                     {item?.category?.Category!}
                   </td>
-                  <td className="py-3 px-6 text-left">{item?.location!}</td>
+                  <td className="py-3 px-6 text-left">
+                    {item?.location?.length > 15 ? (
+                      <h1>{item?.location?.slice(0, 15)}...</h1>
+                    ) : (
+                      item?.location!
+                    )}
+                  </td>
                   <td className="py-3 px-6 text-left">
                     {item?.isPaid! == true ? 'Berbayar' : 'Gratis'}
                   </td>

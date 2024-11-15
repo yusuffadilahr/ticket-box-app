@@ -19,7 +19,6 @@ export default function ForgotPassword({ params }: { params: Params }) {
     const [confirmationPasswordVisible, setConfirmationPasswordVisible] = useState<boolean>(false);
     const { slug } = params
     const router = useRouter()
-    console.log(slug)
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);

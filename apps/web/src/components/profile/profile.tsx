@@ -25,7 +25,7 @@ export default function ProfileHeader() {
 return (
     <div className="flex gap-5 items-center">
         <Avatar className=' w-[80px] h-[80px] border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300'>
-            <AvatarImage className="object-cover" src={`http://localhost:8000/api/src/public/images/${profilePicture}`} alt="@shadcn" />
+            <AvatarImage className="object-cover" src={profilePicture} alt="foto-profil" />
             <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div>

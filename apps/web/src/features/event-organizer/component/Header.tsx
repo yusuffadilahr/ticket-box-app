@@ -82,7 +82,7 @@ export default function Header() {
                     </div>
                     <div className="hidden lg:flex gap-5 items-center px-5">
                         <div className="  hover:text-slate-300 transition-all duration-200 ease-in-out">
-                            <Link href={'/event/explore'} className="flex items-center gap-1">
+                            <Link href={'/event/dashboard/c'} className="flex items-center gap-1">
                                 <FaRegCalendarAlt />
                                 <button className="font-bold text-sm">Buat Event</button>
                             </Link>

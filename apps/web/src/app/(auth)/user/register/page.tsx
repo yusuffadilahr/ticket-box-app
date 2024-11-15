@@ -50,7 +50,6 @@ export default function Page() {
             }}
             validationSchema={registerUserSchema}
             onSubmit={(values) => {
-                console.log(values)
                 handleRegister({
                     firstName: values?.firstName,
                     lastName: values?.lastName,

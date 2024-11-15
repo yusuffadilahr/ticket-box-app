@@ -24,8 +24,6 @@ export default function Page({ params }: { params: { slug: string } }) {
   const token = slug.split('-TBX-')[1];
   const setAuth = authStore((state) => state.setAtuh);
   const router = useRouter()
-  console.log(token);
-  console.log(value);
 
   const { mutate: mutateVerifyCode } = useMutation({
     mutationFn: async (data: any) => {
