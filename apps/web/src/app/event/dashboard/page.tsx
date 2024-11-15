@@ -202,7 +202,7 @@ export default function OrganizerDashboard() {
               <h1 className="font-semibold">+ Buat Event</h1>
             </Link>
             <Avatar className=" border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300">
-              <AvatarImage src={profilePicture} alt="@shadcn" />
+              <AvatarImage src={profilePicture} alt="profile" className='object-cover'/>
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </div>
@@ -304,7 +304,7 @@ export default function OrganizerDashboard() {
                       options={rangeBarChart.options}
                       series={rangeBarChart.series}
                       type="rangeBar"
-                      height={350}
+                      height={'300px'}
                     />
                   </div>
                 </CardContent>

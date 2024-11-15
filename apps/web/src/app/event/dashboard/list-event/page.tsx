@@ -143,7 +143,7 @@ export default function EventTable() {
             </h1>
           </Link>
           <Avatar className="border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300">
-            <AvatarImage src={profilePicture} alt="@shadcn" />
+            <AvatarImage src={profilePicture} alt="profil" className='object-cover' />
             <AvatarFallback>TB</AvatarFallback>
           </Avatar>
         </div>
@@ -164,18 +164,10 @@ export default function EventTable() {
           <tbody className="text-gray-600 text-sm font-light">
             {getEventList &&
               getEventList?.eventList?.map((item: any, index: number) => (
-                <tr
-                  key={index}
-                  className="border-b border-gray-200 hover:bg-gray-100"
-                >
-                  <td className="py-3 px-6 text-left whitespace-nowrap">
-                    {index + 1}
-                  </td>
-                  <td
-                    className="py-3 px-6 text-left whitespace-nowrap"
-
-                  >
-                    {item?.eventName?.length > 15 ? (
+                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100" >
+                  <td className="py-3 px-6 text-left whitespace-nowrap">{((page - 1) * 5) + index + 1}</td>
+                  <td className="py-3 px-6 text-left whitespace-nowrap" > {item?.eventName?.length > 15 ?
+                    (
                       <h1
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={item?.eventName}
@@ -323,7 +315,7 @@ export default function EventTable() {
         {getEventList?.eventList?.length > 0 ? (
           Array(getEventList?.totalPage)
             .fill(0)
-            .map((item, index) => {
+            .map((_, index) => {
               return (
                 <button
                   key={index}

@@ -9,6 +9,12 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { FaCashRegister } from 'react-icons/fa';
 import { MdOutlineVerified } from 'react-icons/md';
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { ErrorMessage, Form, Formik } from 'formik';
+import { profileOrganizerSchema } from '@/features/event-organizer/schema/profileUpdateSchema';
 
 export default function Page() {
   const ownerName = authStore((state) => state?.ownerName);
@@ -41,6 +47,23 @@ export default function Page() {
     },
   });
 
+  const { mutate: mutateUpdateProfile } = useMutation({
+    mutationFn: async (fd: FormData) => {
+      return await instance.patch('/event-organizer/u', fd)
+    },
+    onSuccess: (res) => {
+      toast.success(res?.data?.message)
+      console.log(res, "<<<< res")
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
+    },
+    onError: (err: any) => {
+      console.log(err)
+      toast.error(err?.response?.data?.message)
+    }
+  })
+
   useEffect(() => {
     console.log('<<<<<<< refetch')
     refetch()
@@ -52,7 +75,7 @@ export default function Page() {
     <main className="w-full flex flex-col h-fit gap-5">
       <div className="w-full flex flex-col px-4 bg-neutral-200 h-20 rounded-lg"></div>
       <div className="w-full flex h-fit gap-5">
-        <section className="w-full items-center flex flex-col py-8 px-2 rounded-lg shadow-lg bg-neutral-200">
+        <section className="w-full items-center flex flex-col py-8 px-2 rounded-lg bg-neutral-200">
           <div className="flex items-center gap-5 justify-between w-full px-10">
             <div className="h-20 rounded-full w-full flex items-center gap-5">
               <div className="flex flex-col"></div>
@@ -70,8 +93,8 @@ export default function Page() {
           <div className="w-full px-10 pt-6"></div>
         </section>
         <section className="flex flex-col w-full gap-4">
-          <div className="w-full h-72 rounded-lg bg-neutral-200 shadow-lg px-10 py-5 overflow-y-auto"></div>
-          <div className="w-full h-44 rounded-lg bg-neutral-200 p-5 text-white shadow-lg"><div className="w-full h-24 flex gap-5"></div>
+          <div className="w-full h-72 rounded-lg bg-neutral-200 px-10 py-5 overflow-y-auto"></div>
+          <div className="w-full h-44 rounded-lg bg-neutral-200 p-5 text-white"><div className="w-full h-24 flex gap-5"></div>
           </div>
         </section>
       </div>
@@ -95,7 +118,7 @@ export default function Page() {
                 height={500}
                 alt="profile-photos"
                 src={profilePicture}
-                className="w-20 h-20 rounded-full border"
+                className="w-20 h-20 rounded-full border object-cover"
               />
               <div className="flex flex-col">
                 <h1 className="text-base font-bold text-black">
@@ -153,9 +176,82 @@ export default function Page() {
             </div>
           </div>
           <div className="w-full px-10 pt-6">
-            <button className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-              Ubah Profil
-            </button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className='w-full bg-yellow-400 hover:bg-yellow-500'>Ubah Profil</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Ubah Profil</DialogTitle>
+                  <DialogDescription>
+                   Harap diisi dengan nama dan foto yang benar.
+                  </DialogDescription>
+                </DialogHeader>
+                <Formik
+                  initialValues={{
+                    ownerName: '',
+                    organizer: '',
+                    images: null
+                  }}
+
+                  validationSchema={profileOrganizerSchema}
+
+                  onSubmit={(values) => {
+                    const fd = new FormData()
+                    fd.append('ownerName', values.ownerName)
+                    fd.append('organizer', values.organizer)
+                    if (values?.images) {
+                      fd.append('images', values?.images!)
+                    }
+
+                    mutateUpdateProfile(fd)
+                    console.log(values)
+                  }}
+                >
+                  {({ setFieldValue }) => (
+                    <Form>
+                      <div className="grid gap-4 py-4">
+                        <div className='flex flex-col'>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="ownerName" className="text-right">Name</Label>
+                            <div className='relative w-full col-span-3'>
+                              <Input id="ownerName" defaultValue={ownerName}
+                                onChange={(e) => setFieldValue('ownerName', e.target.value)} />
+                              <ErrorMessage component='div' name='ownerName' className='text-red-500 text-xs text-end top-3 right-4 absolute' />
+                            </div>
+                          </div>
+                        </div>
+                        <div className='flex flex-col'>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="organizer" className="text-right">Name</Label>
+                            <div className='relative w-full col-span-3'>
+                              <Input id="organizer" defaultValue={organizerName}
+                                onChange={(e) => setFieldValue('organizer', e.target.value)} />
+                              <ErrorMessage component='div' name='organizer' className='text-red-500 text-xs text-end top-3 right-4 absolute' />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="images" className="text-right">Profile Image</Label>
+                          <input onChange={(e) => {
+                            const file = e.target.files ? e.target.files[0] : null
+                            if (file) {
+                              setFieldValue('images', file)
+                            }
+                          }}
+                            type="file" name="images" id="images" className="col-span-3 text-xs" />
+                        </div>
+                      </div>
+                      <div className='w-full flex justify-end'>
+                        <Button type="submit">Save changes</Button>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+                <DialogFooter>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </section>
         <section className="flex flex-col w-full gap-4">

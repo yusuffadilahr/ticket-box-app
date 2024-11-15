@@ -43,18 +43,15 @@ export default function ProfileHome() {
             return await instance.patch('/user/user-profile/', fd)
         },
         onSuccess: (res) => {
-            toast.success('Berhasil mengubah data')
+            toast.success(res?.data?.message)
             console.log(res)
+            window.location.reload()
         },
-        onError: (err) => {
-            toast.error('Gagal')
+        onError: (err: any) => {
+            toast.error(err?.response?.data?.message)
             console.log(err)
         }
     })
-
-
-
-
 
     return (
         <main className="pt-28 px-20">
@@ -72,7 +69,7 @@ export default function ProfileHome() {
 
                     <Formik
                         initialValues={{
-                            images:  null as File | null,
+                            images: null as File | null,
                             firstName: firstName || '',
                             lastName: lastName || '',
                             phoneNumber: phoneNumber || '',
