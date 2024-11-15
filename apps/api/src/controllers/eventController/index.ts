@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { addHours } from "date-fns";
 import { cloudinaryUpload } from "@/utils/cloudinary";
 import { Prisma } from "@prisma/client";
+import { createEventService, findEventDetailService } from "@/services/event.service";
 
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,53 +13,66 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
         const { eventName, location, description, isPaid, locationUrl, startEvent, endEvent, categoryId, userId, tickets } = req.body
         const dataArrayTikcet = JSON.parse(tickets)
 
-        await prisma.$transaction(async (tx: any) => {
-            const event = await tx.event.create({
-                data: {
-                    eventName,
-                    location,
-                    locationUrl,
-                    description,
-                    isPaid: Boolean(isPaid),
-                    startEvent: addHours(new Date(startEvent), 7),
-                    endEvent: addHours(new Date(endEvent), 7),
-                    eventOrganizerId: userId,
-                    categoryId: Number(categoryId)
-                }
-            })
-
-            const imagesArr = await Promise.all(imagesUpload?.images?.map(async (item: any) => {
-                const result: any = await cloudinaryUpload(item?.buffer)
-
-                return {
-                    eventImageUrl: result?.res,
-                    eventsId: event?.id
-                }
-            }))
-
-            await tx.eventImages.createMany({
-                data: imagesArr
-            })
-
-            if (dataArrayTikcet.length == 0) throw { msg: 'tiket wajib diisi', status: 400 }
-            const dataTicket = dataArrayTikcet?.map((tik: any) => {
-                return {
-                    price: Number(tik?.price),
-                    ticketName: tik?.ticketName,
-                    ticketType: tik?.ticketType,
-                    totalSeat: Number(tik?.seatAvailable),
-                    seatAvailable: Number(tik?.seatAvailable),
-                    eventId: Number(event?.id),
-                    discount: Number(tik?.discount),
-                    startDate: addHours(new Date(tik?.startDate), 7),
-                    endDate: addHours(new Date(tik?.endDate), 7),
-                }
-            })
-
-            await tx.tickets.createMany({
-                data: dataTicket
-            })
+        await createEventService({
+            eventName,
+            location,
+            locationUrl,
+            description,
+            isPaid,
+            startEvent,
+            endEvent,
+            userId,
+            categoryId,
+            imagesUpload,
+            dataArrayTikcet
         })
+        // await prisma.$transaction(async (tx: any) => {
+        //     const event = await tx.event.create({
+        //         data: {
+        //             eventName,
+        //             location,
+        //             locationUrl,
+        //             description,
+        //             isPaid: Boolean(isPaid),
+        //             startEvent: addHours(new Date(startEvent), 7),
+        //             endEvent: addHours(new Date(endEvent), 7),
+        //             eventOrganizerId: userId,
+        //             categoryId: Number(categoryId)
+        //         }
+        //     })
+
+        //     const imagesArr = await Promise.all(imagesUpload?.images?.map(async (item: any) => {
+        //         const result: any = await cloudinaryUpload(item?.buffer)
+
+        //         return {
+        //             eventImageUrl: result?.res,
+        //             eventsId: event?.id
+        //         }
+        //     }))
+
+        //     await tx.eventImages.createMany({
+        //         data: imagesArr
+        //     })
+
+        //     if (dataArrayTikcet.length == 0) throw { msg: 'tiket wajib diisi', status: 400 }
+        //     const dataTicket = dataArrayTikcet?.map((tik: any) => {
+        //         return {
+        //             price: Number(tik?.price),
+        //             ticketName: tik?.ticketName,
+        //             ticketType: tik?.ticketType,
+        //             totalSeat: Number(tik?.seatAvailable),
+        //             seatAvailable: Number(tik?.seatAvailable),
+        //             eventId: Number(event?.id),
+        //             discount: Number(tik?.discount),
+        //             startDate: addHours(new Date(tik?.startDate), 7),
+        //             endDate: addHours(new Date(tik?.endDate), 7),
+        //         }
+        //     })
+
+        //     await tx.tickets.createMany({
+        //         data: dataTicket
+        //     })
+        // })
 
         res.status(201).json({
             error: false,
@@ -185,18 +199,19 @@ export const findEventDetail = async (req: Request, res: Response, next: NextFun
     try {
         const { id } = req.params
 
-        const eventDetail = await prisma.event.findMany({
-            where: {
-                id: Number(id)
-            },
-            include: {
-                EventImages: true,
-                tickets: true,
-                category: true,
-                EventOrganizer: true,
-                Reviews: true
-            }
-        })
+        const eventDetail = await findEventDetailService({ id })
+        // await prisma.event.findMany({
+        //     where: {
+        //         id: Number(id)
+        //     },
+        //     include: {
+        //         EventImages: true,
+        //         tickets: true,
+        //         category: true,
+        //         EventOrganizer: true,
+        //         Reviews: true
+        //     }
+        // })
 
         if (eventDetail.length == 0) throw { msg: "Event not found", status: 404 }
 
@@ -427,7 +442,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
             //     }
             // })
 
-            const imagesArr = await Promise.all(imagesUploaded?.images?.map(async(item: any) => {
+            const imagesArr = await Promise.all(imagesUploaded?.images?.map(async (item: any) => {
                 const result: any = await cloudinaryUpload(item?.buffer)
 
                 return {
@@ -441,7 +456,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
             })
 
 
-            findEvent?.EventImages?.forEach((item:any) => {
+            findEvent?.EventImages?.forEach((item: any) => {
                 fs.rmSync(`/src/public/images/${item.eventImageUrl}`)
             })
         })
@@ -537,10 +552,6 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
                     eventOrganizerId: userId
                 },
             });
-
-            findImage.forEach((item: any) => {
-                fs.rmSync(`src/public/images/${item?.eventImageUrl}`)
-            })
         })
 
         res.status(200).json({

@@ -45,7 +45,7 @@ export const SidebarMenu = () => {
               width={500}
               height={500}
               alt="foto-profil"
-              className="rounded-full"
+              className="rounded-full w-12 h-12 object-cover"
             />
           </div>
           <div>
