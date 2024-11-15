@@ -7,19 +7,6 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-
-// const uploadAsync = promisify(cloudinary.uploader.upload);
-// export const cloudinaryUpload = async (file: string): Promise<{ res: string | undefined }> => {
-//     try {
-//         const result = await uploadAsync(file)
-//         return {
-//             res: result?.secure_url,
-//         }
-//     } catch (error) {
-//         throw error
-//     };
-// }
-
 export const cloudinaryUpload = async (file: Buffer) => {
     return new Promise((resolve, reject) => {
         cloudinary.uploader.upload_stream(
@@ -33,3 +20,15 @@ export const cloudinaryUpload = async (file: Buffer) => {
         ).end(file);
     });
 };
+
+            // const uploadAsync = promisify(cloudinary.uploader.upload);
+            // export const cloudinaryUpload = async (file: string): Promise<{ res: string | undefined }> => {
+            //     try {
+            //         const result = await uploadAsync(file)
+            //         return {
+            //             res: result?.secure_url,
+            //         }
+            //     } catch (error) {
+            //         throw error
+            //     };
+            // }

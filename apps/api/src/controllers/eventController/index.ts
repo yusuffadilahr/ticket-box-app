@@ -2,6 +2,7 @@ import { prisma } from "@/connection";
 import fs from 'fs'
 import { NextFunction, Request, Response } from "express";
 import { addHours } from "date-fns";
+import { Prisma } from "@prisma/client";
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -61,11 +62,11 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
         })
 
     } catch (error) {
-        const imagesUpload: any = req.files
+        // const imagesUpload: any = req.files
 
-        imagesUpload?.images.forEach((itm: any) => {
-            fs.rmSync(itm.path)
-        })
+        // imagesUpload?.images.forEach((itm: any) => {
+        //     fs.rmSync(itm.path)
+        // })
         next(error)
     }
 }
@@ -88,8 +89,8 @@ export const findEvent = async (req: Request, res: Response, next: NextFunction)
             AND: [
                 event ? {
                     OR: [
-                        { eventName: { contains: event as string } },
-                        { location: { contains: event as string } },
+                        { eventName: { contains: event as string, mode: 'insensitive' as Prisma.QueryMode } },
+                        { location: { contains: event as string, mode: 'insensitive' as Prisma.QueryMode } },
                     ]
                 } : {},
 
@@ -223,12 +224,34 @@ export const getNewestEvent = async (req: Request, res: Response, next: NextFunc
                 tickets: true
             }
         })
-        if (!searchEventByStartEvent.length) throw { msg: 'Data tidak ada', status: 404 }
+
+        const eventDataNewest = searchEventByStartEvent.map(event => {
+            let minPriceForEvent: number | null = null;
+            event.tickets.forEach(ticket => {
+                if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
+                    minPriceForEvent = ticket.price;
+                }
+            });
+
+            let totalSeatsAvailable = 0;
+            event.tickets.forEach(ticket => {
+                totalSeatsAvailable += ticket.seatAvailable;
+            });
+
+            return {
+                ...event,
+                minimumPrice: minPriceForEvent,
+                seatAvailability: totalSeatsAvailable,
+            };
+        });
+
+
+        if (!eventDataNewest.length) throw { msg: 'Data tidak ada', status: 404 }
 
         res.status(200).json({
             error: false,
             message: 'Berhasil menampilkan data event terbaru!',
-            data: searchEventByStartEvent
+            data: eventDataNewest
         })
     } catch (error) {
         next(error)
@@ -262,12 +285,32 @@ export const getBestSellingEvent = async (req: Request, res: Response, next: Nex
             },
         });
 
-        if (!bestSellingEvents.length) throw { msg: 'Data belum tersedia', status: 404 };
+        const eventDataBestSelling = bestSellingEvents.map(event => {
+            let minPriceForEvent: number | null = null;
+            event.tickets.forEach(ticket => {
+                if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
+                    minPriceForEvent = ticket.price;
+                }
+            });
+
+            let totalSeatsAvailable = 0;
+            event.tickets.forEach(ticket => {
+                totalSeatsAvailable += ticket.seatAvailable;
+            });
+
+            return {
+                ...event,
+                minimumPrice: minPriceForEvent,
+                seatAvailability: totalSeatsAvailable,
+            };
+        });
+
+        if (!eventDataBestSelling.length) throw { msg: 'Data belum tersedia', status: 404 };
 
         res.status(200).json({
             error: false,
             message: 'Berhasil mendapatkan data event terlaris!',
-            data: bestSellingEvents,
+            data: eventDataBestSelling,
         });
     } catch (error) {
         next(error);
@@ -284,12 +327,33 @@ export const getComedyEvent = async (req: Request, res: Response, next: NextFunc
                 tickets: true
             }
         })
-        if (!searchEventByCategory.length) throw { msg: 'Data tidak ada', status: 404 }
+
+        const eventDataComedy = searchEventByCategory.map(event => {
+            let minPriceForEvent: number | null = null;
+            event.tickets.forEach(ticket => {
+                if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
+                    minPriceForEvent = ticket.price;
+                }
+            });
+
+            let totalSeatsAvailable = 0;
+            event.tickets.forEach(ticket => {
+                totalSeatsAvailable += ticket.seatAvailable;
+            });
+
+            return {
+                ...event,
+                minimumPrice: minPriceForEvent,
+                seatAvailability: totalSeatsAvailable,
+            };
+        });
+
+        if (!eventDataComedy.length) throw { msg: 'Data tidak ada', status: 404 }
 
         res.status(200).json({
             error: false,
             message: 'Berhasil mendapatkan data event berkategori komedi!',
-            data: searchEventByCategory
+            data: eventDataComedy
         })
 
     } catch (error) {
@@ -298,7 +362,6 @@ export const getComedyEvent = async (req: Request, res: Response, next: NextFunc
 }
 
 
-// simpan di eventImages Controller
 export const getCarousel = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const dataImage = await prisma.eventImages.findMany({
@@ -381,7 +444,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
             console.log('<<<<< sampe mana 8')
 
-            findEvent?.EventImages?.forEach((item:any) => {
+            findEvent?.EventImages?.forEach((item: any) => {
                 fs.rmSync(`/src/public/images/${item.eventImageUrl}`)
             })
         })
@@ -419,8 +482,8 @@ export const getOrganizerEvent = async (req: Request, res: Response, next: NextF
 
         if (search) {
             filters.OR = [
-                { eventName: { contains: search as string } }, // Adjust field name if necessary
-                { location: { contains: search as string } },
+                { eventName: { contains: search as string, mode: 'insensitive' } }, // Adjust field name if necessary
+                { location: { contains: search as string, mode: 'insensitive' } },
             ];
         }
 
@@ -439,7 +502,6 @@ export const getOrganizerEvent = async (req: Request, res: Response, next: NextF
         const totalCount = await prisma.event.count({ where: filters });
         const totalPage = Math.ceil(totalCount / Number(limit_data));
 
-        // if () return []
 
 
         res.status(200).json({

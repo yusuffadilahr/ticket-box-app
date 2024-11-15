@@ -61,6 +61,7 @@ export default function Home() {
     queryKey: ['Get-data-newest'],
     queryFn: async () => {
       const res = await instance.get('/event/newest-event');
+      console.log(res.data.data,'getdatanewest');
       return res.data.data;
     },
   });
@@ -69,6 +70,8 @@ export default function Home() {
     queryKey: ['Get-data-top-sell'],
     queryFn: async () => {
       const res = await instance.get('/event/bestseller-event');
+      console.log(res.data.data, 'getdatatopsell');
+
       return res.data.data;
     },
   });
@@ -77,7 +80,7 @@ export default function Home() {
     queryKey: ['Get-comedy-event'],
     queryFn: async () => {
       const res = await instance.get('/event/comedy-event');
-      // console.log(res);
+      console.log(res.data.data, 'getcomedyevent');
       return res.data.data;
     },
   });
@@ -90,9 +93,11 @@ export default function Home() {
           category: 1,
         },
       });
+      console.log(res.data.data, 'categorymusic');
       return res.data.data.eventSearch;
     },
   });
+
   const { data: queryGetCarousel } = useQuery({
     queryKey: ['get-event-data-carousel'],
     queryFn: async () => {
@@ -240,7 +245,7 @@ export default function Home() {
                           {item?.startEvent
                             .split('T')[0]
                             .split('-')
-                            .join('/')}{' '}
+                            .join('/')}
                           - {item?.endEvent.split('T')[0].split('-').join('/')}
                         </h1>
                       </div>
@@ -252,17 +257,22 @@ export default function Home() {
                         )}
                       </h1>
                       <h1 className="text-xs lg:text-sm  mt-2 bottom-0 text-gray-500 font-normal">
-                        Mulai dari{' '}
+                        Mulai dari
                       </h1>
                       <div className=" flex justify-between">
                         <h1 className="text-sm lg:text-base   bottom-0 text-orange-600 font-bold">
-                          {' '}
-                          RP. {item?.tickets[0]?.price}
+                          Rp{item?.minimumPrice.toLocaleString("id-ID")}
                         </h1>
-                        <h1 className="text-xs lg:text-sm   bottom-0 text-green-500">
-                          {' '}
-                          Tiket Tersedia
-                        </h1>
+
+                        {item?.seatAvailability > 0 ?
+                          <h1 className="text-xs lg:text-sm   bottom-0 text-green-500">
+                            Tiket Tersedia
+                          </h1>
+                          :
+                          <h1 className="text-xs lg:text-sm   bottom-0 text-red-500">
+                            Tiket Habis
+                          </h1>
+                        }
                       </div>
                     </div>
                   </Link>

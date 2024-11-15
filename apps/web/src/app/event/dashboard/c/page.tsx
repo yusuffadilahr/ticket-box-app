@@ -545,8 +545,6 @@ const EventForm = () => {
                                         </div>
                                     </div>
                                 </div>
-
-
                             ))}
                         </div>
                         <div className="flex justify-center mt-8">
