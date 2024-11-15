@@ -22,10 +22,10 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [value, setValue] = useState('');
   const { slug } = params;
   const token = slug.split('-TBX-')[1];
-  const setAuth = authStore((state) => state.setAtuh);
+  const resetAuth = authStore((state) => state.resetAuth);
   const router = useRouter()
 
-  const { mutate: mutateVerifyCode } = useMutation({
+  const { mutate: mutateVerifyCode, isPending } = useMutation({
     mutationFn: async (data: any) => {
       return await axios.patch(
         'http://localhost:8000/api/user/verify-user',
@@ -40,15 +40,15 @@ export default function Page({ params }: { params: { slug: string } }) {
       );
     },
     onSuccess: (res) => {
-      toast.success('Berhasil konfirmasi, silahkan login!');
-      setAuth({ token: '' })
+      toast.success(res?.data?.message);
       Cookies.remove('role')
       Cookies.remove('token')
       router.push('/user/login')
+      resetAuth()
       console.log(res);
     },
-    onError:(err) =>{
-      console.log(err)
+    onError: (err: any) => {
+      console.log(err?.response?.data?.message)
     }
   });
 
@@ -89,6 +89,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </div>
         <div className="py-5 w-full">
           <button
+            disabled={isPending}
             className="py-2 text-white w-full bg-yellow-400"
             type="submit"
             onClick={() => mutateVerifyCode(value)}

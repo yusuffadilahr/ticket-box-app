@@ -6,6 +6,12 @@ import { useQuery } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ApexOptions } from 'apexcharts';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -13,39 +19,6 @@ export default function OrganizerDashboard() {
   const organizerName = authStore((state) => state.organizerName);
   const eventsData = authStore((state) => state.events);
   const profilePicture = authStore((state) => state.profilePicture)
-
-  const yearData: any = {
-    options: {
-      chart: { id: 'yearly-chart' },
-      xaxis: { categories: ['2022', '2023', '2024'] },
-      title: {
-        text: 'Registrasi Per Tahun',
-        align: 'center',
-        style: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
-      },
-    },
-    series: [{ name: 'Registrasi Event Tahun', data: [200, 350, 500] }],
-  };
-
-  const monthData: any = {
-    options: {
-      chart: { id: 'monthly-chart' },
-      xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      },
-      title: {
-        text: 'Registrasi Per Bulan',
-        align: 'center',
-        style: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
-      },
-    },
-    series: [
-      {
-        name: 'Registrasi Event Bulan',
-        data: [30, 40, 50, 60, 70, 80, 90, 100, 120, 130, 140, 150],
-      },
-    ],
-  };
 
   const { data: dashboardData, isFetching, refetch } = useQuery({
     queryKey: ['get-dasboard'],
@@ -61,6 +34,135 @@ export default function OrganizerDashboard() {
     console.log('<<<<<<< refetch bawah')
     console.log("check length events", eventsData?.length)
   }, [refetch])
+
+  const dailyStatistic = dashboardData?.dailyStatistic || []
+  const chartData: { options: ApexOptions, series: any[] } = {
+    options: {
+      chart: { id: 'daily-chart' },
+      xaxis: {
+        categories: dailyStatistic.map((item: any) => new Date(item.createdAt).toLocaleDateString()),
+      },
+      title: {
+        text: 'Laporan Per Hari',
+        align: 'center',
+        style: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
+      },
+    },
+    series: [
+      {
+        name: 'Laporan Hari Ini',
+        data: dailyStatistic.map((item: any) => item._sum.totalPrice),
+      },
+    ],
+  };
+
+  const monthlyStatistic: { options: ApexOptions, series: any[] } = {
+    options: {
+      chart: { id: 'daily-chart' },
+      xaxis: {
+        categories: dashboardData?.monthlyStatistic?.map((item: any) => new Date(item.createdAt).toLocaleDateString()),
+      },
+      title: {
+        text: 'Laporan Per Bulan',
+        align: 'center',
+        style: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
+      },
+    },
+    series: [
+      {
+        name: 'Laporan Bulan Ini',
+        data: dashboardData?.monthlyStatistic?.map((item: any) => item._sum.totalPrice),
+      },
+    ],
+  };
+
+  const yearlyStatistic: { options: ApexOptions, series: any[] } = {
+    options: {
+      chart: { id: 'daily-chart' },
+      xaxis: {
+        categories: dashboardData?.yearlyStatistic?.map((item: any) => new Date(item.createdAt).toLocaleDateString()),
+      },
+      title: {
+        text: 'Laporan Per Tahun',
+        align: 'center',
+        style: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
+      },
+    },
+    series: [
+      {
+        name: 'Laporan Tahun Ini',
+        data: dashboardData?.yearlyStatistic?.map((item: any) => item._sum.totalPrice),
+      },
+    ],
+  };
+
+  const rangeBarChart: { options: ApexOptions, series: any[] } = {
+    series: [
+      {
+        data: dashboardData?.weeklyStatistic?.map((item: any) => ({
+          x: new Date(item.createdAt).toLocaleDateString(), // Format tanggal sebagai label
+          y: [item._sum.totalPrice - 1000, item._sum.totalPrice + 1000], // Contoh rentang data
+        })),
+      },
+    ],
+    options: {
+      chart: {
+        height: 350,
+        type: 'rangeBar',
+        zoom: {
+          enabled: false,
+        },
+      },
+      plotOptions: {
+        bar: {
+          isDumbbell: true,
+          columnWidth: 3,
+          dumbbellColors: [['#008FFB', '#00E396']],
+        },
+      },
+      legend: {
+        show: true,
+        showForSingleSeries: true,
+        position: 'top',
+        horizontalAlign: 'left',
+        customLegendItems: ['Range Transaction'],
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          type: 'vertical',
+          gradientToColors: ['#00E396'],
+          inverseColors: true,
+          stops: [0, 100],
+        },
+      },
+      grid: {
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+      },
+      xaxis: {
+        tickPlacement: 'on',
+      },
+      title: {
+        text: 'Weekly Range Bar Chart',
+        align: 'center',
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          color: '#333',
+        },
+      },
+    },
+  };
+
 
   console.log("check event data", dashboardData)
   if (isFetching) return (
@@ -92,7 +194,7 @@ export default function OrganizerDashboard() {
 
   return (
     <main className="flex">
-      <section className="h-screen w-full px-8 space-y-10 p-10">
+      <section className="h-fit w-full px-8 space-y-10 p-10">
         <div className="flex justify-between items-center">
           <h1 className='font-bold text-2xl text-gray-700'>Hello {organizerName ? organizerName : 'User'}!</h1>
           <div className='flex gap-8'>
@@ -137,25 +239,78 @@ export default function OrganizerDashboard() {
             </div>
           </div>
         </div>
-        <div className="flex w-full gap-5 h-96 pt-5">
-          <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
-            <Chart
-              options={yearData.options}
-              series={yearData.series}
-              type="line"
-              width="100%"
-              height="100%"
-            />
-          </div>
-          <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
-            <Chart
-              options={monthData.options}
-              series={monthData.series}
-              type="bar"
-              width="100%"
-              height="100%"
-            />
-          </div>
+        <div className='flex p-5 bg-white border gap-5'>
+          <Tabs defaultValue="perhari" className="w-full h-fit">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="perhari">Perhari</TabsTrigger>
+              <TabsTrigger value="perbulan">Perbulan</TabsTrigger>
+              <TabsTrigger value="pertahun">Pertahun</TabsTrigger>
+            </TabsList>
+            <TabsContent value="perhari">
+              <Card className='h-96'>
+                <CardContent className="space-y-2 px-4 py-10">
+                  <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
+                    <Chart
+                      options={chartData.options}
+                      series={chartData.series}
+                      type="line"
+                      width="100%"
+                      height="300px"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="perbulan">
+              <Card className='h-96'>
+                <CardContent className="space-y-2 px-4 py-10">
+                  <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
+                    <Chart
+                      options={monthlyStatistic.options}
+                      series={monthlyStatistic.series}
+                      type="bar"
+                      width="100%"
+                      height="300px"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="pertahun">
+              <Card className='h-96'>
+                <CardContent className="space-y-2 px-4 py-10">
+                  <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
+                    <Chart
+                      options={yearlyStatistic.options}
+                      series={yearlyStatistic.series}
+                      type="bar"
+                      width="100%"
+                      height="300px"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+          <Tabs defaultValue="totalAmount" className="w-2/3 h-fit">
+            <TabsList className="grid w-full grid-cols-1">
+              <TabsTrigger value="totalAmount">Total Amount</TabsTrigger>
+            </TabsList>
+            <TabsContent value="totalAmount">
+              <Card className='h-96'>
+                <CardContent className="space-y-2 px-4 py-10">
+                  <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
+                    <Chart
+                      options={rangeBarChart.options}
+                      series={rangeBarChart.series}
+                      type="rangeBar"
+                      height={350}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
     </main>

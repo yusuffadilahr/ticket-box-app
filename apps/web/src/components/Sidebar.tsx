@@ -75,14 +75,7 @@ export const SidebarMenu = () => {
             </button>
           </Link>
 
-          <Link href="/event/dashboard/penjualan-tiket">
-            <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-              <FaTicketAlt className="text-lg" />
-              <span className="text-xs">Penjualan Tiket</span>
-            </button>
-          </Link>
-
-          <Link href="/event/dashboard/report">
+          <Link href="/event/dashboard/transaction">
             <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
               <FaChartBar className="text-xs" />
               <span className="text-xs">Laporan Penjualan</span>

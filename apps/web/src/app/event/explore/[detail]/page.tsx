@@ -66,7 +66,7 @@ export default function EventDetail({ params }: IParams) {
 
     const toggleReferralDiscount = () => setUseReferralDiscount(!useReferralDiscount);
 
-    console.log(ticketQuantities)
+    console.log(ticketQuantities?.reduce((acc, curr) => acc + curr, 0) == 0, '..,,,,,,,,,,,,,,,,,')
 
     const profilePoint = authStore((state: any) => state.point);
     console.log(profilePoint)
@@ -74,15 +74,13 @@ export default function EventDetail({ params }: IParams) {
 
     const { mutate: handleCheckoutTickets, isPending } = useMutation({
         mutationFn: async () => {
+            const ticketDetails = ticketQuantities.map((quantity, index) => quantity > 0 && ({
+                ticketId: queryDataDetailEvent?.tickets[index]?.id,
+                quantity,
+                price: queryDataDetailEvent?.tickets[index]?.price,
+                discount: queryDataDetailEvent?.tickets[index]?.discount,
 
-            const ticketDetails = ticketQuantities
-                .map((quantity, index) => quantity > 0 && ({
-                    ticketId: queryDataDetailEvent?.tickets[index]?.id,
-                    quantity,
-                    price: queryDataDetailEvent?.tickets[index]?.price,
-                    discount: queryDataDetailEvent?.tickets[index]?.discount,
-
-                }))
+            }))
                 .filter(Boolean);
 
             return await instance.post(`/transaction/${id}`, {
@@ -313,24 +311,24 @@ export default function EventDetail({ params }: IParams) {
                                                     }
 
                                                 </p>
-                                                {isExpired ? <div className='text-red-500 font-bold'>KADARLUASA</div> : isSoldOut ? <div className='text-red-500 font-bold'>TIKET HABIS</div> : 
-                                                <div className="flex items-center space-x-4">
-                                                    <button
-                                                        onClick={() => decrement(index)}
-                                                        className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
-                                                    >
-                                                        –
-                                                    </button>
-                                                    <span>{ticketQuantities[index] || 0}</span>
-                                                    <button
-                                                        onClick={() => increment(index)}
-                                                        className={`text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center
+                                                {isExpired ? <div className='text-red-500 font-bold'>KADARLUASA</div> : isSoldOut ? <div className='text-red-500 font-bold'>TIKET HABIS</div> :
+                                                    <div className="flex items-center space-x-4">
+                                                        <button
+                                                            onClick={() => decrement(index)}
+                                                            className="text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center"
+                                                        >
+                                                            –
+                                                        </button>
+                                                        <span>{ticketQuantities[index] || 0}</span>
+                                                        <button
+                                                            onClick={() => increment(index)}
+                                                            className={`text-blue-500 border border-blue-500 rounded-full w-8 h-8 flex justify-center items-center
                                                      (ticketQuantities[index] || 0) >= (item.seatAvailable || 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                                        disabled={(ticketQuantities[index] || 0) >= (item.seatAvailable || 0)}
-                                                    >
-                                                        +
-                                                    </button>
-                                                </div>
+                                                            disabled={(ticketQuantities[index] || 0) >= (item.seatAvailable || 0)}
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
                                                 }
                                             </div>
                                         </div>
@@ -480,7 +478,7 @@ export default function EventDetail({ params }: IParams) {
 
                     }
 
-                    <button disabled={isPending} className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>
+                    <button disabled={ticketQuantities?.reduce((acc, curr) => acc + curr, 0) == 0 || isPending} className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>
                         {isPending ? 'Pembayaran Diproses' : 'Bayar Sekarang'}
                     </button>
                 </div>

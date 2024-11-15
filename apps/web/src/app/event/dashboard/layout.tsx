@@ -25,7 +25,8 @@ export default function Layout({ children }: ILayoutChildren) {
       (isVerified == false) &&
       (pathname == '/event/dashboard' ||
         pathname.startsWith('/event/dashboard/c') ||
-        pathname.startsWith('/event/dashboard/u'))
+        pathname.startsWith('/event/dashboard/u') ||
+        pathname.startsWith('/event/transaction'))
     ) {
       router.push('/event/dashboard/profile-event-organizer/profile');
     }
