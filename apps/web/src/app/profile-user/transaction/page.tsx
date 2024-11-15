@@ -42,7 +42,6 @@ export default function ProfileTransaction() {
         queryKey: ['review-data'],
         queryFn: async () => {
             const res = await instance.get('/review/');
-            console.log(res.data.data,'<<<<<<<<<<')
             return res.data.data
         }
     })
@@ -53,7 +52,6 @@ export default function ProfileTransaction() {
         queryKey: ['get-transaction-data'],
         queryFn: async () => {
             const res = await instance.get('/transaction')
-            console.log(res.data.data)
             return res.data.data
         }
     })

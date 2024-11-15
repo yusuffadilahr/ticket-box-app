@@ -40,7 +40,7 @@ export default function Home() {
       return res.data.data.eventSearch;
     },
     onSuccess: (res) => {
-      // console.log(res);
+      console.log(res);
       setEventData(res);
     },
     onError: (err) => {

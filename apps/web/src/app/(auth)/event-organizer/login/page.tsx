@@ -37,7 +37,6 @@ export default function Page() {
       setAuth({ token: res.data.data.token });
       console.log(res);
       router.push('/event/dashboard');
-      console.log('nyampe mana ---- << --');
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message);

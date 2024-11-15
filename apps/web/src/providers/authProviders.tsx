@@ -39,7 +39,9 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
                 ownerName: auth?.data?.data?.ownerName,
                 organizerName: auth?.data?.data?.organizerName,
                 point: auth?.data?.data?.point,
-                discount: auth?.data?.data?.discount
+                discount: auth?.data?.data?.discount,
+                events: auth?.data?.data?.events,
+                transactions: auth?.data?.data?.transactions
             })  
 
             console.log(auth, "<<< auth provider")

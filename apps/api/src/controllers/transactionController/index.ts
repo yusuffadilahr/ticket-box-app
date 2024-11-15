@@ -14,15 +14,12 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         //         id: item.ticketId
         //     }
         // })
-        // console.log(findTicketId, "<<<<<<<<<<<<<<<<<<<<<<<<<<< seat available cek line 13")
 
         // const findTicket = await prisma.tickets.findMany({
         //     where: {
         //         OR: findTicketId
         //     }
         // })
-
-        // console.log(findTicket, "<<< ini data ticket boss!!")
 
         const dataUser = await prisma.users.findUnique({
             where: {
@@ -112,7 +109,6 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 })
             }
         }
-        console.log(dataDetails, "<<< data details")
 
         const transactionId = await prisma.transactions.create({
             data: {
@@ -126,8 +122,6 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 }
             }
         })
-
-        console.log(transactionId, '<<<< id tf')
 
         const dataArrTransacDetail = dataDetails.map((item: any, i: any) => {
             return {

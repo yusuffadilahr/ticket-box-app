@@ -43,7 +43,7 @@ export default function AvatarHover() {
         <HoverCard>
             <HoverCardTrigger asChild className="cursor-pointer">
                 <Avatar className=' border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300'>
-                    <AvatarImage src={`http://localhost:8000/api/src/public/images/${profilePicture}`} className="object-cover" alt="logo-user" />
+                    <AvatarImage src={profilePicture} className="object-cover" alt="logo-user" />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
             </HoverCardTrigger>

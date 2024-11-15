@@ -348,7 +348,7 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
       where: { eventOrganizerId: userId }
     })
 
-    if (findEvent.length == 0) throw { msg: 'Belum memiliki event', status: 404 }
+    // if (findEvent.length == 0) throw { msg: 'Belum memiliki event', status: 404 }
 
     const findUserTransaction = await prisma.transactions.groupBy({
       by: ['userId'],
@@ -362,7 +362,7 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
 
     })
 
-    if (findUserTransaction.length == 0) throw { msg: 'Belum ada data yang harus ditampilkan', status: 404 }
+    // if (findUserTransaction.length == 0) throw { msg: 'Belum ada data yang harus ditampilkan', status: 404 }
 
     const dataAttendee = findUserTransaction?.map((itm) => {
       return {
@@ -379,6 +379,8 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
     const totalAmount = await prisma.transactions.aggregate({
       _sum: {
         totalPrice: true
+      }, where: {
+        eventOrganizerId: userId
       }
     })
 
@@ -398,32 +400,28 @@ export const getUserByEvent = async (req: Request, res: Response, next: NextFunc
   }
 }
 
-export const getTotalAmountUser = async (req: Request, res: Response, next: NextFunction) => {
+
+export const getFeedbackUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.body
 
-    const findTransaction = await prisma.transactions.aggregate({
-      _sum: {
-        totalPrice: true
-      },
+    const findUser = await prisma.event.findMany({
       where: { eventOrganizerId: userId }
     })
 
-    const findEvent = await prisma.event.findMany({
+    const findFeedback = await prisma.reviews.findMany({
       where: {
-        eventOrganizerId: userId
+        eventId: {
+          in: findUser?.map(ev => ev?.id)
+        }
       }
     })
 
     res.status(200).json({
       error: false,
-      message: 'Berhasil mendapatkan',
-      data: {
-        totalAmount: findTransaction._sum.totalPrice,
-        findEvent
-      }
+      message: 'Data review & feedback telah didapat',
+      data: findFeedback
     })
-
   } catch (error) {
     next(error)
   }

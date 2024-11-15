@@ -69,6 +69,13 @@ export const Header = () => {
 
   const handleRedirectToOrganizerPage = async () => {
     await signOut(auth)
+
+    // if (window.gapi && window.gapi.auth2) {
+    //   const googleAuth = window.gapi.auth2.getAuthInstance();
+    //   await googleAuth.signOut(); // Logout dari Google
+    //   console.log('Google signed out');
+    // }
+
     setAuth({ token: '' });
     Cookies.remove('role');
     Cookies.remove('token');
