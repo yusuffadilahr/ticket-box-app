@@ -130,7 +130,7 @@ export default function Home() {
 
   return (
     <main className="space-y-8">
-      <div className="w-full sm:h-[700px] lg:h-[750px] sm:px-2 lg:px-28 pt-20 lg:pt-28">
+      <div className="w-full sm:h-[700px] lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
         <CarouselSlider data={queryGetCarousel} />
       </div>
 

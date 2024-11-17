@@ -1,0 +1,253 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+
+model Users {
+  id                  String   @id @default(uuid())
+  firstName           String
+  lastName            String
+  email               String   @unique
+  password            String
+  role                String   @default("user")
+  phoneNumber         String?  @db.Text
+  identityNumber      String?  @db.Text
+  profilePicture      String?
+  isVerified          Boolean
+  verifyCode          String
+  referralCode        String  @unique
+  isGoogleRegister    Boolean? @default(false)
+  forgotPasswordToken String? @db.Text
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  points           Points[]
+  referalDiscounts ReferalDiscounts[]
+  Reviews          Reviews[]
+  Transactions     Transactions[]
+
+  @@map("users")
+}
+
+// User biasa tugasnya hanya untuk -> melihat, membeli/transaksi, dan checkout
+// User organizer tugasnya itu CRUD/Dashboard
+
+model EventOrganizer {
+  id             String  @id @default(uuid())
+  organizerName  String // soundproject
+  ownerName      String
+  email          String  @unique
+  password       String
+  role           String  @default("EO")
+  forgotPasswordToken String? @db.Text
+  phoneNumber    String
+  isVerified  Boolean?
+  verifyCode String?
+  identityNumber String? @unique
+  profilePicture String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  events       Event[]
+  Transactions Transactions[]
+
+  @@map("eventOrganizer")
+}
+
+model Event {
+  id               Int      @id @default(autoincrement())
+  eventName        String
+  location         String
+  locationUrl      String
+  description      String   @db.Text
+  isPaid           Boolean
+  startEvent       DateTime
+  endEvent         DateTime
+  eventOrganizerId String
+  categoryId       Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tickets        Tickets[]
+  EventOrganizer EventOrganizer @relation(fields: [eventOrganizerId], references: [id])
+  category       Category       @relation(fields: [categoryId], references: [id])
+
+  Reviews      Reviews[]
+  Transactions Transactions[]
+  EventImages  EventImages[]
+
+  @@map("event")
+}
+
+model EventImages {
+  id            Int    @id @default(autoincrement())
+  eventImageUrl String
+  eventsId      Int
+
+  Events Event @relation(fields: [eventsId], references: [id])
+
+  @@map("eventImages")
+}
+
+model Category {
+  id       Int    @id @default(autoincrement())
+  Category String
+
+  event Event[]
+
+  @@map("category")
+}
+
+model Tickets {
+  id            Int     @id @default(autoincrement())
+  price         Int
+  ticketName    String
+  ticketType    String?
+  totalSeat     Int?
+  seatAvailable Int
+  eventId       Int
+  version       String?
+
+  discount  Int
+  startDate DateTime
+  endDate   DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  event             Event               @relation(fields: [eventId], references: [id])
+  TransactionDetail TransactionDetail[]
+
+  @@map("ticket")
+}
+
+model Points {
+  id                  Int      @id @default(autoincrement())
+  userIdRefferalMatch String
+  point               Int
+  expiredDate         DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  users Users @relation(fields: [userIdRefferalMatch], references: [id])
+
+  @@map("points")
+}
+
+model ReferalDiscounts {
+  id             Int      @id @default(autoincrement())
+  userIdRefferal String
+  discount       Float
+  isUsed         Boolean
+  expiredDate    DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  users Users @relation(fields: [userIdRefferal], references: [id])
+
+  @@map("discounts")
+}
+
+model Reviews {
+  id         Int    @id @default(autoincrement())
+  rating     Int
+  reviewText String @db.Text
+  feedback   String @db.Text
+  eventId    Int
+  userId     String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  event Event @relation(fields: [eventId], references: [id])
+  users Users @relation(fields: [userId], references: [id])
+
+  @@map("reviews")
+}
+
+model Transactions {
+  id         String   @id @default(cuid())
+  userId     String // token
+  eventId    Int // params slug
+  totalPrice Int // state
+  expiredAt  DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  users Users @relation(fields: [userId], references: [id])
+
+  transactionStatus TransactionStatus[]
+  transactionDetail TransactionDetail[]
+  event             Event               @relation(fields: [eventId], references: [id])
+  eventOrganizerId  String?
+  EventOrganizer    EventOrganizer?     @relation(fields: [eventOrganizerId], references: [id])
+
+  @@map("transactions")
+}
+
+model TransactionDetail {
+  id             Int     @id @default(autoincrement())
+  transactionsId String?
+  ticketId       Int
+  price          Int
+  discount       Int
+  quantity       Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tickets      Tickets       @relation(fields: [ticketId], references: [id])
+  Transactions Transactions? @relation(fields: [transactionsId], references: [id])
+
+  @@map("transactionDetails")
+}
+
+model TransactionStatus {
+  id             Int     @id @default(autoincrement())
+  transactionsId String?
+  status         Status
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+  Transactions Transactions? @relation(fields: [transactionsId], references: [id])
+
+  @@map("transactionStatus")
+}
+
+enum Status {
+  WAITING_FOR_PAYMENT
+  PAID
+  CANCELLED
+  EXPIRED
+}

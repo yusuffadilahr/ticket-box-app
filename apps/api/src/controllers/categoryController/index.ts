@@ -1,15 +1,12 @@
 import { prisma } from "@/connection";
+import { createCategoryService } from "@/services/category.service";
 import { NextFunction, Request, Response } from "express";
 
 export const createCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { category } = req.body
-        
-        await prisma.category.create({
-            data: {
-                Category: category
-            }
-        })
+
+        await createCategoryService({ category })
 
         res.status(200).json({
             error: false,

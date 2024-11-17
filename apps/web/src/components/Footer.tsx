@@ -31,7 +31,7 @@ export const Footer = () => {
           <h1>Syarat dan Ketentuan</h1>
           <h1>Kebijakan Privasi</h1>
         </div>
-        <h1 className="text-xs">&copy;2024. PT Celap Celup. All Right Reserved.</h1>
+        <h1 className="text-xs">&copy;2024. Tiket Box. All Right Reserved.</h1>
       </section>
     </footer>
   );

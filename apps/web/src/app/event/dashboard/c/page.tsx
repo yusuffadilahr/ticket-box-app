@@ -12,19 +12,22 @@ import 'react-quill/dist/quill.snow.css';
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RiInformation2Fill } from "react-icons/ri";
 import { Tooltip } from 'react-tooltip';
+import { useRouter } from 'next/navigation';
 
 
 const EventForm = () => {
-  const { mutate: mutationCreateEvent } = useMutation({
+  const router = useRouter()
+  const { mutate: mutationCreateEvent, isPending } = useMutation({
     mutationFn: async (values: FormData) => {
       return await instance.post('/event/new-event', values);
     },
     onSuccess: (res) => {
       toast.success(res?.data?.message);
+      router.push('/event/dashboard/list-event')
       console.log(res);
     },
-    onError: (error) => {
-      toast.error('error bro');
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message);
       console.log(error);
     },
   });
@@ -546,8 +549,9 @@ const EventForm = () => {
             </div>
             <div className="flex justify-center mt-8">
               <button
+              disabled={isPending}
                 type="submit"
-                className="bg-blue-500 text-white rounded-md p-3"
+                className={`bg-blue-500 hover:bg-blue-700 w-full ${isPending ? 'bg-neutral-700 hover:bg-blue-700' : ''} text-white rounded-md p-3`}
               >
                 Buat Event
               </button>

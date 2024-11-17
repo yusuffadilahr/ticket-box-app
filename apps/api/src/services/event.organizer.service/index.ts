@@ -1,7 +1,10 @@
 import { prisma } from "@/connection";
+import { cloudinaryUpload } from "@/utils/cloudinary/index";
 import { comparePassword, hashPassword } from "@/utils/passwordHash";
 import { encodeToken } from "@/utils/token.sign";
 import { transporter } from "@/utils/transporter";
+import { Prisma } from "@prisma/client";
+import { endOfWeek, startOfWeek } from "date-fns";
 import fs, { readFileSync } from 'fs'
 import { compile } from "handlebars";
 
@@ -237,4 +240,199 @@ export const resetPasswordOnLoginService = async ({
         subject: 'Berhasil mengganti password!',
         html: sendEmail
     })
+}
+
+export const getUserByEventService = async ({
+    userId
+}: any) => {
+    const findEvent = await prisma.event.findMany({
+        where: { eventOrganizerId: userId }
+    })
+
+    const findUserTransaction = await prisma.transactions.groupBy({
+        by: ['userId'],
+        where: { eventOrganizerId: userId }
+    })
+
+    const dataAttendee = findUserTransaction?.map((itm) => {
+        return {
+            userId: itm.userId
+        }
+    })
+
+    const dataTotalTransaction = await prisma.transactions.findMany({
+        where: {
+            eventOrganizerId: userId
+        }
+    })
+
+    const totalAmount = await prisma.transactions.aggregate({
+        _sum: {
+            totalPrice: true
+        }, where: {
+            eventOrganizerId: userId
+        }
+    })
+
+    const dailyStatistic = await prisma.transactions.groupBy({
+        by: ['createdAt'],
+        where: { eventOrganizerId: userId },
+        _sum: {
+            totalPrice: true
+        }
+    })
+
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
+    const endWeek = endOfWeek(new Date(), { weekStartsOn: 1 })
+
+    console.log(weekStart, "<<< weekStart")
+    console.log(endWeek, "<<< endWeek")
+
+    const weeklyStatistic = await prisma.transactions.groupBy({
+        by: ['createdAt'],
+        where: {
+            createdAt: {
+                gte: weekStart,
+                lte: endWeek
+            },
+            eventOrganizerId: userId
+        },
+        _sum: {
+            totalPrice: true
+        }
+    })
+
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+
+    const monthlyStatistic = await prisma.transactions.groupBy({
+        by: ['createdAt'],
+        where: {
+            createdAt: {
+                gte: startOfMonth,
+                lte: endOfMonth
+            },
+            eventOrganizerId: userId
+        },
+        _sum: {
+            totalPrice: true
+        }
+    });
+
+    const startYear = new Date(new Date().getFullYear(), 0, 1)
+    const endYear = new Date(new Date().getFullYear(), 11, 31)
+
+    const yearlyStatistic = await prisma.transactions.groupBy({
+        by: ['createdAt'],
+        where: {
+            createdAt: {
+                gte: startYear,
+                lte: endYear
+            },
+            eventOrganizerId: userId
+        },
+        _sum: {
+            totalPrice: true
+        }
+    })
+
+    return {
+        dataAttendee,
+        findEvent,
+        dataTotalTransaction,
+        totalAmount,
+        dailyStatistic,
+        weeklyStatistic,
+        monthlyStatistic,
+        yearlyStatistic
+    }
+}
+
+export const getFeedbackUserService = async ({
+    userId
+}: any) => {
+    const findUser = await prisma.event.findMany({
+        where: { eventOrganizerId: userId }
+    })
+
+    const findFeedback = await prisma.reviews.findMany({
+        where: {
+            eventId: {
+                in: findUser?.map(ev => ev?.id)
+            }
+        }
+    })
+
+    return {
+        findFeedback
+    }
+}
+
+export const updateProfileOrganizerService = async ({
+    userId,
+    imageUpload,
+    ownerName,
+    organizer,
+}: any) => {
+    const findUser = await prisma.eventOrganizer.findFirst({
+        where: {
+            id: userId
+        }
+    })
+
+    if (!findUser) throw { msg: 'User tidak tersedia', status: 404 }
+
+    const imagesUploaded = await Promise.all(imageUpload?.images?.map(async (item: any) => {
+        const result: any = await cloudinaryUpload(item?.buffer)
+
+        return result?.res!
+    }))
+
+    await prisma.eventOrganizer.update({
+        data: {
+            ownerName,
+            organizerName: organizer,
+            profilePicture: imagesUploaded[0]
+        },
+        where: {
+            id: userId
+        }
+    })
+}
+
+export const getReportTransactionService = async ({
+    limit_data,
+    page,
+    userId,
+    search
+}: any) => {
+    const offset = Number(limit_data) * (Number(page) - 1);
+    const findTransaction = await prisma.transactions.findMany({
+        where: {
+            eventOrganizerId: userId,
+            OR: [
+                { id: { contains: search as string, mode: 'insensitive' as Prisma.QueryMode } },
+                { userId: { contains: search as string, mode: 'insensitive' as Prisma.QueryMode } },
+            ]
+        },
+        include: {
+            transactionDetail: true,
+            transactionStatus: true
+        },
+        take: Number(limit_data),
+        skip: offset
+    })
+
+    const totalCount = await prisma.transactions.count({
+        where: {
+            eventOrganizerId: userId
+        }
+    })
+
+    const totalPage = Math.ceil(Number(totalCount) / Number(limit_data));
+
+    return {
+        findTransaction,
+        totalPage
+    }
 }

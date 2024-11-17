@@ -103,7 +103,7 @@ export default function EventTable() {
                                     <Tooltip id='my-tooltip' />
                                 </td>
                                 <td className="py-3 px-6 text-left whitespace-nowrap">{item?.eventId}</td>
-                                <td className="py-3 px-6 text-left whitespace-nowrap">{item?.totalPrice}</td>
+                                <td className="py-3 px-6 text-left whitespace-nowrap">Rp. {item?.totalPrice.toLocaleString('id-ID')}</td>
                                 <td className="py-3 px-6 text-left whitespace-nowrap">{item?.transactionStatus[0]?.status}</td>
                                 <td className="py-3 px-6 text-left whitespace-nowrap">{item?.transactionDetail[0]?.quantity}</td>
                             </tr>

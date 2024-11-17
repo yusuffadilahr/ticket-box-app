@@ -72,8 +72,8 @@ export default function ProfileHome() {
                             images: null as File | null,
                             firstName: firstName || '',
                             lastName: lastName || '',
-                            phoneNumber: phoneNumber || '',
-                            identityNumber: identityNumber || '',
+                            phoneNumber: phoneNumber == 'Belum terisi' ? '' : phoneNumber || '',
+                            identityNumber: identityNumber== 'Belum terisi' ? '' : identityNumber || '',
                         }}
                         onSubmit={(values) => {
                             const fd: any = new FormData();

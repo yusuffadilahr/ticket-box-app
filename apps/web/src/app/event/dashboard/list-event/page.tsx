@@ -106,18 +106,18 @@ export default function EventTable() {
 
   if (isFetching) return (
     <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
-      <div className="w-full py-10 flex flex-col px-4 bg-neutral-200 rounded-lg"></div>
+      <div className="w-full py-10 flex flex-col px-4 bg-neutral-200 rounded-lg animate-pulse"></div>
       <div className="flex justify-between w-full items-center">
-        <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 w-1/2"></div>
+        <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 w-1/2 animate-pulse"></div>
         <div className="flex justify-end gap-8">
-          <div className="px-8 py-2 font-bold text-white bg-neutral-200 rounded-lg transition-all duration-300"></div>
+          <div className="px-8 py-2 font-bold text-white bg-neutral-200 rounded-lg animate-pulse transition-all duration-300"></div>
           <Avatar className="transition-all duration-300">
             <AvatarImage src='' alt="@shadcn" />
             <AvatarFallback>TB</AvatarFallback>
           </Avatar>
         </div>
       </div>
-      <div className='w-full h-80 bg-neutral-200 rounded-lg'></div>
+      <div className='w-full h-80 bg-neutral-200 rounded-lg animate-pulse'></div>
     </main>
   )
 
@@ -182,10 +182,17 @@ export default function EventTable() {
                   </td>
                   <td className="py-3 px-6 text-left">
                     {item?.location?.length > 15 ? (
-                      <h1>{item?.location?.slice(0, 15)}...</h1>
+                      <h1
+                        data-tooltip-id="location-tooltip"
+                        data-tooltip-content={item?.location}
+                        data-tooltip-place="top"
+                      >
+                        {item?.location?.slice(0, 15)}...
+                      </h1>
                     ) : (
                       item?.location!
                     )}
+                    <Tooltip id="location-tooltip" />
                   </td>
                   <td className="py-3 px-6 text-left">
                     {item?.isPaid! == true ? 'Berbayar' : 'Gratis'}
