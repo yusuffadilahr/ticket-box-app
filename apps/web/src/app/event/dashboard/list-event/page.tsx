@@ -182,10 +182,17 @@ export default function EventTable() {
                   </td>
                   <td className="py-3 px-6 text-left">
                     {item?.location?.length > 15 ? (
-                      <h1>{item?.location?.slice(0, 15)}...</h1>
+                      <h1
+                        data-tooltip-id="location-tooltip"
+                        data-tooltip-content={item?.location}
+                        data-tooltip-place="top"
+                      >
+                        {item?.location?.slice(0, 15)}...
+                      </h1>
                     ) : (
                       item?.location!
                     )}
+                    <Tooltip id="location-tooltip" />
                   </td>
                   <td className="py-3 px-6 text-left">
                     {item?.isPaid! == true ? 'Berbayar' : 'Gratis'}

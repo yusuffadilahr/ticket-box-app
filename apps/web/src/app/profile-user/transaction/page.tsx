@@ -11,6 +11,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { Tooltip } from "react-tooltip";
 
 
 export default function ProfileTransaction() {
@@ -46,7 +47,7 @@ export default function ProfileTransaction() {
         }
     })
 
-    
+
 
     const { data: getTransactionData } = useQuery({
         queryKey: ['get-transaction-data'],
@@ -106,8 +107,25 @@ export default function ProfileTransaction() {
 
                                         return (
                                             <tr key={index} className="border-b">
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.id}</td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.event.eventName}</td>
+                                                <td className="px-6 py-4 text-sm text-gray-600"
+                                                >{item?.id?.length > 10 ?
+                                                    <h1 data-tooltip-id="id-tooltip"
+                                                        data-tooltip-content={item?.id}
+                                                        data-tooltip-place="top">
+                                                        {item?.id.slice(0, 10)}..
+                                                    </h1>
+                                                    : item?.id}
+                                                    <Tooltip id="id-tooltip" />
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {item?.event?.eventName.length > 10 ?
+                                                        <h1 data-tooltip-id="event-tooltip"
+                                                            data-tooltip-content={item?.event?.eventName}
+                                                            data-tooltip-place="top">
+                                                            {item.event.eventName.slice(0, 10)}..
+                                                        </h1> : <>{item.event.eventName}</>}
+                                                    <Tooltip id="event-tooltip" />
+                                                </td>
                                                 <td className="px-6 py-4 text-sm text-gray-600">{item.createdAt.split('T')[0]}</td>
                                                 <td className="px-6 py-4 text-sm text-gray-600">
                                                     {totalQuantity}
@@ -123,7 +141,7 @@ export default function ProfileTransaction() {
                                                                     ? 'Pembayaran Gagal'
                                                                     : item.transactionStatus[0]?.status
                                                     }
-                                                    </td>
+                                                </td>
                                                 <td className="px-6 py-4 text-sm text-gray-600">Rp{item.totalPrice.toLocaleString("id-ID")}</td>
                                                 <td className="px-6 py-4 text-sm text-gray-600">
                                                     {isEventReviewed(item.event.id) ? (

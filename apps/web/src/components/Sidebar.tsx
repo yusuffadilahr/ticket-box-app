@@ -14,6 +14,7 @@ import authStore from '@/zustand/authstore';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import logo from '@/../web/public/Logo.webp'
 
 export const SidebarMenu = () => {
   const logout = authStore((state) => state.resetAuth);
@@ -31,7 +32,13 @@ export const SidebarMenu = () => {
     <section className="fixed h-screen bg-blue-950 w-2/12 z-20 pt-2">
       <div className="text-white min-h-screen p-5">
         <div className="text-2xl font-bold mb-8">
-          <div>Logo</div>
+         <Image 
+         width={500}
+         height={500}
+         alt='ticket-box'
+         src={logo}
+         className='object-cover'
+         />
         </div>
 
         <div className="flex items-center space-x-4 mb-8">

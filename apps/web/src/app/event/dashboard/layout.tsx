@@ -2,12 +2,14 @@
 
 import { SidebarMenu } from '@/components/Sidebar';
 import authStore from '@/zustand/authstore';
+import { Metadata } from 'next';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 interface ILayoutChildren {
   children: React.ReactNode;
 }
+
 export default function Layout({ children }: ILayoutChildren) {
   const token = authStore((state) => state.token);
   const isVerified = authStore((state) => state.isVerified);
@@ -26,7 +28,7 @@ export default function Layout({ children }: ILayoutChildren) {
       (pathname == '/event/dashboard' ||
         pathname.startsWith('/event/dashboard/c') ||
         pathname.startsWith('/event/dashboard/u') ||
-        pathname.startsWith('/event/transaction'))
+        pathname.startsWith('/event/dashboard/transaction'))
     ) {
       router.push('/event/dashboard/profile-event-organizer/profile');
     }

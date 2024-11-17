@@ -154,16 +154,13 @@ export default function Home() {
 
   return (
     <main className="space-y-8">
-      <div className="w-full sm:h-[700px] lg:h-[750px] sm:px-2 lg:px-28 pt-20 lg:pt-28">
+      <div className="w-full sm:h-[700px] lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
         <CarouselSlider data={queryGetCarousel} />
       </div>
 
       <div className=" px-12 lg:px-20">
         <h1 className="text-2xl font-bold">
           Top Seller
-          {/* <span className="pl-3 text-blue-500 font-normal text-sm">
-            Lihat Semua
-          </span> */}
           <div className="mt-4">
             <CarousellEvent data={queryGetDataTopSell} />
           </div>
@@ -174,14 +171,14 @@ export default function Home() {
         <h1 className="text-2xl font-bold text-center">Category</h1>
         <div className="flex justify-center gap-5 mt-5">
           {categoryList?.map((item, index) => {
-            const IconComponent: any = iconComponents[item?.logo]; // Get the correct icon component
+            const IconComponent = iconComponents[item?.logo as keyof typeof iconComponents]; 
             return (
-              <Link key={index} href={item.link}>
+              <Link key={index} href={item.link} className='text-blue-900 hover:text-blue-600'>
                 <div className="flex flex-col items-center gap-2">
                   <div>
-                    <IconComponent className="rounded-full p-4 border-2 hover:bg-yellow-500 transition-all duration-300 border-blue-900 text-blue-900 w-[80px] h-[80px]" />
+                    <IconComponent className="rounded-full p-4 transition-all duration-300 w-[80px] h-[80px]" />
                   </div>
-                  <div className="flex justify-center  font-bold text-blue-900">
+                  <div className="flex justify-center font-bold">
                     {item.name}
                   </div>
                 </div>

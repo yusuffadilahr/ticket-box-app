@@ -7,9 +7,10 @@ import { useMutation } from "@tanstack/react-query";
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { resetPasswordProfile } from "@/features/reset-password-profile/schema/resetPasswordProfile";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function OrganizerResetPass() {
-
+    const router = useRouter()
     const { mutate: mutateResetPasswordProfile } = useMutation({
         mutationFn: async ({ existingPassword, password }: { existingPassword: string, password: string }) => {
             return await instance.patch('/event-organizer/reset', {
@@ -19,6 +20,7 @@ export default function OrganizerResetPass() {
         },
         onSuccess: (res) => {
             toast.success(res?.data?.message)
+            router.push('/event/dashboard')
             console.log(res)
         },
         onError: (err: any) => {

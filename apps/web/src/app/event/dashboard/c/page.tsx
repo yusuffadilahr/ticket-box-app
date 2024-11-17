@@ -12,19 +12,22 @@ import 'react-quill/dist/quill.snow.css';
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RiInformation2Fill } from "react-icons/ri";
 import { Tooltip } from 'react-tooltip';
+import { useRouter } from 'next/navigation';
 
 
 const EventForm = () => {
+  const router = useRouter()
   const { mutate: mutationCreateEvent } = useMutation({
     mutationFn: async (values: FormData) => {
       return await instance.post('/event/new-event', values);
     },
     onSuccess: (res) => {
       toast.success(res?.data?.message);
+      router.push('/event/dashboard/list-event')
       console.log(res);
     },
-    onError: (error) => {
-      toast.error('error bro');
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message);
       console.log(error);
     },
   });
