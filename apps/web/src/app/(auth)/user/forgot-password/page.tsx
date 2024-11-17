@@ -18,12 +18,12 @@ export default function Page() {
         },
         onSuccess: (res) => {
             console.log(res)
-            toast.success('Harap cek email secara berkala!')
+            toast.success(res?.data?.message)
             navigate.push('/user/login')
         },
-        onError: (err) => {
+        onError: (err: any) => {
             toast.error('Maaf ada kesalahan atau mungkin email belum terdaftar!')
-            console.log(err)
+            console.log(err?.response?.data?.message)
         }
     })
 
@@ -31,45 +31,45 @@ export default function Page() {
     return (
         <main className="h-svh md:h-lvh flex justify-center items-center">
             <section className='w-full h-fit flex justify-center items-center'>
-            <div className="justify-center w-[50%] bg-white shadow-md py-10 items-center flex rounded-xl flex-col">
-                <Formik
-                    initialValues={{
-                        email: '',
-                    }}
-                    onSubmit={(values) => {
-                        mutateResetPassword({ email: values.email })
-                    }}
-                >
-                    <Form className="w-full flex flex-col px-10 gap-7">
-                        <div id="email-input" className="flex flex-col">
-                            <div className="flex gap-3">
-                                <label htmlFor="email" className="text-sm md:text-base">
-                                    Silahkan Masukkan Email Anda Yang Sudah Ter-Registrasi <span className="text-red-500">*</span>
-                                </label>
-                                <ErrorMessage
+                <div className="justify-center w-[50%] bg-white shadow-md py-10 items-center flex rounded-xl flex-col">
+                    <Formik
+                        initialValues={{
+                            email: '',
+                        }}
+                        onSubmit={(values) => {
+                            mutateResetPassword({ email: values.email })
+                        }}
+                    >
+                        <Form className="w-full flex flex-col px-10 gap-7">
+                            <div id="email-input" className="flex flex-col">
+                                <div className="flex gap-3">
+                                    <label htmlFor="email" className="text-sm md:text-base">
+                                        Silahkan Masukkan Email Anda Yang Sudah Ter-Registrasi <span className="text-red-500">*</span>
+                                    </label>
+                                    <ErrorMessage
+                                        name="email"
+                                        component="div"
+                                        className="text-red-500 text-sm mt-1"
+                                    />
+                                </div>
+                                <Field
+                                    type="email"
                                     name="email"
-                                    component="div"
-                                    className="text-red-500 text-sm mt-1"
+                                    id="email"
+                                    placeholder="Email..."
+                                    className="py-2 text-sm mt-3 rounded-lg px-4 border focus:outline-none active:border focus:border-yellow-400"
                                 />
                             </div>
-                            <Field
-                                type="email"
-                                name="email"
-                                id="email"
-                                placeholder="Email..."
-                                className="py-2 text-sm mt-3 rounded-lg px-4 border focus:outline-none active:border focus:border-yellow-400"
-                            />
-                        </div>
 
-                        <button
-                            type="submit"
-                            className="text-white text-sm rounded-lg w-full py-2 bg-yellow-500 hover:bg-yellow-600"
-                        >
-                            Kirim
-                        </button>
-                    </Form>
-                </Formik>
-            </div>
+                            <button
+                                type="submit"
+                                className="text-white text-sm rounded-lg w-full py-2 bg-yellow-500 hover:bg-yellow-600"
+                            >
+                                Kirim
+                            </button>
+                        </Form>
+                    </Formik>
+                </div>
             </section>
         </main>
     );

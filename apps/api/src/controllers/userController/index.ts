@@ -3,12 +3,9 @@ import { prisma } from '@/connection';
 import { hashPassword, comparePassword } from '@/utils/passwordHash';
 import { nanoid } from 'nanoid';
 import { decodeToken, encodeToken } from '@/utils/token.sign';
-import fs, { readFileSync } from 'fs';
-import { compile } from 'handlebars';
-import { transporter } from '@/utils/transporter';
-import { addMonths, addHours } from 'date-fns';
-import bcrypt from 'bcrypt'
+import { addHours } from 'date-fns';
 import { cloudinaryUpload } from '@/utils/cloudinary';
+import { forgotPasswordService, resetPasswordProfileService, resetPasswordService, sendVerifyEmailUserService, updateProfileUserService, userRegisterService, verifyUserService } from '@/services/user.service';
 
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,84 +19,18 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
     const { firstName, lastName, email, password, phoneNumber, identityNumber, referralBody /* REFERRAL BOLEH NULL */ } = req.body;
     if (!firstName || !lastName || !email || !password || !phoneNumber || !identityNumber) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
 
-    const checkedEmail = await prisma.users.findMany({
-      where: { email },
-    });
-
-    if (checkedEmail.length != 0) throw { msg: 'Email sudah terpakai', status: 400 };
-    const hashed = await hashPassword(password);
-
-    const dataRegisterUser = await prisma.users.create({
-      data: {
-        firstName,
-        lastName,
-        email,
-        password: hashed,
-        role: 'user',
-        isVerified: Boolean(false),
-        verifyCode: verificationCode,
-        phoneNumber,
-        identityNumber,
-        profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
-        referralCode: refferal,
-      },
-    });
-
-    const setTokenUser = await encodeToken({ id: dataRegisterUser.id, role: dataRegisterUser.role });
-
-    const emailHTML = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8');
-    let compiledHtml: any = await compile(emailHTML);
-    compiledHtml = compiledHtml({
-      firstName: firstName,
-      email: email,
-      url: `http://localhost:3000/user/verification-user/${verificationCode}-TBX-${setTokenUser}`,
-      verifCode: verificationCode
-    });
-
-    await transporter.sendMail({
-      to: email,
-      subject: 'Verifikasi Email Anda untuk Ber-Transaksi',
-      html: compiledHtml,
-    });
-
-    const checkedRefferal = await prisma.users.findUnique({
-      where: { referralCode: referralBody },
-    });
-
-    if (checkedRefferal) {
-      const pointsRecord = await prisma.points.findFirst({
-        where: {
-          userIdRefferalMatch: checkedRefferal?.id,
-        },
-      });
-
-      await prisma.referalDiscounts.create({
-        data: {
-          userIdRefferal: dataRegisterUser.id,
-          discount: 0.1,
-          isUsed: false,
-          expiredDate: addHours(addMonths(dateNow, 3), 7),
-        },
-      });
-
-      if (!pointsRecord) {
-        await prisma.points.create({
-          data: {
-            userIdRefferalMatch: checkedRefferal?.id,
-            point: 10000,
-            expiredDate: addHours(addMonths(dateNow, 3), 7),
-          },
-        });
-      } else {
-        await prisma.points.update({
-          where: { id: pointsRecord?.id },
-          data: {
-            point: pointsRecord?.point + 10000,
-            expiredDate: addHours(addMonths(dateNow, 3), 7),
-          },
-        });
-      }
-    }
+    await userRegisterService({
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      identityNumber,
+      refferal,
+      verificationCode,
+      dateNow,
+      referralBody
+    })
 
     res.status(201).json({
       error: false,
@@ -184,10 +115,11 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
   try {
     const { email, password } = req.body;
     if (!email || !password) throw { msg: 'Harap diisi terlebih dahulu', status: 406 };
+
     const checkUser = await prisma.users.findMany({ where: { email: email } });
 
     if (checkUser.length == 0) throw { msg: 'email belum teregistrasi', status: 400 };
-    const isComparePassword = await comparePassword(password, checkUser[0].password)
+    const isComparePassword = await comparePassword(password, checkUser[0]?.password)
 
     if (!isComparePassword) throw { msg: 'Password anda Salah!', status: 400 };
 
@@ -221,8 +153,6 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
     const { userId, authorizationRole } = req.body;
     let dataUser: any;
     let dataEventOrganizer: any;
-    let totalAmount: any
-
 
     if (authorizationRole == 'user') {
       dataUser = await prisma.users.findMany({
@@ -242,13 +172,6 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
           Transactions: true
         }
       })
-
-      totalAmount = await prisma.transactions.aggregate({
-        _sum: { totalPrice: true },
-        where: { eventOrganizerId: userId }
-      })
-
-
     }
 
     // if (dataUser?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
@@ -293,44 +216,12 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
   try {
     const { email } = req.body;
 
-    await prisma.$transaction(async (tx: any) => {
-      const findUser = await tx.users.findMany({
-        where: { email },
-      });
+    await forgotPasswordService({ email })
 
-      if (findUser.length == 0) throw { msg: 'User tidak ada', status: 404 };
-
-      const token = await encodeToken({
-        id: findUser[0].id,
-        role: findUser[0].role,
-      });
-
-      await tx.users.update({
-        data: { forgotPasswordToken: token },
-        where: { email },
-      });
-
-      const emailHtml = fs.readFileSync(
-        './src/public/emailSend/email.html',
-        'utf-8',
-      );
-      let compiledHtml: any = await compile(emailHtml);
-      compiledHtml = compiledHtml({
-        email: email,
-        url: `http://localhost:3000/user/forgot-password/${token}`,
-      });
-
-      await transporter.sendMail({
-        to: email,
-        subject: 'Lupa Password?',
-        html: compiledHtml,
-      });
-
-      res.status(200).json({
-        error: false,
-        message: 'Harap cek email anda secara berkala!',
-        data: {},
-      });
+    res.status(200).json({
+      error: false,
+      message: 'Harap cek email anda secara berkala!',
+      data: {},
     });
   } catch (error) {
     next(error);
@@ -343,37 +234,10 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     const { authorization } = req.headers;
     const token = authorization?.split(' ')[1]!;
 
-    const findUser = await prisma.users.findFirst({
-      where: {
-        id: userId,
-        forgotPasswordToken: token,
-      },
-    });
-    if (!findUser?.id) throw { msg: 'Link sudah tidak berlaku', status: 406 };
-
-    const checkUserPassword = await comparePassword(findUser?.password, password);
-    if (checkUserPassword) throw { msg: 'Masukan password yang berbeda!', status: 400 };
-
-    await prisma.users.update({
-      data: {
-        password: await hashPassword(password),
-        forgotPasswordToken: null,
-      },
-      where: {
-        id: userId,
-      },
-    });
-
-    const emailSucces = readFileSync('./src/public/emailSend/resetPasswordSucces.html', 'utf-8')
-    let sendEmail: any = await compile(emailSucces)
-    sendEmail = sendEmail({
-      firstName: findUser?.firstName,
-      url: 'http://localhost:3000/user/login'
-    })
-
-    await transporter.sendMail({
-      to: findUser?.email,
-      html: sendEmail
+    await resetPasswordService({
+      id: userId,
+      password,
+      forgotPasswordToken: token
     })
 
     res.status(200).json({
@@ -392,32 +256,11 @@ export const resetPasswordProfile = async (req: Request, res: Response, next: Ne
     const { authorization } = req.headers;
     const token = authorization?.split(' ')[1]!;
 
-    const findUser = await prisma.users.findFirst({
-      where: {
-        id: userId,
-      },
-    });
-
-    const match = await comparePassword(
+    await resetPasswordProfileService({
+      id: userId,
       existingPassword,
-      findUser?.password as string,
-    );
-    const samePassword = await comparePassword(
-      password,
-      findUser?.password as string,
-    );
-
-    if (!match) throw { msg: 'Password existing anda salah', status: 406 };
-    if (samePassword) throw { msg: 'Harap masukan password yang berbeda', status: 406 };
-
-    await prisma.users.update({
-      data: {
-        password: await hashPassword(password),
-      },
-      where: {
-        id: userId,
-      },
-    });
+      password
+    })
 
     res.status(200).json({
       error: false,
@@ -433,21 +276,6 @@ export const updateProfileUser = async (req: Request, res: Response, next: NextF
   try {
     const imagesUpload: any = req.files;
     const { userId, firstName, lastName, phoneNumber, identityNumber } = req.body;
-    // if (firstName || lastName || phoneNumber || identityNumber) throw { msg: 'Harus diisi', status: 400 }
-
-    // if(req.files) {
-    //   files = Array.isArray(req.files)
-    //     ? req.files
-    //     : req.files['images']
-    // }
-
-    // const imagesUploaded = []
-    // for (const image of imagesUpload!) {
-    //   const result: any = await cloudinaryUpload(image.buffer)
-    //   console.log(result)
-    //   imagesUploaded.push(result.res!)
-    // }
-
 
     const imagesUploaded = await Promise.all(imagesUpload?.images.map(async (item: any) => {
       const result: any = await cloudinaryUpload(item?.buffer)
@@ -455,18 +283,14 @@ export const updateProfileUser = async (req: Request, res: Response, next: NextF
       return await result?.res!
     }))
 
-    await prisma.users.update({
-      data: {
-        profilePicture: imagesUploaded[0],
-        firstName,
-        lastName,
-        phoneNumber,
-        identityNumber: identityNumber,
-      },
-      where: {
-        id: userId,
-      },
-    });
+    await updateProfileUserService({
+      profilePicture: imagesUploaded[0],
+      firstName,
+      lastName,
+      phoneNumber,
+      identityNumber: identityNumber,
+      id: userId
+    })
 
     res.status(200).json({
       error: false,
@@ -482,36 +306,11 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
   try {
     const { userId, verificationCode } = req.body;
 
-    const findUser = await prisma.users.findFirst({
-      where: {
-        AND: [{ id: userId }, { verifyCode: verificationCode }],
-      },
-    });
-
-    if (!findUser) throw { msg: 'data tidak valid', status: 404 };
-
-    await prisma.users.update({
-      data: {
-        isVerified: true,
-      },
-      where: { id: findUser?.id },
-    });
-
-    const emailSucces = readFileSync('./src/public/emailSend/verifyEmailSucces.html', 'utf-8')
-    let sendEmail: any = await compile(emailSucces)
-    sendEmail = sendEmail({
-      firstName: findUser?.firstName,
-      url: 'http://localhost:3000/'
-    })
-
-    await transporter.sendMail({
-      to: findUser?.email,
-      html: sendEmail
-    })
+    await verifyUserService({ userId, verificationCode })
 
     res.status(200).json({
       error: false,
-      message: 'Berhasil',
+      message: 'Berhasil konfirmasi, silahkan login!',
       data: {}
     })
   } catch (error) {
@@ -527,25 +326,9 @@ export const sendVerifyEmailUser = async (req: Request, res: Response, next: Nex
     const decodedToken = await decodeToken(token) as any
     const userId = decodedToken?.data?.id
 
-    const findUser = await prisma.users.findFirst({
-      where: { id: userId }
-    })
-
-    if (!findUser) throw { msg: 'User tidak ditemukan', status: 404 }
-
-    const emailHTML = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8');
-    let compiledHtml: any = await compile(emailHTML);
-    compiledHtml = compiledHtml({
-      firstName: findUser?.firstName,
-      email: findUser?.email,
-      url: `http://localhost:3000/user/verification-user/${findUser?.verifyCode}-TBX-${token}`,
-      verifCode: findUser?.verifyCode
-    });
-
-    await transporter.sendMail({
-      to: findUser?.email,
-      subject: 'Verifikasi dirimu sekarang!',
-      html: compiledHtml
+    await sendVerifyEmailUserService({
+      id: userId,
+      token
     })
 
     res.status(200).json({

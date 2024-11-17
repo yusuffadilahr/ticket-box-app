@@ -76,7 +76,7 @@ export default function EventDetail({ params }: IParams) {
 
     const toggleReferralDiscount = () => setUseReferralDiscount(!useReferralDiscount);
 
-    console.log(ticketQuantities)
+    console.log(ticketQuantities?.reduce((acc, curr) => acc + curr, 0) == 0, '..,,,,,,,,,,,,,,,,,')
 
     const profilePoint = authStore((state: any) => state.point);
     console.log(profilePoint)

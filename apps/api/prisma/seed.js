@@ -1156,7 +1156,7 @@ async function main() {
 
     // Create the EventOrganizer
     const createdOrganizer = await prisma.eventOrganizer.create({
-      data: { ...organizer, password: await hashPassword('12312312') },
+      data: { ...organizer, password: await hashPassword('12312312'), isVerified: false },
     });
 
     // Assign 3 events to the current organizer
