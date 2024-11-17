@@ -22,10 +22,10 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                 {data?.map((item: any, index: any) => (
                     <CarouselItem key={index} className=" basis-1/2 lg:basis-1/4">
                         <div className="p-1">
-                            <Card className="h-[250px] lg:h-fit pb-2 rounded-2xl">
+                            <Card className="h-[270px] lg:h-fit pb-2 rounded-2xl">
                                 <Link href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}>
                                     <CardContent className="flex items-center justify-center">
-                                        <div className='w-full lg:h-44'>
+                                        <div className='w-full h-20 lg:h-44'>
                                             <Image
                                                 src={
                                                     item?.EventImages[0]?.eventImageUrl?.includes('https://')
@@ -35,14 +35,14 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                                 height={142}
                                                 width={142}
                                                 alt="testing"
-                                                className="w-full lg:h-44 object-cover rounded-t-2xl"
+                                                className="w-full lg:w-full h-24 lg:h-44 object-cover rounded-t-2xl"
                                             />
                                         </div>
                                     </CardContent>
                                     <div className='text-black p-2 pt-5'>
-                                        <div className='flex flex-col gap-2'>
+                                        <div className='flex flex-col gap-1 lg:gap-2'>
                                             <h1 className='flex items-center gap-2 text-xs lg:text-sm text-gray-500 font-normal'>
-                                                <IoLocationSharp />{item?.location.length > 20 ? <h1>{item?.location.slice(0, 20)}</h1> : item?.location}</h1>
+                                                <IoLocationSharp />{item?.location.length > 20 ? <h1>{item?.location.slice(0, 15)}</h1> : item?.location}</h1>
                                             <h1 className='flex items-center gap-2 text-xs lg:text-sm text-gray-500 font-normal'>
                                                 <FaCalendarAlt />
                                                 {item?.startEvent.split('T')[0].split('-').join('/')} - {item?.endEvent.split('T')[0].split('-').join('/')}
@@ -52,7 +52,7 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                         <h1 className='text-xs lg:text-sm  mt-2 bottom-0 text-gray-500 font-normal'>
                                             Mulai dari
                                         </h1>
-                                        <div className=' flex justify-between'>
+                                        <div className=' flex flex-col lg:flex-row lg:justify-between'>
                                             <h1 className='text-sm lg:text-base   bottom-0 text-orange-600 font-bold'>
                                                 Rp{item?.minimumPrice.toLocaleString("id-ID")}
                                             </h1>

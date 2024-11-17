@@ -14,6 +14,7 @@ import Image from 'next/image';
 import logo from '@/../../apps/web/public/Logo.webp';
 import { loginOrganizerSchema } from '@/features/login-organizer/schema/loginOrganizerSchema';
 import authStore from '@/zustand/authstore';
+import BenefitCard from '@/features/event-organizer/component/benefitCard';
 
 export default function Page() {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -49,7 +50,7 @@ export default function Page() {
   };
 
   return (
-    <main className="w-full h-fit bg-white lg:flex p-4 lg:px-20 lg:pt-20 gap-5">
+    <main className="w-full h-fit bg-gray-50 lg:flex lg:flex-col p-4 lg:px-20 lg:pt-20 gap-5">
       <section className='w-full pt-16 md:mt-9 lg:pt-0 flex md:h-96 gap-5 justify-center items-center'>
         <section className="w-full px-10 md:px-14 h-fit py-10 md:py-0 md:h-full bg-white shadow-lg flex flex-col justify-center rounded-xl items-center border border-gray-200 lg:px-32">
           <Formik
@@ -67,7 +68,7 @@ export default function Page() {
               <div id="emailOrganizer-input" className="w-full">
                 <div className="flex gap-5 items-center">
                   <label className='text-sm lg:text-base'>
-                    Email Organizer<span className="text-red-500">*</span>
+                    Email Organizer <span className="text-red-500">*</span>
                   </label>
                   <ErrorMessage
                     name="email"
@@ -109,7 +110,7 @@ export default function Page() {
               <button
                 disabled={isPending}
                 type="submit"
-                className="text-yellow-300 disabled:bg-neutral-300 w-full rounded-lg font-bold py-2 text-sm bg-blue-500 hover:bg-blue-600 transition-all duration-300 "
+                className="text-yellow-300 disabled:text-neutral-800 disabled:bg-neutral-300 w-full rounded-lg font-bold py-2 text-sm bg-blue-500 hover:bg-blue-600 transition-all duration-300 "
               >
                 Login
               </button>
@@ -151,6 +152,7 @@ export default function Page() {
           </div>
         </section>
       </section>
+      <BenefitCard />
     </main>
   );
 }

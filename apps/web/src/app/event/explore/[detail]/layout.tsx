@@ -1,6 +1,7 @@
 'use client'
 
 import authStore from "@/zustand/authstore";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useLayoutEffect, useState } from "react";
 import { ReactNode } from "react";
@@ -11,6 +12,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     const role = authStore((state) => state.role)
     const [toastShow, setToastShow] = useState(false)
     const token = authStore((state) => state.token)
+    const logout = authStore((state) => state.resetAuth)
     const router = useRouter()
 
     useLayoutEffect(() => {
@@ -26,6 +28,15 @@ export default function Layout({ children }: { children: ReactNode }) {
             router.push('/user/login')
         }
     }, [token])
+
+    useLayoutEffect(() => {
+        if (role && role != 'user') {
+            router.push('/user/login')
+            logout()
+            Cookies.remove('role')
+            Cookies.remove('token')
+        }
+    }, [role, token])
 
     return (
         <>

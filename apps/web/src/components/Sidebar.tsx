@@ -29,7 +29,8 @@ export const SidebarMenu = () => {
     router.push('/event-organizer/login');
   };
   return (
-    <section className="fixed h-screen bg-blue-950 w-2/12 z-20 pt-2">
+    
+    <section className="hidden lg:block fixed h-screen bg-blue-950 w-2/12 z-20 pt-2">
       <div className="text-white min-h-screen p-5">
         <div className="text-2xl font-bold mb-8">
          <Image 
@@ -89,16 +90,6 @@ export const SidebarMenu = () => {
             </button>
           </Link>
 
-          {/* <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-                        <FaFileAlt className="text-lg" />
-                        <span className='text-xs'>Invitation Tiket</span>
-                    </button>
-
-                    <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-                        <FaCheckSquare className="text-lg" />
-                        <span className='text-xs'>Check-in</span>
-                    </button> */}
-
           <div className="text-gray-400 uppercase text-xs tracking-wider pt-6">
             Akun
           </div>
@@ -119,10 +110,6 @@ export const SidebarMenu = () => {
             </button>
           </Link>
 
-          {/* <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-                        <FaMoneyBillWave className="text-lg" />
-                        <span className='text-xs'>Withdraw</span>
-                    </button> */}
 
           <button
             onClick={handleLogout}

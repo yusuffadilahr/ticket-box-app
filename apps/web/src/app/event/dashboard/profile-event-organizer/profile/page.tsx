@@ -73,9 +73,9 @@ export default function Page() {
 
   if (isFetching) return (
     <main className="w-full flex flex-col h-fit gap-5">
-      <div className="w-full flex flex-col px-4 bg-neutral-200 h-20 rounded-lg"></div>
+      <div className="w-full flex flex-col px-4 bg-neutral-200 h-20 rounded-lg animate-pulse"></div>
       <div className="w-full flex h-fit gap-5">
-        <section className="w-full items-center flex flex-col py-8 px-2 rounded-lg bg-neutral-200">
+        <section className="w-full items-center flex flex-col py-8 px-2 rounded-lg bg-neutral-200 animate-pulse">
           <div className="flex items-center gap-5 justify-between w-full px-10">
             <div className="h-20 rounded-full w-full flex items-center gap-5">
               <div className="flex flex-col"></div>
@@ -93,8 +93,8 @@ export default function Page() {
           <div className="w-full px-10 pt-6"></div>
         </section>
         <section className="flex flex-col w-full gap-4">
-          <div className="w-full h-72 rounded-lg bg-neutral-200 px-10 py-5 overflow-y-auto"></div>
-          <div className="w-full h-44 rounded-lg bg-neutral-200 p-5 text-white"><div className="w-full h-24 flex gap-5"></div>
+          <div className="w-full h-72 rounded-lg bg-neutral-200 px-10 py-5 overflow-y-auto animate-pulse"></div>
+          <div className="w-full h-44 rounded-lg bg-neutral-200 p-5 text-white animate-pulse"><div className="w-full h-24 flex gap-5"></div>
           </div>
         </section>
       </div>

@@ -69,16 +69,17 @@ export default function ProfileTransaction() {
 
 
     return (
-        <main className="pt-28 px-20">
-            <section className=" flex justify-between items-center">
+        <main className="pt-28 lg:px-20 flex w-screen lg:justify-start flex-col lg:block">
+            <section className="w-full flex justify-between items-center">
                 <ProfileHeader />
             </section>
 
-            <section className="flex">
-                <section className="mt-10 flex h-fit">
+            <section className="flex flex-col lg:flex-row ">
+                <section className="mt-10 w-full lg:w-1/4 flex h-fit">
                     <LeftMenu />
+
                 </section>
-                <section className="w-3/4 bg-white rounded-lg shadow-lg ml-5 p-5">
+                <section className="w-full lg:w-3/4 mt-4 bg-white rounded-lg shadow-lg ml-5 p-5">
                     <h2 className="text-xl font-semibold mb-5">Transaksi</h2>
 
                     {/* Table */}
