@@ -9,7 +9,7 @@ export default function LeftMenu() {
     ];
 
     return (
-        <aside className="w-72 bg-white rounded-lg shadow-lg p-5">
+        <aside className="w-full lg:w-72 bg-white rounded-lg shadow-lg p-5">
             <ul className="space-y-4">
                 {menuItems.map((item, index) => (
                     <Link href={item.link} key={index}>

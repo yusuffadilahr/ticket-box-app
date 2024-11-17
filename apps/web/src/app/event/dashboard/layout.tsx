@@ -1,6 +1,7 @@
 'use client';
 
 import { SidebarMenu } from '@/components/Sidebar';
+import { TopBar } from '@/components/ui/TopBar';
 import authStore from '@/zustand/authstore';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -35,6 +36,7 @@ export default function Layout({ children }: ILayoutChildren) {
   return (
     <>
       <SidebarMenu />
+      {/* <TopBar /> */}
       <main className="pl-72 p-5">{children}</main>
     </>
   );
