@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { RxHamburgerMenu } from 'react-icons/rx';
 
 export const TopBar = () => {
     const logout = authStore((state) => state.resetAuth);
@@ -34,20 +35,7 @@ export const TopBar = () => {
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="p-2">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M4 6h16M4 12h16m-7 6h7"
-                                />
-                            </svg>
+                            <RxHamburgerMenu color="white"/>
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-5 bg-blue-950 text-white">
@@ -98,12 +86,6 @@ export const TopBar = () => {
                                         <span className="text-xs">Event Saya</span>
                                     </button>
                                 </Link>
-                                <Link href="/event/dashboard/penjualan-tiket">
-                                    <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
-                                        <FaTicketAlt className="text-lg" />
-                                        <span className="text-xs">Penjualan Tiket</span>
-                                    </button>
-                                </Link>
                                 <Link href="/event/dashboard/report">
                                     <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
                                         <FaChartBar className="text-lg" />
@@ -139,9 +121,9 @@ export const TopBar = () => {
 
                 <div className="text-white text-lg font-bold">Logo</div>
 
-                <Link href="/event/dashboard/buat-event">
+                <Link href="/event/dashboard/c">
                     <Button className="bg-blue-700 text-white hover:bg-blue-600">
-                        Buat Event
+                       + Buat Event
                     </Button>
                 </Link>
             </nav>

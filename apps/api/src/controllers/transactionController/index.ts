@@ -110,43 +110,88 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
             }
         }
 
-        const transactionId = await prisma.transactions.create({
-            data: {
-                eventId: Number(id),
-                totalPrice: totalPembayaran,
-                userId: userId,
-                eventOrganizerId: dataEvent.EventOrganizer.id,
-                expiredAt: addHours(new Date(), 7),
-                transactionStatus: {
-                    create: { status: "WAITING_FOR_PAYMENT" }
+
+        if (totalPembayaran == 0) {
+            const transactionId = await prisma.transactions.create({
+                data: {
+                    eventId: Number(id),
+                    totalPrice: totalPembayaran,
+                    userId: userId,
+                    eventOrganizerId: dataEvent.EventOrganizer.id,
+                    expiredAt: addHours(new Date(), 7),
+                    transactionStatus: {
+                        create: { status: "PAID" }
+                    }
                 }
+            })
+
+            const dataArrTransacDetail = dataDetails.map((item: any, i: any) => {
+                return {
+                    transactionsId: transactionId.id,
+                    ticketId: item.ticketId,
+                    price: item.price,
+                    discount: item.discount,
+                    quantity: item.quantity,
+                }
+            })
+            await prisma.transactionDetail.createMany({
+                data: dataArrTransacDetail
+            })
+
+            for (const item of ticketDetails) {
+                await prisma.tickets.update({
+                    where: { id: item.ticketId },
+                    data: { seatAvailable: { decrement: item.quantity } }
+                });
             }
-        })
 
-        const dataArrTransacDetail = dataDetails.map((item: any, i: any) => {
-            return {
-                transactionsId: transactionId.id,
-                ticketId: item.ticketId,
-                price: item.price,
-                discount: item.discount,
-                quantity: item.quantity,
+            res.status(200).json({
+                error: false,
+                message: 'Berhasil Melakukan Pembayaran',
+                data: {}
+            })
+
+        } else {
+
+            const transactionId = await prisma.transactions.create({
+                data: {
+                    eventId: Number(id),
+                    totalPrice: totalPembayaran,
+                    userId: userId,
+                    eventOrganizerId: dataEvent.EventOrganizer.id,
+                    expiredAt: addHours(new Date(), 7),
+                    transactionStatus: {
+                        create: { status: "WAITING_FOR_PAYMENT" }
+                    }
+                }
+            })
+
+
+
+            const dataArrTransacDetail = dataDetails.map((item: any, i: any) => {
+                return {
+                    transactionsId: transactionId.id,
+                    ticketId: item.ticketId,
+                    price: item.price,
+                    discount: item.discount,
+                    quantity: item.quantity,
+                }
+            })
+            await prisma.transactionDetail.createMany({
+                data: dataArrTransacDetail
+            })
+
+            for (const item of ticketDetails) {
+                await prisma.tickets.update({
+                    where: { id: item.ticketId },
+                    data: { seatAvailable: { decrement: item.quantity } }
+                });
             }
-        })
-        await prisma.transactionDetail.createMany({
-            data: dataArrTransacDetail
-        })
-
-        for (const item of ticketDetails) {
-            await prisma.tickets.update({
-                where: { id: item.ticketId },
-                data: { seatAvailable: { decrement: item.quantity } }
-            });
-        }
 
 
 
-        const query = await mysqlConnection()
-        await query.query(`
+            const query = await mysqlConnection()
+            await query.query(`
    
 
             CREATE EVENT transaction_${transactionId.id}
@@ -156,29 +201,28 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 INSERT INTO transactionstatus (status, transactionsId, updatedAt) VALUES ('EXPIRED', '${transactionId.id}', utc_timestamp());
             END;
         `);
-        // DELIMITER ;
 
 
-        const paymentToken = await snap.createTransaction({
-            payment_type: 'bank_transfer',
+            const paymentToken = await snap.createTransaction({
+                payment_type: 'bank_transfer',
 
-            transaction_details: {
-                order_id: transactionId.id.toString(),
-                gross_amount: totalPembayaran,
-            },
-            customer_details: {
-                first_name: dataUser?.firstName,
-                email: dataUser?.email,
-                phone: dataUser?.phoneNumber,
-            }
-        });
+                transaction_details: {
+                    order_id: transactionId.id.toString(),
+                    gross_amount: totalPembayaran,
+                },
+                customer_details: {
+                    first_name: dataUser?.firstName,
+                    email: dataUser?.email,
+                    phone: dataUser?.phoneNumber,
+                }
+            });
 
-        res.status(200).json({
-            error: false,
-            message: 'Berhasil Melakukan Pembayaran',
-            data: { paymentToken }
-        })
-
+            res.status(200).json({
+                error: false,
+                message: 'Berhasil Melakukan Pembayaran',
+                data: { paymentToken }
+            })
+        }
 
     } catch (error) {
         next(error)

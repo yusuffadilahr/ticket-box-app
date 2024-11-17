@@ -38,6 +38,7 @@ export default function Home() {
     queryGetCarousel
   } = QueryGetDataHooks()
 
+
   // const { data: queryGetDataNewest } = useQuery({
   //   queryKey: ['Get-data-newest'],
   //   queryFn: async () => {

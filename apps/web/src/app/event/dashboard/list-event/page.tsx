@@ -105,7 +105,7 @@ export default function EventTable() {
   }, [page, searchInput]);
 
   if (isFetching) return (
-    <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
+    <main className="flex flex-col h-fit w-full px-0 lg:px-8 space-y-10  p-10">
       <div className="w-full py-10 flex flex-col px-4 bg-neutral-200 rounded-lg"></div>
       <div className="flex justify-between w-full items-center">
         <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 w-1/2"></div>
@@ -122,7 +122,7 @@ export default function EventTable() {
   )
 
   return (
-    <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
+    <main className="flex flex-col h-fit w-full px-0 lg:px-8 space-y-10 p-10">
       <div className="w-full py-3 flex flex-col px-4 bg-yellow-400 rounded-lg">
         <h1 className="font-bold text-xl text-black">Daftar Event</h1>
         <p className="w-full text-neutral-500">Dashboard / Daftar Event</p>
@@ -136,7 +136,7 @@ export default function EventTable() {
             onChange={(e) => debounceSearch(e.target.value)}
           />
         </div>
-        <div className="flex gap-8 w-full justify-end">
+        <div className="hidden lg:flex gap-8 w-full justify-end">
           <Link href="/event/dashboard/c" className='flex items-center px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
             <h1 className="font-semibold">
               + Buat Event
@@ -193,7 +193,7 @@ export default function EventTable() {
                   <td className="py-3 px-6 text-left">
                     {item?.startEvent.split('T')[0]}
                   </td>
-                  <td className="py-3 px-6 text-left space-x-1">
+                  <td className="flex flex-row items-center justify-center py-3 px-6 text-left space-x-1">
                     <Dialog>
                       <DialogTrigger>
                         <button id='view' className="bg-green-600 p-2 rounded-md">

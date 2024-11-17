@@ -98,7 +98,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                             <div className="flex justify-center font-bold text-2xl  pb-5">
                                 Event
                             </div>
-                            <div className="grid grid-cols-2 gap-4 px-40">
+                            <div className="grid grid-cols-2 gap-4 px-2 lg:px-40">
                                 <div className="flex flex-col">
                                     <label className="font-bold text-sm">Nama Event</label>
                                     <Field

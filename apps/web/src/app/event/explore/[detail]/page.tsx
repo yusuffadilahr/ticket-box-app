@@ -35,7 +35,8 @@ import DetailEvent from '@/features/event/components/detailEvent';
 import PembayaranTiket from '@/features/event/components/pembayaranTiket';
 import InfoEvent from '@/features/event/components/infoEvent';
 import EventImage from '@/features/event/components/eventImage';
-
+import { QueryGetEventDetailHooks } from '@/features/event/hooks/QueryGetEventDetailHooks';
+import { MutateHandleCheckoutTicketsHook } from '@/features/event/hooks/MutateHandleCheckoutTicketsHook';
 
 interface IParams {
     params: {
@@ -43,30 +44,37 @@ interface IParams {
     };
 }
 
+
+
+
 export default function EventDetail({ params }: IParams) {
     const router = useRouter()
     const { detail } = params;
     const id = detail.split('TBX')[0];
 
 
-    const { data: queryDataDetailEvent } = useQuery({
-        queryKey: ['get-detail-event'],
-        queryFn: async () => {
-            const res = await instance.get(`/event/detail/${id}`);
-            return res.data.data[0];
-        },
-    });
 
 
 
-    const { data: queryDataReview } = useQuery({
-        queryKey: ['get-event-review'],
-        queryFn: async () => {
-            const res = await instance.get(`/review/${id}`);
-            return res.data.data;
 
-        },
-    });
+    // const { data: queryDataDetailEvent } = useQuery({
+    //     queryKey: ['get-detail-event'],
+    //     queryFn: async () => {
+    //         const res = await instance.get(`/event/detail/${id}`);
+    //         return res.data.data[0];
+    //     },
+    // });
+
+
+
+    // const { data: queryDataReview } = useQuery({
+    //     queryKey: ['get-event-review'],
+    //     queryFn: async () => {
+    //         const res = await instance.get(`/review/${id}`);
+    //         return res.data.data;
+
+    //     },
+    // });
 
 
     const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
@@ -76,39 +84,51 @@ export default function EventDetail({ params }: IParams) {
 
     const toggleReferralDiscount = () => setUseReferralDiscount(!useReferralDiscount);
 
-    console.log(ticketQuantities?.reduce((acc, curr) => acc + curr, 0) == 0, '..,,,,,,,,,,,,,,,,,')
+    // console.log(ticketQuantities?.reduce((acc, curr) => acc + curr, 0) == 0, '..,,,,,,,,,,,,,,,,,')
 
     const profilePoint = authStore((state: any) => state.point);
-    console.log(profilePoint)
     const profileDiscount = authStore((state: any) => state.discount);
 
-    const { mutate: handleCheckoutTickets, isPending } = useMutation({
-        mutationFn: async () => {
+    // const { mutate: handleCheckoutTickets, isPending } = useMutation({
+    //     mutationFn: async () => {
 
-            const ticketDetails = ticketQuantities
-                .map((quantity, index) => quantity > 0 && ({
-                    ticketId: queryDataDetailEvent?.tickets[index]?.id,
-                    quantity,
-                    price: queryDataDetailEvent?.tickets[index]?.price,
-                    discount: queryDataDetailEvent?.tickets[index]?.discount,
-                }))
-                .filter(Boolean);
+    //         const ticketDetails = ticketQuantities
+    //             .map((quantity, index) => quantity > 0 && ({
+    //                 ticketId: queryDataDetailEvent?.tickets[index]?.id,
+    //                 quantity,
+    //                 price: queryDataDetailEvent?.tickets[index]?.price,
+    //                 discount: queryDataDetailEvent?.tickets[index]?.discount,
+    //             }))
+    //             .filter(Boolean);
 
-            if (!ticketDetails) throw { msg: "harap masukkan tiket" }
+    //         if (!ticketDetails) throw { msg: "harap masukkan tiket" }
 
-            return await instance.post(`/transaction/${id}`, {
-                referralPoints: pointsToDeduct,
-                ticketDetails,
-                referralDiscount: useReferralDiscount ? profileDiscount : 0,
-            })
-        },
-        onSuccess: (res) => {
-            router.push(res?.data?.data?.paymentToken?.redirect_url)
-        },
-        onError: (err) => {
-            console.log(err)
-        }
-    })
+    //         return await instance.post(`/transaction/${id}`, {
+    //             referralPoints: pointsToDeduct,
+    //             ticketDetails,
+    //             referralDiscount: useReferralDiscount ? profileDiscount : 0,
+    //         })
+    //     },
+    //     onSuccess: (res) => {
+    //         router.push(res?.data?.data?.paymentToken?.redirect_url)
+    //     },
+    //     onError: (err) => {
+    //         console.log(err)
+    //     }
+    // })
+
+    const {
+        queryDataDetailEvent,
+        queryDataReview
+    } = QueryGetEventDetailHooks({ id })
+
+
+
+    const {
+        handleCheckoutTickets,
+        isPending
+    } = MutateHandleCheckoutTicketsHook({ id, router, profileDiscount, useReferralDiscount, pointsToDeduct, queryDataDetailEvent, ticketQuantities })
+
 
     useEffect(() => {
         if (queryDataDetailEvent?.tickets?.length > 0) {
