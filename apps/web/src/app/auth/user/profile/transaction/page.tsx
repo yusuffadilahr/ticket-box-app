@@ -139,7 +139,7 @@ export default function ProfileTransaction() {
                         />
                         <Input
                             type="number"
-                            placeholder="Rating (1-5)"
+                            placeholder="Rating (1:Sangat Buruk - 5:Sangat Baik)"
                             min="1"
                             max="5"
                             value={rating}

@@ -57,16 +57,16 @@ export default function ProfileHome() {
 
 
     return (
-        <main className="pt-28 px-20">
-            <section className=" flex justify-between items-center">
+        <main className="pt-28 lg:px-20 flex w-screen lg:justify-start flex-col lg:block">
+            <section className="w-full flex justify-between items-center">
                 <ProfileHeader />
             </section>
 
-            <section className="flex">
-                <section className="mt-10 flex h-fit">
+            <section className="flex flex-col lg:flex-row ">
+                <section className="mt-10 w-full lg:w-1/4 flex h-fit">
                     <LeftMenu />
                 </section>
-                <section className="w-3/4 bg-white rounded-lg shadow-lg ml-5 p-5">
+                <section className="w-full lg:w-3/4 bg-white rounded-lg shadow-lg mt-4 lg:mt-0 lg:ml-5 p-5">
 
                     <h2 className="text-xl font-semibold mb-5">Pengaturan Akun</h2>
 
@@ -94,7 +94,7 @@ export default function ProfileHome() {
                     >
 
                         {({ setFieldValue }) => (
-                            <div className='flex flex-row'>
+                            <div className='flex flex-col lg:flex-row '>
                                 <div className='space-y-2'>
                                     Ganti Profile Picture
                                     <input
@@ -115,12 +115,7 @@ export default function ProfileHome() {
                                             </Avatar>
                                         </div>
                                     )}
-                                    {/* <button
-                                        onClick={() => console.log('Image submitted:', imagePreview)}
-                                        className="mt-4 bg-blue-500 text-white p-2 rounded"
-                                    >
-                                        Upload
-                                    </button> */}
+                                    
                                 </div>
                                 <Form className='flex flex-col justify-center items-center w-full'>
                                     <main className="flex justify-center flex-col w-[80%] md:w-[60%] lg:w-[90%]  space-y-5">

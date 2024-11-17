@@ -5,7 +5,6 @@ import { addHours } from "date-fns";
 import { cloudinaryUpload } from "@/utils/cloudinary";
 import { Prisma } from "@prisma/client";
 
-
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const imagesUpload: any = req.files;
@@ -131,16 +130,16 @@ export const findEvent = async (req: Request, res: Response, next: NextFunction)
         });
 
 
-        const eventDataWithDetails = eventSearch.map(event => {
+        const eventDataWithDetails = eventSearch.map((event: any) => {
             let minPriceForEvent: number | null = null;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
                     minPriceForEvent = ticket.price;
                 }
             });
 
             let totalSeatsAvailable = 0;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 totalSeatsAvailable += ticket.seatAvailable;
             });
 
@@ -225,16 +224,16 @@ export const getNewestEvent = async (req: Request, res: Response, next: NextFunc
             }
         })
 
-        const eventDataNewest = searchEventByStartEvent.map(event => {
+        const eventDataNewest = searchEventByStartEvent.map((event: any) => {
             let minPriceForEvent: number | null = null;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
                     minPriceForEvent = ticket.price;
                 }
             });
 
             let totalSeatsAvailable = 0;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 totalSeatsAvailable += ticket.seatAvailable;
             });
 
@@ -285,16 +284,16 @@ export const getBestSellingEvent = async (req: Request, res: Response, next: Nex
             },
         });
 
-        const eventDataBestSelling = bestSellingEvents.map(event => {
+        const eventDataBestSelling = bestSellingEvents.map((event: any) => {
             let minPriceForEvent: number | null = null;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
                     minPriceForEvent = ticket.price;
                 }
             });
 
             let totalSeatsAvailable = 0;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 totalSeatsAvailable += ticket.seatAvailable;
             });
 
@@ -328,16 +327,16 @@ export const getComedyEvent = async (req: Request, res: Response, next: NextFunc
             }
         })
 
-        const eventDataComedy = searchEventByCategory.map(event => {
+        const eventDataComedy = searchEventByCategory.map((event: any) => {
             let minPriceForEvent: number | null = null;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 if (minPriceForEvent === null || ticket.price < minPriceForEvent) {
                     minPriceForEvent = ticket.price;
                 }
             });
 
             let totalSeatsAvailable = 0;
-            event.tickets.forEach(ticket => {
+            event.tickets.forEach((ticket: any) => {
                 totalSeatsAvailable += ticket.seatAvailable;
             });
 
@@ -427,7 +426,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
             //     }
             // })
 
-            const imagesArr = await Promise.all(imagesUploaded?.images?.map(async(item: any) => {
+            const imagesArr = await Promise.all(imagesUploaded?.images?.map(async (item: any) => {
                 const result: any = await cloudinaryUpload(item?.buffer)
 
                 return {
@@ -441,7 +440,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
             })
 
 
-            findEvent?.EventImages?.forEach((item:any) => {
+            findEvent?.EventImages?.forEach((item: any) => {
                 fs.rmSync(`/src/public/images/${item.eventImageUrl}`)
             })
         })

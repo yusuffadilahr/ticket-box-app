@@ -130,11 +130,12 @@ export default function Explore({ searchParams }: { searchParams: any }) {
 
         router.push(`${pathname}?${currentUrl.toString()}`)
     }, [page, searchInput, selectedCategory, minPrice, maxPrice, dateFrom, dateUntil, location])
+   
 
 
     return (
-        <main className="pt-28 px-20 flex gap-5">
-            <section id="filter" className="w-1/5 bg-white rounded-lg border border-gray-50 drop-shadow-lg p-4 h-fit sticky top-24">
+        <main className="pt-12 lg:pt-28 lg:px-20 flex flex-col lg:flex-row gap-5">
+            <section id="filter" className="w-full lg:w-1/5 bg-white rounded-lg border border-gray-50 drop-shadow-lg p-4 h-fit lg:sticky top-24">
                 <div className="flex flex-col justify-center font-bold text-xl">
                     <div className="flex justify-center">Filter</div>
                     <button
@@ -165,7 +166,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                         </div>
                     </div>
                     <div>
-                        <Accordion type="multiple" defaultValue={["item-1", "item-2", "item-3", "item-4"]} collapsible className="w-full">
+                        <Accordion type="multiple" defaultValue={window.innerWidth < 768 ? [] : ["item-1", "item-2", "item-3", "item-4"]} className="w-full">
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Tipe Event</AccordionTrigger>
                                 <AccordionContent>
@@ -269,18 +270,18 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                 </div>
             </section>
 
-            <div className="flex flex-col">
-                <section className="w-fit ">
-                    <div className="grid grid-cols-4 gap-3">
+            <div className="flex flex-col pt-10 lg:pt-0">
+                <section className="w-full lg:w-fit ">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                         {
-                            querySearchData?.eventSearch?.map((item, index) => (
-                                <Card key={index} className="h-[200px] lg:h-fit pb-4">
+                            querySearchData?.eventSearch?.map((item: any, index: any) => (
+                                <Card key={index} className="h-[260px] lg:h-fit pb-4">
                                     <Link
                                         href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}
                                     >
                                         <CardContent className="flex items-center justify-center w-full h-full rounded-2xl">
-                                            <div className="bg-white w-[180px] lg:w-full lg:h-full rounded-2xl">
-                                                <div className="w-full lg:h-32">
+                                            <div className="bg-white w-full lg:w-full lg:h-full rounded-2xl">
+                                                <div className="w-full  lg:h-32">
                                                     <Image
                                                         src={item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                                             ? item.EventImages[0].eventImageUrl
@@ -288,7 +289,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
                                                         height={142}
                                                         width={142}
                                                         alt="Event Image"
-                                                        className="w-full lg:h-32 object-cover rounded-t-2xl"
+                                                        className="w-full  lg:h-32 object-cover rounded-t-2xl"
                                                     />
                                                 </div>
                                                 <div className="text-black p-3 pt-5">
