@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { tokenValidation } from "@/middlewares/verify.token";
-import { createReviewUser, getReviewUser } from "@/controllers/reviewController";
+import { createReviewUser, getReviewUser } from "./../controllers/reviewController";
 
 const reviewRouter = Router()
 

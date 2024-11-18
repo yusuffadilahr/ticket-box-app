@@ -1,23 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { EventSchema } from '@/features/event/schema/eventSchemas';
-import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { toast } from 'react-hot-toast';
-import ReactQuill from 'react-quill';
+
 import 'react-quill/dist/quill.snow.css';
-import { FaRegTrashAlt } from "react-icons/fa";
-import { RiInformation2Fill } from "react-icons/ri";
-import { Tooltip } from 'react-tooltip';
+
 import { useRouter } from 'next/navigation';
 
-import Image from 'next/image';
-import CreateEventInfo from '@/components/eventDashboard/createEventInfo';
-import ImageUpload from '@/components/eventDashboard/imageUpload';
-import CreateTicket from '@/components/eventDashboard/createTicket';
+
 import TicketList from '@/components/eventDashboard/ticketList';
 import EditEventInfo from '@/features/eventDashboard/components/editEventInfo';
 import ImageUploader from '@/features/eventDashboard/components/imageUploader';

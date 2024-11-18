@@ -1,8 +1,8 @@
-import { createEvent, findEvent, findEventDetail, getBestSellingEvent, updateEvent,getComedyEvent, getNewestEvent, getOrganizerEvent, deleteEvent } from "@/controllers/eventController";
+import { createEvent, findEvent, findEventDetail, getBestSellingEvent, updateEvent,getComedyEvent, getNewestEvent, getOrganizerEvent, deleteEvent } from "./../controllers/eventController";
 import { Router } from "express";
-import { tokenValidation } from "@/middlewares/verify.token";
-import { uploader } from "@/middlewares/uploader";
-import { getCarousel } from "@/controllers/eventController";
+import { tokenValidation } from "./../middlewares/verify.token";
+import { uploader } from "./../middlewares/uploader";
+import { getCarousel } from "./../controllers/eventController";
 
 const eventRouter = Router()
 

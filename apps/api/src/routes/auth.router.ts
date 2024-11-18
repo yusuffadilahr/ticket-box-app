@@ -1,8 +1,8 @@
-import { findEvent } from "@/controllers/eventController";
-import { tokenValidation } from "@/middlewares/verify.token";
+import { findEvent } from "./../controllers/eventController";
+import { tokenValidation } from "./../middlewares/verify.token";
 import { Router } from "express";
-import { forgotPassword, resetPassword, resetPasswordProfile, signInWithGoogle, userLogin, userRegister } from "@/controllers/userController";
-import { eventOrganizerLogin, eventOrganizerRegister } from "@/controllers/eventOrganizerController";
+import { forgotPassword, resetPassword, resetPasswordProfile, signInWithGoogle, userLogin, userRegister } from "./../controllers/userController";
+import { eventOrganizerLogin, eventOrganizerRegister } from "./../controllers/eventOrganizerController";
 
 const authRouter = Router()
 authRouter.post('/register/user', userRegister)
