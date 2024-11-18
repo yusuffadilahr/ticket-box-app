@@ -1,3 +1,4 @@
+
 import { Tooltip } from "react-tooltip";
 import {
     Dialog,
@@ -11,7 +12,7 @@ import {
 
 export default function TableTransaction({ getTransactionData, isEventReviewed, openReviewDialog }: any) {
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto ">
             <table className="min-w-full bg-white border">
                 <thead>
                     <tr className="border-b">
@@ -24,7 +25,7 @@ export default function TableTransaction({ getTransactionData, isEventReviewed, 
                         <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="overflow-y-auto max-h-96">
                     {
                         getTransactionData?.map((item: any, index: any) => {
                             const totalQuantity = item.transactionDetail.reduce(
@@ -87,16 +88,7 @@ export default function TableTransaction({ getTransactionData, isEventReviewed, 
 
                                         </DialogContent>
                                     </Dialog>
-                                    {/* <td className="px-6 py-4 text-sm text-gray-600"
-                                    >{item?.id?.length > 10 ?
-                                        <h1 data-tooltip-id="id-tooltip"
-                                            data-tooltip-content={item?.id}
-                                            data-tooltip-place="top">
-                                            {item?.id.slice(0, 10)}..
-                                        </h1>
-                                        : item?.id}
-                                        <Tooltip id="id-tooltip" />
-                                    </td> */}
+                          
                                     <td className="px-6 py-4 text-sm text-gray-600">
                                         {item?.event?.eventName.length > 10 ?
                                             <h1 data-tooltip-id="event-tooltip"
@@ -124,11 +116,10 @@ export default function TableTransaction({ getTransactionData, isEventReviewed, 
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-600">Rp{item.totalPrice.toLocaleString("id-ID")}</td>
                                     <td className="px-6 py-4 text-sm text-gray-600">
+
                                         {isEventReviewed(item.event.id) ? (
                                             <span className="text-green-500">Event Reviewed</span>
                                         ) : item.transactionStatus[item.transactionStatus.length - 1]?.status === 'PAID' ?
-
-
                                             (
                                                 <button
                                                     onClick={() => openReviewDialog(item.event.id)}

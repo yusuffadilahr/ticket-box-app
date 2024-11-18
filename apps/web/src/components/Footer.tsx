@@ -3,6 +3,7 @@ import { CiFacebook, CiTwitter, CiInstagram, CiLinkedin } from 'react-icons/ci';
 import Image from 'next/image';
 import Logo from '../../public/Logo.webp'
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export const Footer = () => {
   const pathname = usePathname()
@@ -25,11 +26,10 @@ export const Footer = () => {
           <CiLinkedin />
         </div>
 
-        {/* Logo Sosmed */}
         <div className="w-full grid grid-cols-2 gap-5 text-neutral-500 md:grid-cols-3 md:text-center md:text-base text-xs">
           <h1>Tentang kami?</h1>
-          <h1>Syarat dan Ketentuan</h1>
-          <h1>Kebijakan Privasi</h1>
+          <Link href="/syarat-ketentuan" className="text-white hover:text-orange-300 transition-colors">Syarat dan Ketentuan</Link>
+          <Link href="/kebijakan-privasi" className="text-white hover:text-orange-300 transition-colors">Kebijakan Privasi</Link>
         </div>
         <h1 className="text-xs">&copy;2024. Tiket Box. All Right Reserved.</h1>
       </section>

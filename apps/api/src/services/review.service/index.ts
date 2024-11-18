@@ -33,7 +33,7 @@ export const createReviewUserService = async ({
             },
         });
 
-        if (existingReview) throw { msg: "user telah memberikan review" }
+        if (existingReview) throw { msg: "Anda telah memberikan review" }
 
         await tx.reviews.create({
             data: {
@@ -47,7 +47,22 @@ export const createReviewUserService = async ({
     }, { timeout: 30000 })
 }
 
-export const getReviewUserService = async ({ id }: any) => {
+export const getReviewUserService = async ({ userId }: any) => {
+    const dataReview = await prisma.reviews.findMany({
+        where: {
+            userId: userId
+
+        },
+        include: {
+            event: true,
+            users: true
+        },
+    })
+
+    return { dataReview }
+}
+
+export const getReviewUserEventService = async ({ id }: any) => {
     const dataReview = await prisma.reviews.findMany({
         where: {
             eventId: Number(id)
@@ -57,6 +72,5 @@ export const getReviewUserService = async ({ id }: any) => {
             users: true
         },
     })
-
     return { dataReview }
 }
