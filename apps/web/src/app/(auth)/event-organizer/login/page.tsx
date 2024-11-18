@@ -1,47 +1,15 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Formik } from 'formik';
-import { useMutation } from '@tanstack/react-query';
-import instance from '../../../../utils/axiosInstance/axiosInstance';
-import toast from 'react-hot-toast';
 import bg from '../../../../../../../apps/web/public/daftar-cr.webp';
 import Image from 'next/image';
 import logo from '../../../../../../../apps/web/public/Logo.webp';
 import { loginOrganizerSchema } from '../../../../features/login-organizer/schema/loginOrganizerSchema';
-import authStore from '../../../../zustand/authstore';
 import BenefitCard from '../../../../features/event-organizer/component/benefitCard';
 import FormInputLogin from '../../../../features/event-organizer/login/component/FormInputLogin';
 import useHandleLogin from '@/features/event-organizer/login/hooks/useHandleLogin';
 
 export default function Page() {
-  // const setAuth = authStore((state) => state.setAuth);
-  // const router = useRouter();
-  // const { mutate: handleLogin, isPending } = useMutation({
-  //   mutationFn: async ({
-  //     email,
-  //     password,
-  //   }: {
-  //     email: string;
-  //     password: string;
-  //   }) => {
-  //     return await instance.post('/auth/login/event-organizer', {
-  //       email,
-  //       password,
-  //     });
-  //   },
-  //   onSuccess: (res) => {
-  //     toast.success(res?.data?.message);
-  //     setAuth({ token: res.data.data.token });
-  //     console.log(res);
-  //     router.push('/event/dashboard');
-  //   },
-  //   onError: (error: any) => {
-  //     toast.error(error?.response?.data?.message);
-  //     console.log(error);
-  //   },
-  // });
-
   const { handleLogin, isPending } = useHandleLogin()
 
   return (
