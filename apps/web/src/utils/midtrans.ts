@@ -1,33 +1,25 @@
+export default async function loadSnap(): Promise<typeof window.snap> {
+    const snapSrc = 'https://app.sandbox.midtrans.com/snap/snap.js';
 
-// export default async function loadSnap(): Promise<typeof window.snap> {
-//     const snapSrc = 'https://app.sandbox.midtrans.com/snap/snap.js';
-//     if (!document.querySelector(`script[src="${snapSrc}"]`)) {
-//         const script = document.createElement('script');
-//         script.src = snapSrc;
-//         script.async = true;
-//         document.body.appendChild(script);
-//         await new Promise<void>((resolve) => {
-//             script.onload = () => resolve();
-//         });
-//     }
+    if (typeof window === 'undefined') {
+        throw new Error('loadSnap can only be called in the browser.');
+    }
 
-//     if (!window.snap) {
-//         throw new Error("Failed to load Midtrans Snap.");
-//     }
+    if (!document.querySelector(`script[src="${snapSrc}"]`)) {
+        const script = document.createElement('script');
+        script.src = snapSrc;
+        script.async = true;
+        document.body.appendChild(script);
 
-//     return window.snap;
-// }
+        await new Promise<void>((resolve, reject) => {
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error('Failed to load Midtrans Snap script.'));
+        });
+    }
 
-// export default async function loadSnap() {
-//     const snapSrc = 'https://app.sandbox.midtrans.com/snap/snap.js';
-//     if (!document.querySelector(`script[src="${snapSrc}"]`)) {
-//         const script = document.createElement('script');
-//         script.src = snapSrc;
-//         script.async = true;
-//         document.body.appendChild(script);
-//         await new Promise((resolve) => {
-//             script.onload = resolve;
-//         });
-//     }
-//     return window.snap;
-// }
+    if (!window.snap) {
+        throw new Error("Failed to load Midtrans Snap.");
+    }
+
+    return window.snap;
+}

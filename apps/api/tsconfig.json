@@ -13,6 +13,6 @@
     }
   },
   // "include": ["src/**/*"],
-  "include": ["**/*.ts"],
+  "include": ["global.d.ts","**/*.ts"],
   "exclude": ["node_modules"]
 }
