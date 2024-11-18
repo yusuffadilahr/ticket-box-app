@@ -4,7 +4,6 @@ import { tokenValidation } from "./../middlewares/verify.token";
 import { Router } from "express";
 
 const eventOrganizerRouter = Router()
-// eventOrganizerRouter.get('/', tokenValidation, keepAuthUserOrganizer)
 eventOrganizerRouter.patch('/reset', tokenValidation, resetPasswordOnLogin)
 eventOrganizerRouter.get('/attendee', tokenValidation, getUserByEvent)
 eventOrganizerRouter.post('/forgot-password', forgotPasswordOrganizer)

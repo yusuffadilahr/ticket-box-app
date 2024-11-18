@@ -35,7 +35,6 @@ const categoryEvent = [
 
 const dataEvent = [
   {
-    // id: 1,
     eventName: 'Indonesia Blockchain Week 2024',
     location: 'The Ritz-Carlton Jakarta, Pacific Place',
     locationUrl: 'https://maps.app.goo.gl/5AEQxiRxMue5gM9TA',

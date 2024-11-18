@@ -10,12 +10,7 @@ export default function CreateTicket({isPaid}:any) {
                     name="ticketName"
                     placeholder="Nama Tiket"
                     className="border border-gray-500 rounded-md p-2"
-                  // onChange={(e: any) =>
-                  //     setNewTicket({
-                  //         ...newTicket,
-                  //         ticketName: e.target.value,
-                  //     })
-                  // }
+        
                   />
                   <div className="h-1">
                     <ErrorMessage

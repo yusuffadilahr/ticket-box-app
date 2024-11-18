@@ -171,7 +171,7 @@ export default function RegisterOrganizer() {
                                             type={passwordVisible ? 'text' : 'password'}
                                         />
                                         <span
-                                            className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                                            className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500"
                                             onClick={togglePasswordVisibility}
                                         >
                                             {passwordVisible ? <FaEye /> : <FaEyeSlash />}
@@ -197,7 +197,7 @@ export default function RegisterOrganizer() {
                                             type={confirmationPasswordVisible ? 'text' : 'password'}
                                         />
                                         <span
-                                            className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                                            className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" 
                                             onClick={togglePasswordConfirmationVisibility}
                                         >
                                             {confirmationPasswordVisible ? <FaEye /> : <FaEyeSlash />}

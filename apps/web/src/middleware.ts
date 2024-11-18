@@ -23,13 +23,6 @@ export const middleware = (req: NextRequest) => {
         return NextResponse.redirect(new URL('/event/dashboard', req.url))
     }
 
-    // if (tokenCookie && role == 'EO' && (currentURL == '/' || currentURL.startsWith('/event/explore') || currentURL.startsWith('/profile-user'))) {
-    //     return NextResponse.redirect(new URL('/event/dashboard', req.url))
-    // }
-
     return NextResponse.next()
 }
 
-// export const config = {
-//     matcher:
-// }

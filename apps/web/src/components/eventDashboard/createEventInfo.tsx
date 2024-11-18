@@ -2,7 +2,6 @@ import dynamic from 'next/dynamic';
 
 import { Field, ErrorMessage } from 'formik';
 import { Tooltip } from 'react-tooltip';
-// import ReactQuill from 'react-quill';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 import 'react-quill/dist/quill.snow.css';

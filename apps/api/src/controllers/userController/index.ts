@@ -141,7 +141,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
         profilePicture: checkUser[0]?.profilePicture,
         identityNumber: checkUser[0]?.identityNumber,
         refferalCode: checkUser[0]?.referralCode,
-      }, // token
+      },
     });
   } catch (error) {
     next(error);
@@ -174,8 +174,6 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
       })
     }
 
-    // if (dataUser?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
-    // if (dataEventOrganizer?.length == 0) throw { msg: 'Data tidak tersedia', status: 404 };
 
     res.status(200).json({
       error: false,
@@ -204,7 +202,6 @@ export const keepAuthUser = async (req: Request, res: Response, next: NextFuncti
         isVerified: dataEventOrganizer[0]?.isVerified,
         events: dataEventOrganizer[0]?.events,
         transactions: dataEventOrganizer[0]?.Transactions,
-        // totalAmount: totalAmount?._sum?.totalPrice
       } : {},
     });
   } catch (error) {

@@ -90,7 +90,7 @@ export default function ForgotPassword({ params }: { params: Params }) {
                                 className="py-2 text-sm mt-3 rounded-lg px-4 border focus:outline-none active:border focus:border-yellow-400"
                             />
                             <span
-                                className="absolute  right-3 transform translate-y-12 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                                className="absolute  right-3 transform translate-y-12 flex items-center cursor-pointer text-gray-500" 
                                 onClick={toogleExistingPassword}
                             >
                                 {existingPassword ? <FaEye /> : <FaEyeSlash />}
@@ -115,7 +115,7 @@ export default function ForgotPassword({ params }: { params: Params }) {
                                 className="py-2 text-sm mt-3 rounded-lg px-4 border focus:outline-none active:border focus:border-yellow-400"
                             />
                             <span
-                                className="absolute  right-3 transform translate-y-12 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                                className="absolute  right-3 transform translate-y-12 flex items-center cursor-pointer text-gray-500"
                                 onClick={togglePasswordVisibility}
                             >
                                 {passwordVisible ? <FaEye /> : <FaEyeSlash />}
@@ -140,7 +140,7 @@ export default function ForgotPassword({ params }: { params: Params }) {
                                 className="py-2 text-sm mt-3 rounded-lg px-4 border focus:outline-none active:border focus:border-yellow-400"
                             />
                             <span
-                                className="absolute  right-3 transform translate-y-12 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                                className="absolute  right-3 transform translate-y-12 flex items-center cursor-pointer text-gray-500"
                                 onClick={togglePasswordConfirmationVisibility}
                             >
                                 {confirmationPasswordVisible ? <FaEye /> : <FaEyeSlash />}
