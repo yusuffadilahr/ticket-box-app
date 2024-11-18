@@ -11,10 +11,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import { useRouter } from 'next/navigation';
 
-import Image from 'next/image';
-import CreateEventInfo from '@/components/eventDashboard/createEventInfo';
-import ImageUpload from '@/components/eventDashboard/imageUpload';
-import CreateTicket from '@/components/eventDashboard/createTicket';
+
 import TicketList from '@/components/eventDashboard/ticketList';
 import EditEventInfo from '@/features/eventDashboard/components/editEventInfo';
 import ImageUploader from '@/features/eventDashboard/components/imageUploader';
