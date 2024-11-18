@@ -38,8 +38,8 @@ export default function Layout({ children }: ILayoutChildren) {
   return (
     <>
       <SidebarMenu />
-      {/* <TopBar /> */}
-      <main className="pl-72 p-5">{children}</main>
+      <TopBar />
+      <main className="lg:pl-72 p-5">{children}</main>
     </>
   );
 }

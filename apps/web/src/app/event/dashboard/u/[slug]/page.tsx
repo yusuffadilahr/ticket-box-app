@@ -1,4 +1,4 @@
-'use client'; // Add this line at the top of your component file
+'use client'; 
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -10,7 +10,9 @@ import 'react-tooltip/dist/react-tooltip.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { UpdateEventSchema } from '@/features/event/schema/updateEventSchemas';
-
+import EditEventInfo from '@/features/eventDashboard/components/editEventInfo';
+import { useState } from 'react';
+import ImageUploader from '@/features/eventDashboard/components/imageUploader';
 // Validasi menggunakan Yup
 
 export default function Page({ params }: { params: { slug: string } }) {
@@ -46,6 +48,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         },
     });
 
+    const [isPaid, setIsPaid] = useState(true);
 
 
     console.log(eventDetail)
@@ -94,11 +97,18 @@ export default function Page({ params }: { params: { slug: string } }) {
             >
                 {({ values, setFieldValue }) => (
                     <Form>
-                        <section className="flex flex-col pb-24 justify-center rounded-xl">
+
+                        <EditEventInfo
+                            getCategory={getCategory}
+                            setIsPaid={setIsPaid}
+                            setFieldValue={setFieldValue}
+                            values={values}
+                        />
+                        {/* <section className="flex flex-col pb-24 justify-center rounded-xl">
                             <div className="flex justify-center font-bold text-2xl  pb-5">
                                 Event
                             </div>
-                            <div className="grid grid-cols-2 gap-4 px-40">
+                            <div className="grid grid-cols-2 gap-4 px-2 lg:px-40">
                                 <div className="flex flex-col">
                                     <label className="font-bold text-sm">Nama Event</label>
                                     <Field
@@ -182,9 +192,16 @@ export default function Page({ params }: { params: { slug: string } }) {
                                     />
                                 </div>
                             </div>
-                        </section>
+                        </section> */}
 
-                        <div className="flex flex-col mt-8 px-10">
+                        
+
+
+                        <ImageUploader
+                            setFieldValue={setFieldValue}
+                            values={values}
+                        />
+                        {/* <div className="flex flex-col mt-8 px-10">
                             <h3 className="flex justify-center font-bold text-2xl pb-5">
                                 Upload Gambar Event
                             </h3>
@@ -219,7 +236,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                                     />
                                 </label>
                             </div>
-                        </div>
+                        </div> */}
 
 
                         <div className="flex justify-center mt-8">

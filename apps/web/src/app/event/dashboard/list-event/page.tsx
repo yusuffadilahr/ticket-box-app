@@ -35,7 +35,10 @@ import {
 } from "@/components/ui/dialog"
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import authStore from '@/zustand/authstore';
-
+import SkeletonListEvent from '@/components/eventDashboard/skeletonListEvent';
+import CreateEventButton from '@/components/eventDashboard/createEventButton';
+import SearchEventInput from '@/components/eventDashboard/searchEventInput';
+import ListEventTable from '@/components/eventDashboard/listEventTable';
 
 
 
@@ -105,43 +108,22 @@ export default function EventTable() {
   }, [page, searchInput]);
 
   if (isFetching) return (
-    <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
-      <div className="w-full py-10 flex flex-col px-4 bg-neutral-200 rounded-lg animate-pulse"></div>
-      <div className="flex justify-between w-full items-center">
-        <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 w-1/2 animate-pulse"></div>
-        <div className="flex justify-end gap-8">
-          <div className="px-8 py-2 font-bold text-white bg-neutral-200 rounded-lg animate-pulse transition-all duration-300"></div>
-          <Avatar className="transition-all duration-300">
-            <AvatarImage src='' alt="@shadcn" />
-            <AvatarFallback>TB</AvatarFallback>
-          </Avatar>
-        </div>
-      </div>
-      <div className='w-full h-80 bg-neutral-200 rounded-lg animate-pulse'></div>
-    </main>
+    <SkeletonListEvent />
   )
 
   return (
-    <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
+    <main className="flex flex-col h-fit w-full px-0 lg:px-8 space-y-10 p-10">
       <div className="w-full py-3 flex flex-col px-4 bg-yellow-400 rounded-lg">
         <h1 className="font-bold text-xl text-black">Daftar Event</h1>
         <p className="w-full text-neutral-500">Dashboard / Daftar Event</p>
       </div>
       <div className='w-full flex gap-3 items-center'>
-        <div className='relative w-full'>
-          <input
-            type="text"
-            placeholder="Search events..."
-            className="w-full py-2 border px-2 border-gray-300 rounded"
-            onChange={(e) => debounceSearch(e.target.value)}
-          />
-        </div>
-        <div className="flex gap-8 w-full justify-end">
-          <Link href="/event/dashboard/c" className='flex items-center px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300'>
-            <h1 className="font-semibold">
-              + Buat Event
-            </h1>
-          </Link>
+        
+        <SearchEventInput
+          debounceSearch={debounceSearch}
+        />
+        <div className="hidden lg:flex gap-8 w-full justify-end">
+          <CreateEventButton />
           <Avatar className="border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300">
             <AvatarImage src={profilePicture} alt="profil" className='object-cover' />
             <AvatarFallback>TB</AvatarFallback>
@@ -162,158 +144,13 @@ export default function EventTable() {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm font-light">
-            {getEventList &&
-              getEventList?.eventList?.map((item: any, index: number) => (
-                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100" >
-                  <td className="py-3 px-6 text-left whitespace-nowrap">{((page - 1) * 5) + index + 1}</td>
-                  <td className="py-3 px-6 text-left whitespace-nowrap" > {item?.eventName?.length > 15 ?
-                    (
-                      <h1
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content={item?.eventName}
-                        data-tooltip-place="top">{item?.eventName?.slice(0, 15)}...</h1>
-                    ) : (
-                      item?.eventName!
-                    )}
-                    <Tooltip id="my-tooltip" />
-                  </td>
-                  <td className="py-3 px-6 text-left">
-                    {item?.category?.Category!}
-                  </td>
-                  <td className="py-3 px-6 text-left">
-                    {item?.location?.length > 15 ? (
-                      <h1
-                        data-tooltip-id="location-tooltip"
-                        data-tooltip-content={item?.location}
-                        data-tooltip-place="top"
-                      >
-                        {item?.location?.slice(0, 15)}...
-                      </h1>
-                    ) : (
-                      item?.location!
-                    )}
-                    <Tooltip id="location-tooltip" />
-                  </td>
-                  <td className="py-3 px-6 text-left">
-                    {item?.isPaid! == true ? 'Berbayar' : 'Gratis'}
-                  </td>
-                  <td className="py-3 px-6 text-left">
-                    {item?.startEvent.split('T')[0]}
-                  </td>
-                  <td className="py-3 px-6 text-left space-x-1">
-                    <Dialog>
-                      <DialogTrigger>
-                        <button id='view' className="bg-green-600 p-2 rounded-md">
-                          <FaRegEye color="white" />
-                        </button>
-                        <Tooltip anchorSelect='#view' place='top' content='Lihat Tiket' />
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Tiket</DialogTitle>
-                          <DialogDescription className='overflow-y-auto max-h-96 space-y-2'>
-                            {
-                              item?.tickets?.map((item: any, index: number) => {
-                                return (
 
-                                  <div key={index} className="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-md w-full mx-auto">
-                                    <div className="flex  items-start">
-                                      <div>
-                                        <h3 className="text-lg font-semibold">
-                                          {item?.ticketName}
-                                        </h3>
-                                        <p className="text-gray-600 mt-1">
-                                          {item?.ticketType}
-                                        </p>
-                                        <div className="text-blue-600 mt-2">
-                                          <span className="flex items-center">
-                                            <MdOutlineAccessTimeFilled />
-                                            Mulai {item?.startDate.split('T')[0]} • {item?.startDate.split('T')[1].split('.')[0].slice(0, -3)}
-                                          </span>
-                                          <span className="flex items-center">
-                                            <MdOutlineAccessTimeFilled />
-                                            Berakhir {item?.endDate.split('T')[0]} • {item?.endDate.split('T')[1].split('.')[0].slice(0, -3)}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <hr className="my-4 border-blue-300 border-dashed" />
-                                    <div className="flex justify-between items-center">
-                                      <p className="text-xl font-semibold">
+            <ListEventTable
+              getEventList={getEventList}
+              mutateDeleteData={mutateDeleteData}
+              page={ page }
+                />
 
-                                        {
-                                          item.discount > 0 ? (
-                                            <div>
-                                              <span className="line-through mr-2 text-gray-500">Rp.{item.price}</span>
-                                              <span className="text-red-600">
-                                                Rp{(item.price - item.discount).toLocaleString("id-ID")}
-                                              </span>
-                                            </div>
-                                          ) : item.price == 0 ? 'Gratis'
-                                            :
-                                            (`Rp${item.price.toLocaleString("id-ID")}`)
-                                        }
-
-                                      </p>
-                                      <div className="flex items-center space-x-4">
-                                        Kuota/Sisa Tiket: <span className='text-black font-bold'>{item.totalSeat}/{item.seatAvailable}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
-                              })
-                            }
-
-
-
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-
-
-
-
-
-
-
-
-
-                    <AlertDialog>
-                      <AlertDialogTrigger>
-                        <button id='delete' className="bg-red-600 p-2 rounded-md">
-                          <FaRegTrashAlt color="white" />
-                        </button>
-                        <Tooltip anchorSelect='#delete' place='top' content='Hapus Event' />
-
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Peringatan</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Apakah Anda yakin ingin menghapus Event ini?
-                            Event yang sudah dihapus tidak bisa dikembalikan lagi.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Batal</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => mutateDeleteData(item?.id)}
-                          >
-                            Hapus
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                    <Link href={`/event/dashboard/u/${item?.id}`}>
-                      <button id='update' className="bg-yellow-500 p-2 rounded-md">
-                        <FaPencil color="white" />
-                      </button>
-                      <Tooltip anchorSelect='#update' place='top' content='Update Event' />
-                    </Link>
-                  </td>
-                </tr>
-              ))}
           </tbody>
         </table>
       </div>

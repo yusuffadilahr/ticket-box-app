@@ -196,7 +196,7 @@ export default function OrganizerDashboard() {
       <section className="h-fit w-full px-8 space-y-10 p-10">
         <div className="flex justify-between items-center">
           <h1 className='font-bold text-2xl text-gray-700'>Hello {organizerName ? organizerName : 'User'}!</h1>
-          <div className='flex gap-8'>
+          <div className='hidden lg:flex gap-8'>
             <Link href="/event/dashboard/c" className="flex items-center px-4 font-bold text-white drop-shadow-lg bg-blue-500 rounded-lg hover:bg-blue-700 transition-all duration-300">
               <h1 className="font-semibold">+ Buat Event</h1>
             </Link>
@@ -206,7 +206,7 @@ export default function OrganizerDashboard() {
             </Avatar>
           </div>
         </div>
-        <div className="w-full h-fit grid grid-cols-4 gap-4">
+        <div className="w-full h-fit grid lg:grid-rows-1 grid-rows-4 grid-cols-1 lg:grid-cols-4 gap-4">
           <div className="text-white h-24 bg-cyan-500 rounded-lg flex flex-col justify-center items-center drop-shadow-lg">
             <div>Saldo Saya</div>
             <div>
@@ -238,7 +238,7 @@ export default function OrganizerDashboard() {
             </div>
           </div>
         </div>
-        <div className='flex p-5 bg-white border gap-5'>
+        <div className='flex p-5 flex-col lg:flex-row bg-white border gap-5'>
           <Tabs defaultValue="perhari" className="w-full h-fit">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="perhari">Perhari</TabsTrigger>
@@ -291,7 +291,7 @@ export default function OrganizerDashboard() {
               </Card>
             </TabsContent>
           </Tabs>
-          <Tabs defaultValue="totalAmount" className="w-2/3 h-fit">
+          <Tabs defaultValue="totalAmount" className="w-full lg:w-2/3 h-fit">
             <TabsList className="grid w-full grid-cols-1">
               <TabsTrigger value="totalAmount">Total Amount</TabsTrigger>
             </TabsList>
