@@ -1,4 +1,4 @@
-import CreateTicket from "@/components/eventDashboard/createTicket";
+import CreateTicket from "./../../../../components/eventDashboard/createTicket";
 import { ErrorMessage } from "formik";
 
 export default function CreateNewTicket({ isPaid, setFieldValue, values }:any) {

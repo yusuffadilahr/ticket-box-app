@@ -1,5 +1,5 @@
-import { prisma } from "@/connection";
-import { Status } from '@prisma/client'; // Import your enum
+import { prisma } from "./../../connection";
+import { Status } from '@prisma/client';
 import { Request, Response, NextFunction } from "express";
 
 

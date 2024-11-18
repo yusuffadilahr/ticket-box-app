@@ -1,4 +1,4 @@
-import CarousellEvent from "@/components/carousell/carouselEvent"
+import CarousellEvent from "./../../../../components/carousell/carouselEvent"
 
 export default function Terbaru({ queryGetDataNewest }:any) {
     return (

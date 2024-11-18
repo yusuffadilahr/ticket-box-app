@@ -10,11 +10,11 @@ import {
   FaSignOutAlt,
 } from 'react-icons/fa';
 import Link from 'next/link';
-import authStore from '@/zustand/authstore';
+import authStore from './../zustand/authstore';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import logo from '@/../web/public/Logo.webp'
+import logo from './../../public/Logo.webp'
 
 export const SidebarMenu = () => {
   const logout = authStore((state) => state.resetAuth);

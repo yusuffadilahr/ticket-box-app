@@ -3,10 +3,10 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from './../../components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from './../../components/ui/avatar';
 import { FaStar } from 'react-icons/fa';
-import authStore from '@/zustand/authstore';
+import authStore from './../../zustand/authstore';
 
 
 export default function TabReview({ queryDataReview }:any) {

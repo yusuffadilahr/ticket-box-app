@@ -1,16 +1,16 @@
 'use client'
-import bg from "@/../../apps/web/public/daftar-cr.webp"
+import bg from "./../../../../../public/daftar-cr.webp"
 import Image from "next/image"
-import logo from "@/../../apps/web/public/Logo.webp"
+import logo from "./../../../../../public/Logo.webp"
 import { Formik, Field, ErrorMessage, Form } from 'formik';
 import { useState } from "react";
 import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 import Link from "next/link";
-import { registerOrganizerSchema } from "@/features/register-organizer/schema/registerOrganizerSchema";
+import { registerOrganizerSchema } from "./../../../../features/register-organizer/schema/registerOrganizerSchema";
 import { useMutation } from "@tanstack/react-query";
 import { IRegisterOrganizer } from "./type";
-import instance from '@/utils/axiosInstance/axiosInstance';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
 import { toast } from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 

@@ -1,7 +1,7 @@
 'use client';
 
-import instance from '@/utils/axiosInstance/axiosInstance';
-import authStore from '@/zustand/authstore';
+import instance from './../../../../../utils/axiosInstance/axiosInstance';
+import authStore from './../../../../../zustand/authstore';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,12 +9,12 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { FaCashRegister } from 'react-icons/fa';
 import { MdOutlineVerified } from 'react-icons/md';
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "./../../../../../components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./../../../../../components/ui/dialog"
+import { Input } from "./../../../../../components/ui/input"
+import { Label } from "./../../../../../components/ui/label"
 import { ErrorMessage, Form, Formik } from 'formik';
-import { profileOrganizerSchema } from '@/features/event-organizer/schema/profileUpdateSchema';
+import { profileOrganizerSchema } from './../../../../../features/event-organizer/schema/profileUpdateSchema';
 
 export default function Page() {
   const ownerName = authStore((state) => state?.ownerName);

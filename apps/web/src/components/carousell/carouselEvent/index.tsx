@@ -4,8 +4,8 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from '@/components/ui/carousel';
-import { Card, CardContent } from '@/components/ui/card';
+} from './../../../components/ui/carousel';
+import { Card, CardContent } from './../../../components/ui/card';
 import Link from 'next/link';
 import Image from 'next/image';
 import { IoLocationSharp } from 'react-icons/io5';

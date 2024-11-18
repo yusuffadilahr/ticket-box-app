@@ -3,18 +3,17 @@ import {
     Sheet,
     SheetClose,
     SheetContent,
-    SheetDescription,
     SheetFooter,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from '@/components/ui/sheet';
+} from './../../components/ui/sheet';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import RegisterButton from './registerButton';
 import LoginButton from './loginButton';
 import JelajahButton from './jelajahButton';
 import BuatEventButton from './buatEventButton';
-import AvatarHover from '@/components/homepage/avatar';
+import AvatarHover from './../../components/homepage/avatar';
 import Link from 'next/link';
 import { FaStar } from "react-icons/fa";
 

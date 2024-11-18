@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { prisma } from '@/connection';
-import { hashPassword, comparePassword } from '@/utils/passwordHash';
+import { prisma } from './../../connection';
+import { hashPassword, comparePassword } from './../../utils/passwordHash';
 import { nanoid } from 'nanoid';
-import { decodeToken, encodeToken } from '@/utils/token.sign';
+import { decodeToken, encodeToken } from './../../utils/token.sign';
 import { addHours } from 'date-fns';
-import { cloudinaryUpload } from '@/utils/cloudinary';
-import { forgotPasswordService, resetPasswordProfileService, resetPasswordService, sendVerifyEmailUserService, updateProfileUserService, userRegisterService, verifyUserService } from '@/services/user.service';
+import { cloudinaryUpload } from './../../utils/cloudinary';
+import { forgotPasswordService, resetPasswordProfileService, resetPasswordService, sendVerifyEmailUserService, updateProfileUserService, userRegisterService, verifyUserService } from './../../services/user.service';
 
 export const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -1,10 +1,8 @@
 'use client'
 
-import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
-import instance from '@/utils/axiosInstance/axiosInstance';
-import authStore from '@/zustand/authstore';
-import { redirect, usePathname, useRouter } from 'next/navigation'
-import toast from 'react-hot-toast';
+import { ReactNode, useLayoutEffect } from 'react';
+import instance from './../utils/axiosInstance/axiosInstance';
+import authStore from './../zustand/authstore';
 import CryptoJS from 'crypto-js'
 import Cookies from 'js-cookie'
 import dotenv from 'dotenv'
@@ -15,9 +13,6 @@ interface IAuthProviderProps {
 
 dotenv.config()
 export default function AuthProvider({ children }: IAuthProviderProps) {
-    const router = useRouter()
-    const pathname = usePathname()
-    // const [protectAuth, setProtectAuth] = useState<boolean>(false)
     const token = authStore((state) => state.token)
     const setKeepAuth = authStore((state) => state.setKeepAuth)
     const role = authStore((state) => state.role)

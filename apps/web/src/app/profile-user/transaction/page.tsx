@@ -1,17 +1,15 @@
 
 'use client'
 import { useState } from "react";
-import ProfileHeader from "@/components/profile/profile";
-import LeftMenu from "@/components/profile/leftMenu";
-import instance from "@/utils/axiosInstance/axiosInstance";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import TableTransaction from "@/components/profile/transaction/tableTransaction";
-import { QueryGetDataTransactionReviewHooks } from "@/features/profile-transaction/hooks/QueryGetDataTransactionReviewHooks";
-import { MutateReviewEventHook } from "@/features/profile-transaction/hooks/MutateReviewEventHook";
+import ProfileHeader from "./../../../components/profile/profile";
+import LeftMenu from "./../../../components/profile/leftMenu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './../../../components/ui/dialog';
+import { Button } from './../../../components/ui/button';
+import { Textarea } from './../../../components/ui/textarea';
+import { Input } from './../../../components/ui/input';
+import TableTransaction from "./../../../components/profile/transaction/tableTransaction";
+import { QueryGetDataTransactionReviewHooks } from "./../../../features/profile-transaction/hooks/QueryGetDataTransactionReviewHooks";
+import { MutateReviewEventHook } from "./../../../features/profile-transaction/hooks/MutateReviewEventHook";
 
 
 export default function ProfileTransaction() {

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import instance from "@/utils/axiosInstance/axiosInstance";
+import instance from "./../../../utils/axiosInstance/axiosInstance";
 
 
 export const MutateHandleCHeckoutTicketsApi = ({ id, onError, onSuccess, profileDiscount, useReferralDiscount, pointsToDeduct, queryDataDetailEvent, ticketQuantities }:any) => {

@@ -1,27 +1,24 @@
 'use client';
 
 import Image from 'next/image';
-import CarouselSlider from '@/components/carousell';
+import CarouselSlider from './../components/carousell';
 import waras from './../../waras.png';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
-import { useEffect, useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
-import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import {  useRouter } from 'next/navigation';
 import Link from 'next/link';
-import authStore from '@/zustand/authstore';
+import authStore from './../zustand/authstore';
 import { CiMusicNote1 } from 'react-icons/ci';
 import { PiPersonSimpleWalkThin } from 'react-icons/pi';
 import { CiTrophy } from 'react-icons/ci';
 import { CiMicrophoneOn } from 'react-icons/ci';
 import { GiBlackBook } from 'react-icons/gi';
 import Cookies from 'js-cookie';
-import TopSeller from '@/features/homepage/components/topSeller';
-import KategoriSection from '@/features/homepage/components/kategori';
-import KomediSection from '@/features/homepage/components/komedi';
-import Terbaru from '@/features/homepage/components/terbaru';
-import Musik from '@/features/homepage/components/musik';
-import { QueryGetDataHooks } from '@/features/homepage/hooks/QueryGetDataHooks';
+import TopSeller from './../features/homepage/components/topSeller';
+import KategoriSection from './../features/homepage/components/kategori';
+import KomediSection from './../features/homepage/components/komedi';
+import Terbaru from './../features/homepage/components/terbaru';
+import Musik from './../features/homepage/components/musik';
+import { QueryGetDataHooks } from './../features/homepage/hooks/QueryGetDataHooks';
 
 export default function Home() {
   const router = useRouter();

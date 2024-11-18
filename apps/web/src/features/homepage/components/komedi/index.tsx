@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import CarouselComedy from "@/components/carousell/carouselComedy"
+import CarouselComedy from "./../../../../components/carousell/carouselComedy"
 
 export default function KomediSection({ queryGetComedyEvent, waras }:any) {
     return (

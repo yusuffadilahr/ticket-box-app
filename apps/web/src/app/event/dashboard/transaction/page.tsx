@@ -2,10 +2,10 @@
 'use client';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
+import { Avatar, AvatarFallback, AvatarImage } from './../../../../components/ui/avatar';
 import Link from 'next/link';
-import authStore from '@/zustand/authstore';
+import authStore from './../../../../zustand/authstore';
 import { Tooltip } from 'react-tooltip';
 import { useDebouncedCallback } from 'use-debounce';
 

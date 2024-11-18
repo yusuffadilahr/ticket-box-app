@@ -1,6 +1,6 @@
-import { prisma } from "@/connection";
+import { prisma } from "./../../connection";
 import { NextFunction, Request, Response } from "express";
-import { createEventService, deleteEventService, findEventDetailService, findEventService, getBestSellingEventService, getComedyEventService, getNewestEventService, getOrganizerEventService, updateEventService } from "@/services/event.service";
+import { createEventService, deleteEventService, findEventDetailService, findEventService, getBestSellingEventService, getComedyEventService, getNewestEventService, getOrganizerEventService, updateEventService } from "./../../services/event.service";
 
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {

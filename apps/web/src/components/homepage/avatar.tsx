@@ -1,10 +1,10 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "./../../components/ui/avatar"
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import authStore from "@/zustand/authstore"
+} from "./../../components/ui/hover-card"
+import authStore from "./../../zustand/authstore"
 import { useRouter } from "next/navigation"
 import Link from 'next/link'
 import Cookies from 'js-cookie'

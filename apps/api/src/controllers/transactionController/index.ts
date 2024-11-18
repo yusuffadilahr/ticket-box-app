@@ -1,25 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { mysqlConnection, prisma } from "@/connection";
-import { addHours, addMinutes } from "date-fns";
-// import coreApi from "@/utils/midtransInstance/midtransInstance";
-import snap from "@/utils/midtransInstance/midtransInstance";
+import { mysqlConnection, prisma } from "./../../connection";
+import { addHours } from "date-fns";
+import snap from "./../../utils/midtransInstance/midtransInstance";
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId, ticketDetails, referralDiscount = 0, referralPoints = 0 } = req.body
         const { id } = req.params
-
-        // const findTicketId = ticketDetails.map((item: any) => {
-        //     return {
-        //         id: item.ticketId
-        //     }
-        // })
-
-        // const findTicket = await prisma.tickets.findMany({
-        //     where: {
-        //         OR: findTicketId
-        //     }
-        // })
 
         const dataUser = await prisma.users.findUnique({
             where: {

@@ -1,9 +1,9 @@
-import { mutateReviewEventApi } from "../api/MutateReviewEventApi"
+import { MutateReviewEventApi } from "../api/MutateReviewEventApi"
 
 export const MutateReviewEventHook = ({ setRating, setReviewText, setIsDialogOpen, selectedEventId, reviewText, feedback, rating }:any) => {
     const {
         mutateReviewEvent
-    } = mutateReviewEventApi({
+    } = MutateReviewEventApi({
         setRating,setReviewText, setIsDialogOpen, selectedEventId, reviewText, feedback, rating
     })
     return {

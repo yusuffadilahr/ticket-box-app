@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import instance from "@/utils/axiosInstance/axiosInstance";
+import instance from "./../../../utils/axiosInstance/axiosInstance";
 
 export const QueryGetDataTransactionReviewApi = () => {
     const { data: reviewData } = useQuery({

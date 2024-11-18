@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
-import { EventSchema } from '@/features/event/schema/eventSchemas';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
+import { EventSchema } from './../../../../features/event/schema/eventSchemas';
 import { toast } from 'react-hot-toast';
 
 import 'react-quill/dist/quill.snow.css';
@@ -12,10 +12,10 @@ import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
 
 
-import TicketList from '@/components/eventDashboard/ticketList';
-import EditEventInfo from '@/features/eventDashboard/components/editEventInfo';
-import ImageUploader from '@/features/eventDashboard/components/imageUploader';
-import CreateNewTicket from '@/features/eventDashboard/components/createNewTicket';
+import TicketList from './../../../../components/eventDashboard/ticketList';
+import EditEventInfo from './../../../../features/eventDashboard/components/editEventInfo';
+import ImageUploader from './../../../../features/eventDashboard/components/imageUploader';
+import CreateNewTicket from './../../../../features/eventDashboard/components/createNewTicket';
 
 
 
