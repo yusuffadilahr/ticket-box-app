@@ -13,6 +13,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { RiInformation2Fill } from "react-icons/ri";
 import { Tooltip } from 'react-tooltip';
 import { useRouter } from 'next/navigation';
+
 import Image from 'next/image';
 import CreateEventInfo from '@/components/eventDashboard/createEventInfo';
 import ImageUpload from '@/components/eventDashboard/imageUpload';
@@ -21,6 +22,7 @@ import TicketList from '@/components/eventDashboard/ticketList';
 import EditEventInfo from '@/features/eventDashboard/components/editEventInfo';
 import ImageUploader from '@/features/eventDashboard/components/imageUploader';
 import CreateNewTicket from '@/features/eventDashboard/components/createNewTicket';
+
 
 
 const EventForm = () => {

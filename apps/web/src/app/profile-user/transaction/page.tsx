@@ -34,46 +34,12 @@ export default function ProfileTransaction() {
         rating
     })
 
-    // const { mutate: mutateReviewEvent } = useMutation({
-    //     mutationFn: async () => {
-    //         const res = await instance.post('/review', {
-    //             eventId: selectedEventId,
-    //             reviewComments: reviewText,
-    //             feedback: feedback,
-    //             rating: Number(rating),
-    //         })
-    //     },
-    //     onSuccess: () => {
-    //         setIsDialogOpen(false);
-    //         setReviewText("");
-    //         setRating('');
-    //     }
-    // })
-
 
     const {
         reviewData,
         getTransactionData
     } = QueryGetDataTransactionReviewHooks()
 
-
-    // const { data: reviewData } = useQuery({
-    //     queryKey: ['review-data'],
-    //     queryFn: async () => {
-    //         const res = await instance.get('/review/');
-    //         return res.data.data
-    //     }
-    // })
-
-
-
-    // const { data: getTransactionData } = useQuery({
-    //     queryKey: ['get-transaction-data'],
-    //     queryFn: async () => {
-    //         const res = await instance.get('/transaction')
-    //         return res.data.data
-    //     }
-    // })
 
     const openReviewDialog = (eventId: string) => {
         setSelectedEventId(eventId);
@@ -100,11 +66,14 @@ export default function ProfileTransaction() {
                 <section className="w-full lg:w-3/4 mt-4 bg-white rounded-lg shadow-lg ml-5 p-5">
                     <h2 className="text-xl font-semibold mb-5">Transaksi</h2>
 
+
                     <TableTransaction
                         getTransactionData={getTransactionData}
                         isEventReviewed={isEventReviewed}
                         openReviewDialog={openReviewDialog}
                     />
+
+
                 </section>
             </section>
 
