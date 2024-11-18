@@ -47,22 +47,6 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
 
         
 
-        // for (const detail of transactionRecord.transactionDetail) {
-        //     const ticket = detail.tickets;
-
-        //     if (updatedStatus === "WAITING_FOR_PAYMENT") {
-        //         await prisma.tickets.update({
-        //             where: { id: ticket.id },
-        //             data: { seatAvailable: { decrement: detail.quantity } }, // Adjust field as needed
-        //         });
-        //     } else if (updatedStatus === "CANCELLED" || updatedStatus === "EXPIRED") {
-        //         await prisma.tickets.update({
-        //             where: { id: ticket.id },
-        //             data: { seatAvailable: { increment: detail.quantity } }, // Adjust field as needed
-        //         });
-        //     }
-        // }
-
         res.status(200).json({
             error: false,
             message: 'Transaksi Berhasil Di-Update',
