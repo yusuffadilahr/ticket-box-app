@@ -6,7 +6,7 @@ export const prisma = new PrismaClient
 dotenv.config()
 
 
-const password = process.env.PASSWORD_MYSQL2 || "Maximum57!"
+const password = process.env.PASSWORD_MYSQL2 || ""
 
 
 export const mysqlConnection = async () => {

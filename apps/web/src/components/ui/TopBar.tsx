@@ -56,7 +56,7 @@ export const TopBar = () => {
                                         src={
                                             profilePicture?.includes("https")
                                                 ? profilePicture
-                                                : `https://tiket-box-api.vercel.app/api/src/public/images/${profilePicture}`
+                                                : `http://localhost:8000/api/src/public/images/${profilePicture}`
                                         }
                                         width={500}
                                         height={500}
