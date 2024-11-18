@@ -223,7 +223,12 @@ export const getTransaction = async (req: Request, res: Response, next: NextFunc
         const dataTransaction = await prisma.transactions.findMany({
             where: { userId: userId },
             include: {
-                transactionDetail: true,
+                // transactionDetail: true,
+                transactionDetail: {
+                    include: {
+                        tickets : true
+                    }
+                },
                 event: {
                     include: {
                         Reviews: {

@@ -1,4 +1,13 @@
 import { Tooltip } from "react-tooltip";
+import {
+    Dialog,
+    DialogContent,
+
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+
 
 export default function TableTransaction({ getTransactionData, isEventReviewed, openReviewDialog }: any) {
     return (
@@ -25,7 +34,60 @@ export default function TableTransaction({ getTransactionData, isEventReviewed, 
 
                             return (
                                 <tr key={index} className="border-b">
-                                    <td className="px-6 py-4 text-sm text-gray-600"
+
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+
+                                            <td className="px-6 py-4 text-sm text-gray-600"
+                                            >{item?.id?.length > 10 ?
+                                                <button data-tooltip-id="id-tooltip"
+                                                    data-tooltip-content={item?.id}
+                                                    data-tooltip-place="top"
+                                                    className="text-blue-900"
+                                                >
+
+                                                    {item?.id.slice(0, 10)}..
+                                                </button>
+                                                : item?.id}
+                                                <Tooltip id="id-tooltip" />
+                                            </td>
+
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-[425px]">
+                                            <DialogHeader>
+                                                <DialogTitle>Transaction Detail</DialogTitle>
+                                            </DialogHeader>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    <div className="font-bold">Transaction ID:</div>
+                                                    <div className="text-sm">{item?.transactionDetail[0]?.transactionsId}</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold">Tanggal Transaksi:</div>
+                                                    <div className="text-sm">{item?.createdAt?.split('T')[0]}</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold">Detail Transaksi:</div>
+
+                                                    {
+                                                        item?.transactionDetail.map((item1: any, index: any) => {
+                                                            return (
+                                                                <>
+                                                                    <div key={index} className="text-sm font-bold">{item1.tickets.ticketName}</div>
+                                                                    <div className="text-sm">x{item1.quantity} : Rp{(item1.price - item1.discount).toLocaleString("id-ID")} </div>
+                                                                </>
+                                                            )
+                                                        })}
+                                                    <div className="text-sm font-bold">Total : Rp{item.totalPrice.toLocaleString("id-ID")}</div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </DialogContent>
+                                    </Dialog>
+                                    {/* <td className="px-6 py-4 text-sm text-gray-600"
                                     >{item?.id?.length > 10 ?
                                         <h1 data-tooltip-id="id-tooltip"
                                             data-tooltip-content={item?.id}
@@ -34,7 +96,7 @@ export default function TableTransaction({ getTransactionData, isEventReviewed, 
                                         </h1>
                                         : item?.id}
                                         <Tooltip id="id-tooltip" />
-                                    </td>
+                                    </td> */}
                                     <td className="px-6 py-4 text-sm text-gray-600">
                                         {item?.event?.eventName.length > 10 ?
                                             <h1 data-tooltip-id="event-tooltip"
@@ -49,22 +111,22 @@ export default function TableTransaction({ getTransactionData, isEventReviewed, 
                                         {totalQuantity}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-600">
-                                        {item.transactionStatus[0]?.status === 'WAITING_FOR_PAYMENT'
+                                        {item.transactionStatus[item.transactionStatus.length - 1]?.status === 'WAITING_FOR_PAYMENT'
                                             ? 'Menunggu Pembayaran'
-                                            : item.transactionStatus[0]?.status === 'PAID'
+                                            : item.transactionStatus[item.transactionStatus.length - 1]?.status === 'PAID'
                                                 ? 'Berhasil'
-                                                : item.transactionStatus[0]?.status === 'CANCELLED'
+                                                : item.transactionStatus[item.transactionStatus.length - 1]?.status === 'CANCELLED'
                                                     ? 'Batal'
-                                                    : item.transactionStatus[0]?.status === 'EXPIRED'
+                                                    : item.transactionStatus[item.transactionStatus.length - 1]?.status === 'EXPIRED'
                                                         ? 'Pembayaran Gagal'
-                                                        : item.transactionStatus[0]?.status
+                                                        : item.transactionStatus[item.transactionStatus.length - 1]?.status
                                         }
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-600">Rp{item.totalPrice.toLocaleString("id-ID")}</td>
                                     <td className="px-6 py-4 text-sm text-gray-600">
                                         {isEventReviewed(item.event.id) ? (
                                             <span className="text-green-500">Event Reviewed</span>
-                                        ) : item.transactionStatus[0]?.status === 'PAID' ?
+                                        ) : item.transactionStatus[item.transactionStatus.length - 1]?.status === 'PAID' ?
 
 
                                             (

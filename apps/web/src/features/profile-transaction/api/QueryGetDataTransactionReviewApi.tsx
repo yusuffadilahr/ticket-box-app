@@ -14,6 +14,7 @@ export const QueryGetDataTransactionReviewApi = () => {
         queryKey: ['get-transaction-data'],
         queryFn: async () => {
             const res = await instance.get('/transaction')
+            console.log(res.data.data)
             return res.data.data
         }
     })

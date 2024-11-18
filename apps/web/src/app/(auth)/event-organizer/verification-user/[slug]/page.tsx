@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const { mutate: mutateVerifyCode } = useMutation({
     mutationFn: async (data: any) => {
       return await axios.patch(
-        'http://localhost:8000/api/event-organizer/verify-user',
+        'https://tiket-box-api.vercel.app/api/event-organizer/verify-user',
         {
           verificationCode: data,
         },
