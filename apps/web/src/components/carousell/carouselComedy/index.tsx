@@ -22,7 +22,7 @@ export default function CarouselComedy({ queryGetComedyEvent }: any) {
                                             'https://',
                                         )
                                             ? item.EventImages[0].eventImageUrl
-                                            : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
+                                            : `https://tiket-box-api.vercel.app/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
                                     }
                                     height={142}
                                     width={142}

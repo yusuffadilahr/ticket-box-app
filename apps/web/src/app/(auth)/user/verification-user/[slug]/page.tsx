@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const { mutate: mutateVerifyCode, isPending } = useMutation({
     mutationFn: async (data: any) => {
       return await axios.patch(
-        'http://localhost:8000/api/user/verify-user',
+        'https://tiket-box-api.vercel.app/api/user/verify-user',
         {
           verificationCode: data,
         },
