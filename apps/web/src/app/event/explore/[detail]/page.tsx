@@ -24,26 +24,12 @@ export default function EventDetail({ params }: IParams) {
     const { detail } = params;
     const id = detail.split('TBX')[0];
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e8d87c878062f49a3e23d928f2a0331de6d9f49f
     const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
     const [pointsToDeduct, setPointsToDeduct] = useState(0);
     const [useReferralDiscount, setUseReferralDiscount] = useState(false);
     const toggleReferralDiscount = () => setUseReferralDiscount(!useReferralDiscount);
-<<<<<<< HEAD
     const profilePoint = authStore((state: any) => state.point);
     const profileDiscount = authStore((state: any) => state.discount);
-=======
-
-
-    const profilePoint = authStore((state: any) => state.point);
-    const profileDiscount = authStore((state: any) => state.discount);
-
- 
-
->>>>>>> e8d87c878062f49a3e23d928f2a0331de6d9f49f
     const {
         queryDataDetailEvent,
         queryDataReview
