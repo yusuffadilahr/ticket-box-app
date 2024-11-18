@@ -29,17 +29,16 @@ export const SidebarMenu = () => {
     router.push('/event-organizer/login');
   };
   return (
-    
     <section className="hidden lg:block fixed h-screen bg-blue-950 w-2/12 z-20 pt-2">
       <div className="text-white min-h-screen p-5">
         <div className="text-2xl font-bold mb-8">
-         <Image 
-         width={500}
-         height={500}
-         alt='ticket-box'
-         src={logo}
-         className='object-cover'
-         />
+          <Image
+            width={500}
+            height={500}
+            alt='ticket-box'
+            src={logo}
+            className='object-cover'
+          />
         </div>
 
         <div className="flex items-center space-x-4 mb-8">

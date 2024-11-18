@@ -302,22 +302,31 @@ export const getUserByEventService = async ({
         }
     })
 
-    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+    // const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+    // const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
-    const monthlyStatistic = await prisma.transactions.groupBy({
-        by: ['createdAt'],
-        where: {
-            createdAt: {
-                gte: startOfMonth,
-                lte: endOfMonth
+    const monthlyStatistic = [];
+    for (let month = 0; month < 12; month++) {
+        const startOfMonth = new Date(new Date().getFullYear(), month, 1);
+        const endOfMonth = new Date(new Date().getFullYear(), month + 1, 0);
+
+        const monthlyStatistics = await prisma.transactions.groupBy({
+            by: ['createdAt'],
+            where: {
+                createdAt: {
+                    gte: startOfMonth,
+                    lte: endOfMonth
+                },
+                eventOrganizerId: userId
             },
-            eventOrganizerId: userId
-        },
-        _sum: {
-            totalPrice: true
-        }
-    });
+            _sum: {
+                totalPrice: true
+            }
+        });
+        monthlyStatistic.push({ month, monthlyStatistics });
+    }
+
+    console.log(monthlyStatistic, "<<<<<<");
 
     const startYear = new Date(new Date().getFullYear(), 0, 1)
     const endYear = new Date(new Date().getFullYear(), 11, 31)

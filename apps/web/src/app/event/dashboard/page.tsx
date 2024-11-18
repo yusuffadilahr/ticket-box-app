@@ -6,10 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ApexOptions } from 'apexcharts';
 
@@ -29,9 +26,7 @@ export default function OrganizerDashboard() {
   });
 
   useEffect(() => {
-    console.log('<<<<<<< refetch')
     refetch()
-    console.log('<<<<<<< refetch bawah')
   }, [refetch])
 
   const dailyStatistic = dashboardData?.dailyStatistic || []
@@ -55,22 +50,33 @@ export default function OrganizerDashboard() {
     ],
   };
 
+  const monthlyData = dashboardData?.monthlyStatistic?.map((item: any) => {
+    const total = item.monthlyStatistics.reduce((sum: any, stat: any) => sum + (stat._sum?.totalPrice || 0), 0);
+
+    return { month: item.month, total };
+  });
+
+  const monthNames = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+  ];
+
   const monthlyStatistic: { options: ApexOptions, series: any[] } = {
     options: {
-      chart: { id: 'daily-chart' },
+      chart: { id: 'monthly-chart' },
       xaxis: {
-        categories: dashboardData?.monthlyStatistic?.map((item: any) => new Date(item?.createdAt).toLocaleDateString()),
+        categories: monthNames,
       },
       title: {
-        text: 'Laporan Per Bulan',
+        text: 'Statistik Bulanan',
         align: 'center',
         style: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
       },
     },
     series: [
       {
-        name: 'Laporan Bulan Ini',
-        data: dashboardData?.monthlyStatistic?.map((item: any) => item?._sum?.totalPrice),
+        name: 'Total Pendapatan',
+        data: monthlyData?.map((item: any) => item.total),
       },
     ],
   };
@@ -100,7 +106,7 @@ export default function OrganizerDashboard() {
       {
         data: dashboardData?.weeklyStatistic?.map((item: any) => ({
           x: new Date(item?.createdAt).toLocaleDateString(),
-          y: [item?._sum?.totalPrice - 1000, item?._sum?.totalPrice + 1000], 
+          y: [item?._sum?.totalPrice - 1000, item?._sum?.totalPrice + 1000],
         })),
       },
     ],
@@ -201,7 +207,7 @@ export default function OrganizerDashboard() {
               <h1 className="font-semibold">+ Buat Event</h1>
             </Link>
             <Avatar className=" border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300">
-              <AvatarImage src={profilePicture} alt="profile" className='object-cover'/>
+              <AvatarImage src={profilePicture} alt="profile" className='object-cover' />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </div>

@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { RxHamburgerMenu } from 'react-icons/rx';
+import logo from '@/../web/public/Logo.webp'
 
 export const TopBar = () => {
     const logout = authStore((state) => state.resetAuth);
@@ -35,13 +36,19 @@ export const TopBar = () => {
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="p-2">
-                            <RxHamburgerMenu color="white"/>
+                            <RxHamburgerMenu color="white" />
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-5 bg-blue-950 text-white">
                         <div className="min-h-screen">
-                            <div className="text-2xl font-bold mb-8">
-                                <div>Logo</div>
+                            <div className="text-2xl font-bold mb-8 w-fit h-10">
+                                <Image
+                                    width={500}
+                                    height={500}
+                                    alt="logo-tbx"
+                                    src={logo}
+                                    className="w-fit h-10 object-cover"
+                                />
                             </div>
                             <div className="flex items-center space-x-4 mb-8">
                                 <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
@@ -86,7 +93,7 @@ export const TopBar = () => {
                                         <span className="text-xs">Event Saya</span>
                                     </button>
                                 </Link>
-                                <Link href="/event/dashboard/report">
+                                <Link href="/event/dashboard/transaction">
                                     <button className="flex items-center w-full space-x-3 py-2 px-4 hover:bg-blue-700 rounded">
                                         <FaChartBar className="text-lg" />
                                         <span className="text-xs">Laporan Penjualan</span>
@@ -123,7 +130,7 @@ export const TopBar = () => {
 
                 <Link href="/event/dashboard/c">
                     <Button className="bg-blue-700 text-white hover:bg-blue-600">
-                       + Buat Event
+                        + Buat Event
                     </Button>
                 </Link>
             </nav>

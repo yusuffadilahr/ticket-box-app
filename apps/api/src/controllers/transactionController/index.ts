@@ -9,18 +9,6 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         const { userId, ticketDetails, referralDiscount = 0, referralPoints = 0 } = req.body
         const { id } = req.params
 
-        // const findTicketId = ticketDetails.map((item: any) => {
-        //     return {
-        //         id: item.ticketId
-        //     }
-        // })
-
-        // const findTicket = await prisma.tickets.findMany({
-        //     where: {
-        //         OR: findTicketId
-        //     }
-        // })
-
         const dataUser = await prisma.users.findUnique({
             where: {
                 id: userId
