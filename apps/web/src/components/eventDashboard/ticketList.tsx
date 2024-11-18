@@ -1,3 +1,5 @@
+'use client'
+
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 

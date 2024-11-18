@@ -1,3 +1,5 @@
+'use client'
+
 import CreateEventInfo from "./../../../../components/eventDashboard/createEventInfo"
 
 export default function EditEventInfo({ getCategory, setIsPaid, setFieldValue, values }:any) {
