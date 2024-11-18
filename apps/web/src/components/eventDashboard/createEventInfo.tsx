@@ -1,6 +1,10 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import dynamic from 'next/dynamic';
+
+import { Field, ErrorMessage } from 'formik';
 import { Tooltip } from 'react-tooltip';
-import ReactQuill from 'react-quill';
+// import ReactQuill from 'react-quill';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 import 'react-quill/dist/quill.snow.css';
 import { RiInformation2Fill } from "react-icons/ri";
 
