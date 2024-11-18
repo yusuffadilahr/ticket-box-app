@@ -122,11 +122,13 @@ export default function EventTable() {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm font-light">
+
             <ListEventTable
               getEventList={getEventList}
               mutateDeleteData={mutateDeleteData}
               page={ page }
                 />
+
           </tbody>
         </table>
       </div>
