@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import instance from "@/utils/axiosInstance/axiosInstance";
 
 
-export const MutateHandleCHeckoutTicketsApi = ({id, router, profileDiscount, useReferralDiscount, pointsToDeduct, queryDataDetailEvent, ticketQuantities }:any) => {
+export const MutateHandleCHeckoutTicketsApi = ({ id, onError, onSuccess, profileDiscount, useReferralDiscount, pointsToDeduct, queryDataDetailEvent, ticketQuantities }:any) => {
     const { mutate: handleCheckoutTickets, isPending } = useMutation({
         mutationFn: async () => {
 
@@ -23,11 +23,11 @@ export const MutateHandleCHeckoutTicketsApi = ({id, router, profileDiscount, use
                 referralDiscount: useReferralDiscount ? profileDiscount : 0,
             })
         },
-        onSuccess: (res) => {
-            router.push(res?.data?.data?.paymentToken?.redirect_url)
-        },
-        onError: (err) => {
-            console.log(err)
-        }
+        onSuccess,
+        onError
     })
+    return {
+        handleCheckoutTickets,
+        isPending
+    }
 }

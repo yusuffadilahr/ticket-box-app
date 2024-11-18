@@ -6,10 +6,13 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaStar } from 'react-icons/fa';
-
+import authStore from '@/zustand/authstore';
 
 
 export default function TabReview({ queryDataReview }:any) {
+    const profilePicture = authStore((state) => state.profilePicture)
+ 
+  
     return (
         <Card className="p-4">
             <CardHeader>
@@ -27,7 +30,7 @@ export default function TabReview({ queryDataReview }:any) {
                                         <div className="flex items-center">
                                             <div className="flex-shrink-0">
                                                 <Avatar className=' border-blue-400 border-2 hover:border-yellow-500 transition-all duration-300'>
-                                                    <AvatarImage src={`http://localhost:8000/api/src/public/images/${item?.users.profilePicture}`} className="object-cover" alt="logo-user" />
+                                                    <AvatarImage src={profilePicture} className="object-cover" alt="logo-user" />
                                                     <AvatarFallback>CN</AvatarFallback>
                                                 </Avatar>
                                             </div>

@@ -23,7 +23,7 @@ export const EventSchema = Yup.object().shape({
     seatAvailable: Yup.number().required('Kuota tiket wajib diisi'),
     discount: Yup.number()
         .min(0, 'Harga minimal 0')
-        .max(Yup.ref('price'), 'Discount cannot be greater than the price'),
+        .max(Yup.ref('price'), 'Dikon tidak boleh lebih besar dari harga tiket'),
     startDate: Yup.date().required('Tanggal mulai penjualan tiket diisi'),
     endDate: Yup.date().required('Tanggal berakhir penjualan tiket diisi'),
     // }),
