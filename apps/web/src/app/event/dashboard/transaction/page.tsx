@@ -8,6 +8,7 @@ import Link from 'next/link';
 import authStore from './../../../../zustand/authstore';
 import { Tooltip } from 'react-tooltip';
 import { useDebouncedCallback } from 'use-debounce';
+import SkeletonListEvent from '@/components/eventDashboard/skeletonListEvent';
 
 export default function EventTable() {
     const [page, setPage] = useState(1)
@@ -35,20 +36,7 @@ export default function EventTable() {
     console.log(getTransactionData, "<<<< mantap")
 
     if (isFetching) return (
-        <main className="flex flex-col h-fit w-full px-8 space-y-10 p-10">
-            <div className="w-full py-10 flex flex-col px-4 bg-neutral-200 rounded-lg"></div>
-            <div className="flex justify-between w-full items-center">
-                <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 w-1/2"></div>
-                <div className="flex justify-end gap-8">
-                    <div className="px-8 py-2 font-bold text-white bg-neutral-200 rounded-lg transition-all duration-300"></div>
-                    <Avatar className="transition-all duration-300">
-                        <AvatarImage src='' alt="@shadcn" />
-                        <AvatarFallback>TB</AvatarFallback>
-                    </Avatar>
-                </div>
-            </div>
-            <div className='w-full h-80 bg-neutral-200 rounded-lg'></div>
-        </main>
+        <SkeletonListEvent />
     )
 
     return (
