@@ -4,8 +4,9 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from './../../../../../components/ui/input-otp';
-import authStore from './../../../../../zustand/authstore';
+} from '@/components/ui/input-otp';
+import VerificationHeaders from '../../../../../features/event-organizer/verification-user/components';
+import authStore from '../../../../../zustand/authstore';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -51,13 +52,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <main className="w-full justify-center items-center flex h-screen px-20">
       <div className="w-fit px-10 justify-center flex items-center h-fit py-10 bg-white flex-col rounded-xl shadow-lg">
-        <div className="py-5">
-          <h1 className="text-2xl font-semibold">Masukkan Kode OTP Anda</h1>
-          <p className="text-sm text-gray-600">
-            Kami telah mengirimkan kode OTP ke email Anda. Silakan masukkan di
-            bawah ini.
-          </p>
-        </div>
+        <VerificationHeaders />
         <InputOTP
           maxLength={6}
           value={value}
@@ -84,11 +79,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           )}
         </div>
         <div className="py-5 w-full">
-          <button
-            className="py-2 text-white w-full bg-yellow-400"
-            type="submit"
-            onClick={() => mutateVerifyCode(value)}
-          >
+          <button className="py-2 text-white w-full bg-yellow-400" type="submit" onClick={() => mutateVerifyCode(value)}>
             Konfirmasi
           </button>
         </div>

@@ -21,7 +21,7 @@ export default function PembayaranTiket({ isPending, setPointsToDeduct, pointsTo
                 setPointsToDeduct={setPointsToDeduct}
             />
 
-            <button disabled={isPending || (ticketQuantities.reduce((acc: any, val: any) => acc + val, 0) == 0)} className='btn bg-blue-700 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>
+            <button disabled={isPending || (ticketQuantities.reduce((acc: any, val: any) => acc + val, 0) == 0)} className='btn bg-blue-700 disabled:bg-neutral-600 text-white font-bold p-2 w-full rounded-lg mt-5' onClick={() => handleCheckoutTickets()}>
                 {isPending ? 'Pembayaran Diproses' : 'Bayar Sekarang'}
             </button>
         </div>
