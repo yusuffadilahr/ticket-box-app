@@ -8,7 +8,7 @@ export const middleware = (req: NextRequest) => {
     const currentURL = req.nextUrl.pathname
     const roleCookie: any = req.cookies.get('role')?.value
     const tokenCookie: any = req.cookies.get('token')?.value
-    
+
     let role = ''
 
     if (roleCookie) { role = CryptoJS.AES.decrypt(roleCookie, secret_key).toString(CryptoJS.enc.Utf8) }
@@ -19,7 +19,7 @@ export const middleware = (req: NextRequest) => {
         return NextResponse.redirect(new URL('/', req.url))
     }
 
-    if (tokenCookie && role == 'EO' && (currentURL == '/event-organizer/login' || currentURL == '/event-organizer/register')) {
+    if (tokenCookie && role == 'EO' && (currentURL == '/event-organizer/login' || currentURL == '/event-organizer/register' || currentURL.startsWith('/user'))) {
         return NextResponse.redirect(new URL('/event/dashboard', req.url))
     }
 

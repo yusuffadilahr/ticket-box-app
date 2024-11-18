@@ -55,7 +55,7 @@ export default function TabTiket({ queryDataDetailEvent, ticketQuantities, decre
                                     }
 
                                 </p>
-                                {isExpired ? <div className='text-red-500 font-bold'>KADARLUASA</div> : isSoldOut ? <div className='text-red-500 font-bold'>TIKET HABIS</div> :
+                                {isExpired ? <div className='text-red-500 font-bold'>KADALUARSA</div> : isSoldOut ? <div className='text-red-500 font-bold'>TIKET HABIS</div> :
                                     <div className="flex items-center space-x-4">
                                         <button
                                             onClick={() => decrement(index)}

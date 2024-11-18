@@ -20,6 +20,7 @@ const TicketList = dynamic(() => import('./../../../../components/eventDashboard
 
 
 const EventForm = () => {
+  const [isPaid, setIsPaid] = useState(true);
   const router = useRouter()
   const { mutate: mutationCreateEvent, isPending } = useMutation({
     mutationFn: async (values: FormData) => {
@@ -44,7 +45,6 @@ const EventForm = () => {
   });
 
 
-  const [isPaid, setIsPaid] = useState(true);
 
   return (
     <main className="bg-white p-5 px-1 lg:px-20">

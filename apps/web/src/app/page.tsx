@@ -39,10 +39,10 @@ export default function Home() {
 
   useEffect(() => {
     if (role && role == 'EO') {
-      router.push('/user/login');
       setAuth({ token: '' });
       Cookies.remove('role');
       Cookies.remove('token');
+      router.push('/user/login');
     }
   }, [role, token]);
 
