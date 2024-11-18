@@ -103,7 +103,7 @@ export const eventOrganizerLogin = async (req: Request, res: Response, next: Nex
         ownerName: checkUser[0]?.ownerName,
         profilePicture: checkUser[0]?.profilePicture,
         role: checkUser[0]?.role,
-      }, // token
+      }, 
     });
   } catch (error) {
     next(error);

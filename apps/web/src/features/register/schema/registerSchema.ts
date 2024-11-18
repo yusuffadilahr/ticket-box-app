@@ -11,5 +11,4 @@ export const registerUserSchema = Yup.object().shape({
     ).required('Harap password diisi terlebih dahulu'),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), ''], 'Password tidak sama'),
-    // referral: Yup.string()
 })

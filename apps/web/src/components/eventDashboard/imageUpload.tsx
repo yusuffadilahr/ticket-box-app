@@ -13,28 +13,20 @@ export default function ImageUpload({ setFieldValue, values }:any) {
                       name='gambar1'
                       type="file"
                       accept="image/*"
-                      // onChange={(event: any) =>
-                      //   setFieldValue(
-                      //     'images[0]',
-                      //     event?.currentTarget?.files[0],
-                      //   )
-                      // }
-                      // className="mx-auto"
+                    
                       onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const file = event.currentTarget.files?.[0];
 
-                        // Set the file in the form values
                         setFieldValue('images[0]', file);
 
-                        // Generate a preview
                         if (file) {
                           const reader = new FileReader();
                           reader.onload = () => {
-                            setFieldValue('imagesPreview[0]', reader.result); // Store preview URL in values
+                            setFieldValue('imagesPreview[0]', reader.result);
                           };
                           reader.readAsDataURL(file);
                         } else {
-                          setFieldValue('imagesPreview[0]', null); // Clear the preview if no file is selected
+                          setFieldValue('imagesPreview[0]', null); 
                         }
                       }}
                       className="mt-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
@@ -64,28 +56,21 @@ export default function ImageUpload({ setFieldValue, values }:any) {
                       type="file"
                       accept="image/*"
                       name='gambar2'
-                      // onChange={(event: any) =>
-                      //   setFieldValue(
-                      //     'images[1]',
-                      //     event?.currentTarget?.files[0],
-                      //   )
-                      // }
+               
 
                       onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const file = event.currentTarget.files?.[0];
 
-                        // Set the file in the form values
                         setFieldValue('images[1]', file);
 
-                        // Generate a preview
                         if (file) {
                           const reader = new FileReader();
                           reader.onload = () => {
-                            setFieldValue('imagesPreview[1]', reader.result); // Store preview URL in values
+                            setFieldValue('imagesPreview[1]', reader.result); 
                           };
                           reader.readAsDataURL(file);
                         } else {
-                          setFieldValue('imagesPreview[1]', null); // Clear the preview if no file is selected
+                          setFieldValue('imagesPreview[1]', null);
                         }
                       }}
                       className="mt-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"

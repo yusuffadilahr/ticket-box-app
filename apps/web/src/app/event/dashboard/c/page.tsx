@@ -19,13 +19,6 @@ const CreateNewTicket = dynamic(() => import('./../../../../features/eventDashbo
 const TicketList = dynamic(() => import('./../../../../components/eventDashboard/ticketList'), { ssr: false });
 
 
-// import TicketList from './../../../../components/eventDashboard/ticketList';
-// import EditEventInfo from './../../../../features/eventDashboard/components/editEventInfo';
-// import ImageUploader from './../../../../features/eventDashboard/components/imageUploader';
-// import CreateNewTicket from './../../../../features/eventDashboard/components/createNewTicket';
-
-
-
 const EventForm = () => {
   const [isPaid, setIsPaid] = useState(true);
   const router = useRouter()

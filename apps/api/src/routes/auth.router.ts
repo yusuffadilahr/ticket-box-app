@@ -14,7 +14,6 @@ authRouter.post('/forgot-password', forgotPassword)
 authRouter.patch('/reset-password', tokenValidation, resetPassword)
 authRouter.patch('/reset-password-profile', tokenValidation, resetPasswordProfile)
 
-// points
-authRouter.get('/search-all-filter', findEvent) // tester untuk di event
+authRouter.get('/search-all-filter', findEvent) 
 
 export default authRouter

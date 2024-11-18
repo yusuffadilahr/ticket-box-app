@@ -3,7 +3,7 @@ export const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'tiketbox88@gmail.com',
-        pass: 'huobxyafyutvorwm' // password dari google sign
+        pass: 'huobxyafyutvorwm' 
     },
     tls: {
         rejectUnauthorized: false

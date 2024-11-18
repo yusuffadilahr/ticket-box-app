@@ -20,15 +20,3 @@ export const cloudinaryUpload = async (file: Buffer) => {
         ).end(file);
     });
 };
-
-            // const uploadAsync = promisify(cloudinary.uploader.upload);
-            // export const cloudinaryUpload = async (file: string): Promise<{ res: string | undefined }> => {
-            //     try {
-            //         const result = await uploadAsync(file)
-            //         return {
-            //             res: result?.secure_url,
-            //         }
-            //     } catch (error) {
-            //         throw error
-            //     };
-            // }

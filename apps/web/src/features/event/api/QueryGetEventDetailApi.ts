@@ -6,7 +6,6 @@ export const QueryGetEventDetailApi: any = ({ id }:any) => {
             queryKey: ['get-detail-event'],
             queryFn: async () => {
                 const res = await instance.get(`/event/detail/${id}`);
-                // console.log(res.data.data)
                 return res.data.data[0];
             },
         });

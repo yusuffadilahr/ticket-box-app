@@ -166,9 +166,6 @@ export const findEventService = async ({
 
     const totalPage = Math.ceil(Number(totalCount) / Number(limit_data));
 
-    // if (eventSearch.length === 0 && event) {
-    //     throw { msg: 'Event tidak tersedia', status: 404 };
-    // }
 
     if (eventDataWithDetails.length === 0 && event) {
         throw { msg: 'Event tidak tersedia', status: 404 };

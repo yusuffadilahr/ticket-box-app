@@ -15,8 +15,8 @@ import Autoplay from "embla-carousel-autoplay"
 
 
 export default function CarouselSlider({ data }: { data: any }) {
-    const emblaRef = useRef<HTMLDivElement>(null); // Ref for the carousel container div
-    const emblaInstance = useRef<EmblaCarouselType | null>(null); // Ref for the EmblaCarousel instance
+    const emblaRef = useRef<HTMLDivElement>(null);
+    const emblaInstance = useRef<EmblaCarouselType | null>(null); 
 
     useEffect(() => {
         if (emblaRef.current && !emblaInstance.current) {
