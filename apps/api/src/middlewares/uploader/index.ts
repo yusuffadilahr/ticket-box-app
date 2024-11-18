@@ -1,4 +1,4 @@
-import { uploadMulter } from "@/utils/multer";
+import { uploadMulter } from "./../../utils/multer";
 import { NextFunction, Request, Response } from "express";
 
 export const uploader = (req: Request, res: Response, next: NextFunction) => {

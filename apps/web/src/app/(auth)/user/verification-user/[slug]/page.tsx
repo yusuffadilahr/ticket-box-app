@@ -1,16 +1,11 @@
 'use client';
-// import {
-//     InputOTP,
-//     InputOTPGroup,
-//     InputOTPSeparator,
-//     InputOTPSlot,
-//   } from "@/components/ui/input-otp"
+
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
-import authStore from '@/zustand/authstore';
+} from './../../../../../components/ui/input-otp';
+import authStore from './../../../../../zustand/authstore';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Cookies from 'js-cookie';

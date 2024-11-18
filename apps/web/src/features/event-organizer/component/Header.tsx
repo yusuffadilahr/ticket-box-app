@@ -1,7 +1,7 @@
 'use client';
 
 import { FaRegCalendarAlt } from 'react-icons/fa';
-import { Button } from '@/components/ui/button';
+import { Button } from './../../../components/ui/button';
 import { FaCompass } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,10 +15,10 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from '@/components/ui/sheet';
-import Logo from '@/../../public/Logo.webp'
+} from './../../../components/ui/sheet';
+import Logo from './../../../../public/Logo.webp'
 import { usePathname } from 'next/navigation';
-import authStore from '@/zustand/authstore';
+import authStore from './../../../zustand/authstore';
 import { useRouter } from 'next/navigation';
 
 const SHEET_SIDES = ['top', 'right', 'bottom', 'left'] as const;

@@ -1,42 +1,14 @@
 'use client';
-import { FaArrowRight, FaArrowLeft, FaStar } from 'react-icons/fa';
 
-import Image from 'next/image';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MdOutlineAccessTimeFilled } from 'react-icons/md';
-import { IoLocationSharp } from 'react-icons/io5';
-import { FaCalendarAlt } from 'react-icons/fa';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
-import Link from 'next/link';
-import { IoTicketOutline } from "react-icons/io5";
-import authStore from '@/zustand/authstore';
-// import dynamic from 'next/dynamic';
+import authStore from './../../../../zustand/authstore';
 import { useRouter } from 'next/navigation';
-import { divide } from 'cypress/types/lodash';
-import TabDeskripsi from '@/components/eventDetails/tabDeskripsi';
-import TabTiket from '@/components/eventDetails/tabTiket';
-import TabReview from '@/components/eventDetails/tabReview';
-import EventInfo from '@/components/eventDetails/eventInfo';
-import EventOrganizerInfo from '@/components/eventDetails/eventOrganizerInfo';
-import TotalPayment from '@/components/eventDetails/totalPayment';
-import PointReferralDiscount from '@/components/eventDetails/pointReferralDiscount';
-import DetailEvent from '@/features/event/components/detailEvent';
-import PembayaranTiket from '@/features/event/components/pembayaranTiket';
-import InfoEvent from '@/features/event/components/infoEvent';
-import EventImage from '@/features/event/components/eventImage';
-import { QueryGetEventDetailHooks } from '@/features/event/hooks/QueryGetEventDetailHooks';
-import { MutateHandleCheckoutTicketsHook } from '@/features/event/hooks/MutateHandleCheckoutTicketsHook';
+import DetailEvent from './../../../../features/event/components/detailEvent/';
+import PembayaranTiket from './../../../../features/event/components/pembayaranTiket';
+import InfoEvent from './../../../../features/event/components/infoEvent';
+import EventImage from './../../../../features/event/components/eventImage';
+import { QueryGetEventDetailHooks } from './../../../../features/event/hooks/QueryGetEventDetailHooks';
+import { MutateHandleCheckoutTicketsHook } from './../../../../features/event/hooks/MutateHandleCheckoutTicketsHook';
 
 interface IParams {
     params: {

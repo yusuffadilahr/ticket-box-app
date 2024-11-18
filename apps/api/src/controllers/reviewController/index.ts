@@ -1,6 +1,6 @@
-import express, { Request, Response, NextFunction } from 'express'
-import { prisma } from '@/connection/index'
-import { createReviewUserService, getReviewUserService } from '@/services/review.service'
+import  { Request, Response, NextFunction } from 'express'
+
+import { createReviewUserService, getReviewUserService } from './../../services/review.service'
 
 export const createReviewUser = async (req: Request, res: Response, next: NextFunction) => {
     try {

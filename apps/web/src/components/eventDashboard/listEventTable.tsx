@@ -8,7 +8,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from './../../components/ui/alert-dialog';
 import {
     Dialog,
     DialogContent,
@@ -16,7 +16,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
+} from "./../../components/ui/dialog"
 import { Tooltip } from 'react-tooltip';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { FaPencil } from 'react-icons/fa6';

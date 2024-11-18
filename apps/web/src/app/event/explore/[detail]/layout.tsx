@@ -1,6 +1,6 @@
 'use client'
 
-import authStore from "@/zustand/authstore";
+import authStore from "./../../../../zustand/authstore";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useLayoutEffect, useState } from "react";

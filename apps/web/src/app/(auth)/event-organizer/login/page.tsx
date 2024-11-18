@@ -7,14 +7,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ErrorMessage } from 'formik';
 import { useMutation } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
-import bg from '@/../../apps/web/public/daftar-cr.webp';
+import bg from './../../../../../public/daftar-cr.webp';
 import Image from 'next/image';
-import logo from '@/../../apps/web/public/Logo.webp';
-import { loginOrganizerSchema } from '@/features/login-organizer/schema/loginOrganizerSchema';
-import authStore from '@/zustand/authstore';
-import BenefitCard from '@/features/event-organizer/component/benefitCard';
+import logo from './../../../../../public/Logo.webp';
+import { loginOrganizerSchema } from './../../../../features/login-organizer/schema/loginOrganizerSchema';
+import authStore from './../../../../zustand/authstore';
+import BenefitCard from './../../../../features/event-organizer/component/benefitCard';
 
 export default function Page() {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);

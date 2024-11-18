@@ -8,11 +8,11 @@ import {
 } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
-import authStore from "@/zustand/authstore";
+import authStore from "./../../zustand/authstore";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger, SheetContent } from "./../../components/ui/sheet";
+import { Button } from "./../../components/ui/button";
 import { RxHamburgerMenu } from 'react-icons/rx';
 
 export const TopBar = () => {

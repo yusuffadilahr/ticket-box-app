@@ -1,7 +1,7 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import TabDeskripsi from '@/components/eventDetails/tabDeskripsi';
-import TabTiket from '@/components/eventDetails/tabTiket';
-import TabReview from '@/components/eventDetails/tabReview';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './../../../../components/ui/tabs';
+import TabDeskripsi from './../../../../components/eventDetails/tabDeskripsi';
+import TabTiket from './../../../../components/eventDetails/tabTiket';
+import TabReview from './../../../../components/eventDetails/tabReview';
 
 export default function DetailEvent({ queryDataReview, increment, decrement, ticketQuantities, queryDataDetailEvent }:any) {
     return (

@@ -1,5 +1,5 @@
-import { prisma } from "@/connection"
-import { cloudinaryUpload } from "@/utils/cloudinary"
+import { prisma } from "./../../connection"
+import { cloudinaryUpload } from "./../../utils/cloudinary/"
 import { Prisma } from "@prisma/client"
 import { addHours } from "date-fns"
 

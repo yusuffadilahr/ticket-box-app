@@ -2,21 +2,21 @@
 'use client';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from './../../../../components/ui/avatar';
 import { useMutation } from '@tanstack/react-query';
 
-import authStore from '@/zustand/authstore';
-import SkeletonListEvent from '@/components/eventDashboard/skeletonListEvent';
-import CreateEventButton from '@/components/eventDashboard/createEventButton';
-import SearchEventInput from '@/components/eventDashboard/searchEventInput';
-import ListEventTable from '@/components/eventDashboard/listEventTable';
+import authStore from './../../../../zustand/authstore';
+import SkeletonListEvent from './../../../../components/eventDashboard/skeletonListEvent';
+import CreateEventButton from './../../../../components/eventDashboard/createEventButton';
+import SearchEventInput from './../../../../components/eventDashboard/searchEventInput';
+import ListEventTable from './../../../../components/eventDashboard/listEventTable';
 
 
 

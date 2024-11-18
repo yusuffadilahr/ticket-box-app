@@ -1,4 +1,4 @@
-import ImageUpload from "@/components/eventDashboard/imageUpload"
+import ImageUpload from "../../../../components/eventDashboard/imageUpload"
 
 export default function ImageUploader({ setFieldValue, values }:any) {
     return (

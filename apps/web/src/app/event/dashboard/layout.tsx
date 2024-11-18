@@ -1,8 +1,8 @@
 'use client';
 
-import { SidebarMenu } from '@/components/Sidebar';
-import { TopBar } from '@/components/ui/TopBar';
-import authStore from '@/zustand/authstore';
+import { SidebarMenu } from './../../../components/Sidebar';
+import { TopBar } from './../../../components/ui/TopBar';
+import authStore from './../../../zustand/authstore';
 import { Metadata } from 'next';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';

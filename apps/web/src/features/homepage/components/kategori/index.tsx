@@ -1,4 +1,4 @@
-import Kategori from "@/components/carousell/kategori"
+import Kategori from "./../../../../components/carousell/kategori/"
 
 export default function KategoriSection({ categoryList, iconComponents }: any) {
     return (

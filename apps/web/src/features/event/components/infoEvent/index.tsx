@@ -1,5 +1,5 @@
-import EventInfo from '@/components/eventDetails/eventInfo';
-import EventOrganizerInfo from '@/components/eventDetails/eventOrganizerInfo';
+import EventInfo from './../../../../components/eventDetails/eventInfo';
+import EventOrganizerInfo from './../../../../components/eventDetails/eventOrganizerInfo';
 
 
 export default function InfoEvent({ queryDataDetailEvent }: any) {

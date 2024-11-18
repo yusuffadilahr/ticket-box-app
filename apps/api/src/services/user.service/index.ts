@@ -1,7 +1,7 @@
-import { prisma } from "@/connection";
-import { comparePassword, hashPassword } from "@/utils/passwordHash";
-import { encodeToken } from "@/utils/token.sign";
-import { transporter } from "@/utils/transporter";
+import { prisma } from "./../../connection";
+import { comparePassword, hashPassword } from "./../../utils/passwordHash";
+import { encodeToken } from "./../../utils/token.sign";
+import { transporter } from "./../../utils/transporter";
 import { addHours, addMonths } from "date-fns";
 import { compile } from "handlebars";
 import fs, { readFileSync } from 'fs'

@@ -1,8 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import authStore from "@/zustand/authstore"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import instance from "@/utils/axiosInstance/axiosInstance"
-import Image from "next/image"
+import { Avatar, AvatarFallback, AvatarImage } from "./../../components/ui/avatar"
+import authStore from "./../../zustand/authstore"
+import { useMutation } from "@tanstack/react-query"
+import instance from "./../../utils/axiosInstance/axiosInstance"
 
 
 export default function ProfileHeader() {
