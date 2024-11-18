@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -11,18 +9,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-
-
-
-
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_URL")
-// }
 
 model Users {
   id                  String  @id @default(uuid())
@@ -51,12 +37,10 @@ model Users {
   @@map("users")
 }
 
-// User biasa tugasnya hanya untuk -> melihat, membeli/transaksi, dan checkout
-// User organizer tugasnya itu CRUD/Dashboard
 
 model EventOrganizer {
   id             String  @id @default(uuid())
-  organizerName  String // soundproject
+  organizerName  String  
   ownerName      String
   email          String  @unique
   password       String
@@ -197,9 +181,9 @@ model Reviews {
 
 model Transactions {
   id         String   @id @default(cuid())
-  userId     String // token
-  eventId    Int // params slug
-  totalPrice Int // state
+  userId     String 
+  eventId    Int 
+  totalPrice Int 
   expiredAt  DateTime
 
   createdAt DateTime  @default(now())

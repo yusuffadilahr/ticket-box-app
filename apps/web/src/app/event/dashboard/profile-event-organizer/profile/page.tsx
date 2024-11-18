@@ -68,7 +68,6 @@ export default function Page() {
     console.log('<<<<<<< refetch')
     refetch()
     console.log('<<<<<<< refetch bawah')
-    // console.log("check length events", eventsData?.length)
   }, [refetch])
 
   if (isFetching) return (

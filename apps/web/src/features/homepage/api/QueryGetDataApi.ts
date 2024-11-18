@@ -44,7 +44,6 @@ export const QueryGetDataApi: any = ()=>{
         queryKey: ['get-event-data-carousel'],
         queryFn: async () => {
             const res = await instance.get('/event/carousel-images', {});
-            // console.log(res)
             return res.data.data;
         },
     });

@@ -127,7 +127,6 @@ export default function ProfileHome() {
                                                 value={dataEmail}
                                                 disabled
                                                 className="disabled:bg-neutral-300 disabled:text-neutral-700 w-full mt-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                                // placeholder="testin"
                                                 type="email"
                                             />
                                         </div>

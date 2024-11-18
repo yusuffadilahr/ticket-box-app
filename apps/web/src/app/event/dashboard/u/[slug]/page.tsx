@@ -69,7 +69,6 @@ export default function Page({ params }: { params: { slug: string } }) {
 
                     categoryId: eventDetail[0]?.categoryId || '',
                 }}
-                // validationSchema={UpdateEventSchema}
                 onSubmit={(values: any) => {
                     console.log([values]);
                     const fd = new FormData();

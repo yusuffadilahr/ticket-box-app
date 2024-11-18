@@ -23,7 +23,7 @@ export default function Page() {
         },
         onError: (err) => {
             console.log(err)
-            toast.error('ini gagal') // harus alert nerima respon dari be
+            toast.error('ini gagal') 
         }
     })
 

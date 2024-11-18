@@ -1,4 +1,4 @@
-'use client'; // Ensure this is included at the top of your component file
+'use client'; 
 
 import React from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -17,7 +17,7 @@ const TiptapEditor = ({ value, onChange }: { value: any, onChange: any }) => {
         ],
         content: value,
         onUpdate: ({ editor }) => {
-            onChange(editor.getHTML()); // Call the onChange with the HTML content
+            onChange(editor.getHTML()); 
         },
     });
 
