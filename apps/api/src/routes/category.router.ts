@@ -1,4 +1,4 @@
-import { createCategory, getCategoryEvents } from "@/controllers/categoryController";
+import { createCategory, getCategoryEvents } from "./../controllers/categoryController";
 import { Router } from "express";
 
 const categoryRouter = Router()

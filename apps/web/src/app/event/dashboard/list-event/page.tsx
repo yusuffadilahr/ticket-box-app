@@ -1,39 +1,17 @@
 // components/EventTable.tsx
 'use client';
 import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import instance from '@/utils/axiosInstance/axiosInstance';
 import { useDebouncedCallback } from 'use-debounce';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { FaPencil } from 'react-icons/fa6';
+
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaRegEye } from 'react-icons/fa6';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useMutation } from '@tanstack/react-query';
-import Link from 'next/link';
-import { Tooltip } from 'react-tooltip';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { MdOutlineAccessTimeFilled } from 'react-icons/md';
+
 import authStore from '@/zustand/authstore';
 import SkeletonListEvent from '@/components/eventDashboard/skeletonListEvent';
 import CreateEventButton from '@/components/eventDashboard/createEventButton';

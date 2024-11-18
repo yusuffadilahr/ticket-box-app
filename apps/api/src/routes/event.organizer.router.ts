@@ -1,4 +1,4 @@
-import { forgotPasswordOrganizer, getFeedbackUser, getReportTransaction, getUserByEvent, resetPasswordOnLogin, resetPasswordOrganizer, sendVerifyEmailUser, updateProfileOrganizer, verifyEmailUser } from "@/controllers/eventOrganizerController";
+import { forgotPasswordOrganizer, getFeedbackUser, getReportTransaction, getUserByEvent, resetPasswordOnLogin, resetPasswordOrganizer, sendVerifyEmailUser, updateProfileOrganizer, verifyEmailUser } from "./../controllers/eventOrganizerController";
 import { uploader } from "@/middlewares/uploader";
 import { tokenValidation } from "@/middlewares/verify.token";
 import { Router } from "express";
