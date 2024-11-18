@@ -122,8 +122,6 @@ export default function EventDetail({ params }: IParams) {
         queryDataReview
     } = QueryGetEventDetailHooks({ id })
 
-
-
     const {
         handleCheckoutTickets,
         isPending

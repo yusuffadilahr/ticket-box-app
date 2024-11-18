@@ -97,7 +97,7 @@ export const userRegisterService = async ({
                 });
             }
         }
-    })
+    }, { timeout: 30000 })
 }
 
 export const verifyUserService = async ({ userId, verificationCode }: any) => {

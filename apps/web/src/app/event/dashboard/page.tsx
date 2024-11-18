@@ -32,7 +32,6 @@ export default function OrganizerDashboard() {
     console.log('<<<<<<< refetch')
     refetch()
     console.log('<<<<<<< refetch bawah')
-    console.log("check length events", eventsData?.length)
   }, [refetch])
 
   const dailyStatistic = dashboardData?.dailyStatistic || []
@@ -40,7 +39,7 @@ export default function OrganizerDashboard() {
     options: {
       chart: { id: 'daily-chart' },
       xaxis: {
-        categories: dailyStatistic.map((item: any) => new Date(item.createdAt).toLocaleDateString()),
+        categories: dailyStatistic?.map((item: any) => new Date(item?.createdAt).toLocaleDateString()),
       },
       title: {
         text: 'Laporan Per Hari',
@@ -51,7 +50,7 @@ export default function OrganizerDashboard() {
     series: [
       {
         name: 'Laporan Hari Ini',
-        data: dailyStatistic.map((item: any) => item._sum.totalPrice),
+        data: dailyStatistic.map((item: any) => item?._sum?.totalPrice),
       },
     ],
   };
@@ -60,7 +59,7 @@ export default function OrganizerDashboard() {
     options: {
       chart: { id: 'daily-chart' },
       xaxis: {
-        categories: dashboardData?.monthlyStatistic?.map((item: any) => new Date(item.createdAt).toLocaleDateString()),
+        categories: dashboardData?.monthlyStatistic?.map((item: any) => new Date(item?.createdAt).toLocaleDateString()),
       },
       title: {
         text: 'Laporan Per Bulan',
@@ -71,7 +70,7 @@ export default function OrganizerDashboard() {
     series: [
       {
         name: 'Laporan Bulan Ini',
-        data: dashboardData?.monthlyStatistic?.map((item: any) => item._sum.totalPrice),
+        data: dashboardData?.monthlyStatistic?.map((item: any) => item?._sum?.totalPrice),
       },
     ],
   };
@@ -80,7 +79,7 @@ export default function OrganizerDashboard() {
     options: {
       chart: { id: 'daily-chart' },
       xaxis: {
-        categories: dashboardData?.yearlyStatistic?.map((item: any) => new Date(item.createdAt).toLocaleDateString()),
+        categories: dashboardData?.yearlyStatistic?.map((item: any) => new Date(item?.createdAt).toLocaleDateString()),
       },
       title: {
         text: 'Laporan Per Tahun',
@@ -91,7 +90,7 @@ export default function OrganizerDashboard() {
     series: [
       {
         name: 'Laporan Tahun Ini',
-        data: dashboardData?.yearlyStatistic?.map((item: any) => item._sum.totalPrice),
+        data: dashboardData?.yearlyStatistic?.map((item: any) => item?._sum?.totalPrice),
       },
     ],
   };
@@ -100,8 +99,8 @@ export default function OrganizerDashboard() {
     series: [
       {
         data: dashboardData?.weeklyStatistic?.map((item: any) => ({
-          x: new Date(item.createdAt).toLocaleDateString(), // Format tanggal sebagai label
-          y: [item._sum.totalPrice - 1000, item._sum.totalPrice + 1000], // Contoh rentang data
+          x: new Date(item?.createdAt).toLocaleDateString(),
+          y: [item?._sum?.totalPrice - 1000, item?._sum?.totalPrice + 1000], 
         })),
       },
     ],
@@ -170,9 +169,9 @@ export default function OrganizerDashboard() {
       <section className='flex'>
         <div className="h-fit w-full px-8 space-y-10 p-10">
           <div className="flex justify-between items-center">
-            <div className="text-lg font-bold bg-neutral-200 rounded-lg py-4 px-10"></div>
+            <div className="text-lg font-bold bg-neutral-200 animate-pulse rounded-lg py-4 px-10"></div>
             <div className='flex gap-8'>
-              <div className="flex items-center px-10 font-bold bg-neutral-100 rounded-lg transition-all duration-300"></div>
+              <div className="flex items-center px-10 font-bold animate-pulse bg-neutral-100 rounded-lg transition-all duration-300"></div>
               <Avatar className="transition-all duration-300">
                 <AvatarImage src='' alt="@shadcn" />
                 <AvatarFallback>TB</AvatarFallback>
@@ -181,13 +180,13 @@ export default function OrganizerDashboard() {
           </div>
           <div className="w-full h-fit grid grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div className=" h-24 bg-neutral-200 rounded-lg flex flex-col justify-center items-center" key={i}></div>
+              <div className=" h-24 bg-neutral-200 animate-pulse rounded-lg flex flex-col justify-center items-center" key={i}></div>
             ))}
           </div>
         </div>
       </section>
       <section className='w-full h-52 px-8'>
-        <div className='bg-neutral-200 w-full h-full rounded-lg'></div>
+        <div className='bg-neutral-200 animate-pulse w-full h-full rounded-lg'></div>
       </section>
     </main>
   );
@@ -251,8 +250,8 @@ export default function OrganizerDashboard() {
                 <CardContent className="space-y-2 px-4 py-10">
                   <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
                     <Chart
-                      options={chartData.options}
-                      series={chartData.series}
+                      options={chartData?.options}
+                      series={chartData?.series}
                       type="line"
                       width="100%"
                       height="300px"
@@ -266,8 +265,8 @@ export default function OrganizerDashboard() {
                 <CardContent className="space-y-2 px-4 py-10">
                   <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
                     <Chart
-                      options={monthlyStatistic.options}
-                      series={monthlyStatistic.series}
+                      options={monthlyStatistic?.options}
+                      series={monthlyStatistic?.series}
                       type="bar"
                       width="100%"
                       height="300px"
@@ -281,8 +280,8 @@ export default function OrganizerDashboard() {
                 <CardContent className="space-y-2 px-4 py-10">
                   <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
                     <Chart
-                      options={yearlyStatistic.options}
-                      series={yearlyStatistic.series}
+                      options={yearlyStatistic?.options}
+                      series={yearlyStatistic?.series}
                       type="bar"
                       width="100%"
                       height="300px"
@@ -301,8 +300,8 @@ export default function OrganizerDashboard() {
                 <CardContent className="space-y-2 px-4 py-10">
                   <div className="col-span-2 row-span-3 rounded-lg drop-shadow-lg w-full">
                     <Chart
-                      options={rangeBarChart.options}
-                      series={rangeBarChart.series}
+                      options={rangeBarChart?.options}
+                      series={rangeBarChart?.series}
                       type="rangeBar"
                       height={'300px'}
                     />

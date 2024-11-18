@@ -46,212 +46,214 @@ export default function RegisterOrganizer() {
 
     return (
         <main className="pt-32 px-20 flex gap-5">
-            <section className="relative w-1/2 h-screen">
-                <Image
-                    src={bg}
-                    alt="background"
-                    className="rounded-xl object-cover h-full w-full shadow-lg"
-                />
-            </section>
-            <div className="absolute z-10 p-16 text-white">
-                <Image
-                    src={logo}
-                    alt="background"
-                    className="rounded-xl object-cover w-8 md:w-20 lg:w-48"
-                />
-                <div className="mt-8 font-bold text-5xl">Welcome  👋</div>
-                <div className="font-bold text-4xl">Event Creator</div>
-                <div className="mt-10 text-lg">Gabung jadi Event Creator dengan sangat mudah! </div>
-                <div className="text-lg">Buat event dan manage tiketmu di Tiketbox.com</div>
-            </div>
+            <section className='flex lg:h-[800px] w-full gap-5'>
+                <section className="relative lg:block hidden w-1/2 h-full">
+                    <Image
+                        src={bg}
+                        alt="background"
+                        className="rounded-xl object-cover h-full w-full shadow-lg"
+                    />
+                </section>
+                <div className="absolute lg:block hidden z-10 p-16 text-white">
+                    <Image
+                        src={logo}
+                        alt="background"
+                        className="rounded-xl object-cover w-8 md:w-20 lg:w-48"
+                    />
+                    <div className="mt-8 font-bold text-5xl">Welcome  👋</div>
+                    <div className="font-bold text-4xl">Event Creator</div>
+                    <div className="mt-10 text-lg">Gabung jadi Event Creator dengan sangat mudah! </div>
+                    <div className="text-lg">Buat event dan manage tiketmu di Tiketbox.com</div>
+                </div>
 
-            <section className="w-1/2 h-fit rounded-xl border border-gray-200 shadow-lg">
-                <div className="p-10 w-full">
-                    <Link href='/event-organizer/login'>
-                        <button className="text-yellow-300 text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 w-full">
-                            Login
-                        </button>
-                    </Link>
-                    <div className="flex items-center justify-between w-full">
-                        <div className="flex-grow h-px bg-gray-300"></div>
-                        <span className="px-4 text-gray-500 font-semibold">atau</span>
-                        <div className="flex-grow h-px bg-gray-300"></div>
-                    </div>
-                    <div className="flex justify-center py-5 font-bold">Daftar untuk membuat event</div>
-                    <Formik
-                        initialValues={{
-                            email: '',
-                            ownerName: '',
-                            organizerName: '',
-                            phoneNumber: '',
-                            identityNumber: '',
-                            password: '',
-                        }}
-                        validationSchema={registerOrganizerSchema}
-                        onSubmit={(values) => {
-                            console.log(values)
-                            handleRegister({
-                                organizerName: values.organizerName,
-                                ownerName: values.ownerName,
-                                email: values.email,
-                                password: values.password,
-                                phoneNumber: values.phoneNumber,
-                                identityNumber: values.identityNumber
+                <section className="lg:w-1/2 h-full rounded-xl border border-gray-200 shadow-lg">
+                    <div className="p-10">
+                        <Link href='/event-organizer/login'>
+                            <button className="text-yellow-300 text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 w-full">
+                                Login
+                            </button>
+                        </Link>
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex-grow h-px bg-gray-300"></div>
+                            <span className="px-4 text-gray-500 font-semibold">atau</span>
+                            <div className="flex-grow h-px bg-gray-300"></div>
+                        </div>
+                        <div className="flex justify-center py-5 font-bold">Daftar untuk membuat event</div>
+                        <Formik
+                            initialValues={{
+                                email: '',
+                                ownerName: '',
+                                organizerName: '',
+                                phoneNumber: '',
+                                identityNumber: '',
+                                password: '',
+                            }}
+                            validationSchema={registerOrganizerSchema}
+                            onSubmit={(values) => {
+                                console.log(values)
+                                handleRegister({
+                                    organizerName: values.organizerName,
+                                    ownerName: values.ownerName,
+                                    email: values.email,
+                                    password: values.password,
+                                    phoneNumber: values.phoneNumber,
+                                    identityNumber: values.identityNumber
 
-                            })
-                        }}
-                    >
-                        <Form className='flex flex-col justify-center items-center w-full space-y-4'>
-                            <div id="organizerName-input" className=" w-[500px]">
-                                <div className="flex gap-5 items-center">
-                                    <label>
-                                        Organizer Name<span className="text-red-500">*</span>
-                                    </label>
-                                    <ErrorMessage
-                                        name="organizerName"
-                                        component="div"
-                                        className="text-red-500 text-xs mt-1"
-                                    />
-                                </div>
-                                <Field
-                                    name="organizerName"
-                                    className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                    placeholder="Mutiara Sakti Organizer"
-                                    type="text"
-                                />
-                            </div>
-                            <div id="owner-input" className=" w-[500px]">
-                                <div className="flex gap-5 items-center">
-                                    <label>
-                                        Owner Name <span className="text-red-500">*</span>
-                                    </label>
-                                    <ErrorMessage
-                                        name="ownerName"
-                                        component="div"
-                                        className="text-red-500 text-xs mt-1"
-                                    />
-                                </div>
-                                <Field
-                                    name="ownerName"
-                                    className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                    placeholder="John Doe"
-                                    type="text"
-                                />
-                            </div>
-                            <div id="emailOrganizer-input" className=" w-[500px]">
-                                <div className="flex gap-5 items-center">
-                                    <label>
-                                        Email Organizer<span className="text-red-500">*</span>
-                                    </label>
-                                    <ErrorMessage
-                                        name="email"
-                                        component="div"
-                                        className="text-red-500 text-xs mt-1"
-                                    />
-                                </div>
-                                <Field
-                                    name="email"
-                                    className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                    placeholder="example@gmail.com"
-                                    type="email"
-                                />
-                            </div>
-                            <div className="flex gap-4">
-                                <div id="password-input" className="relative w-[240px]">
+                                })
+                            }}
+                        >
+                            <Form className='flex flex-col justify-center items-center w-full space-y-4'>
+                                <div id="organizerName-input" className=" w-[500px]">
                                     <div className="flex gap-5 items-center">
                                         <label>
-                                            Password <span className="text-red-500">*</span>
+                                            Organizer Name<span className="text-red-500">*</span>
                                         </label>
-                                    </div>
-                                    <Field
-                                        name="password"
-                                        className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                        placeholder="******"
-                                        type={passwordVisible ? 'text' : 'password'}
-                                    />
-                                    <span
-                                        className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
-                                        onClick={togglePasswordVisibility}
-                                    >
-                                        {passwordVisible ? <FaEye /> : <FaEyeSlash />}
-                                    </span>
-                                    <div className="h-2">
                                         <ErrorMessage
-                                            name="password"
+                                            name="organizerName"
                                             component="div"
                                             className="text-red-500 text-xs mt-1"
                                         />
                                     </div>
+                                    <Field
+                                        name="organizerName"
+                                        className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                                        placeholder="Mutiara Sakti Organizer"
+                                        type="text"
+                                    />
                                 </div>
-                                <div id="confirmPassword-input" className="relative w-[240px]">
+                                <div id="owner-input" className=" w-[500px]">
                                     <div className="flex gap-5 items-center">
                                         <label>
-                                            Confirm Password <span className="text-red-500">*</span>
+                                            Owner Name <span className="text-red-500">*</span>
                                         </label>
+                                        <ErrorMessage
+                                            name="ownerName"
+                                            component="div"
+                                            className="text-red-500 text-xs mt-1"
+                                        />
                                     </div>
                                     <Field
-                                        name="confirmPassword"
+                                        name="ownerName"
                                         className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                        placeholder="******"
-                                        type={confirmationPasswordVisible ? 'text' : 'password'}
-                                    />
-                                    <span
-                                        className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
-                                        onClick={togglePasswordConfirmationVisibility}
-                                    >
-                                        {confirmationPasswordVisible ? <FaEye /> : <FaEyeSlash />}
-                                    </span>
-                                <div className="h-2">
-                                    <ErrorMessage
-                                        name="confirmPassword"
-                                        component="div"
-                                        className="text-red-500 text-xs mt-1"
+                                        placeholder="John Doe"
+                                        type="text"
                                     />
                                 </div>
+                                <div id="emailOrganizer-input" className=" w-[500px]">
+                                    <div className="flex gap-5 items-center">
+                                        <label>
+                                            Email Organizer<span className="text-red-500">*</span>
+                                        </label>
+                                        <ErrorMessage
+                                            name="email"
+                                            component="div"
+                                            className="text-red-500 text-xs mt-1"
+                                        />
+                                    </div>
+                                    <Field
+                                        name="email"
+                                        className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                                        placeholder="example@gmail.com"
+                                        type="email"
+                                    />
                                 </div>
-                            </div>
-                            <div id="phoneNumber-input" className=" w-[500px]">
-                                <div className="flex gap-5 items-center">
-                                    <label>
-                                        Nomor HP <span className="text-red-500">*</span>
-                                    </label>
-                                    <ErrorMessage
+                                <div className="flex gap-4">
+                                    <div id="password-input" className="relative w-[240px]">
+                                        <div className="flex gap-5 items-center">
+                                            <label>
+                                                Password <span className="text-red-500">*</span>
+                                            </label>
+                                        </div>
+                                        <Field
+                                            name="password"
+                                            className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                                            placeholder="******"
+                                            type={passwordVisible ? 'text' : 'password'}
+                                        />
+                                        <span
+                                            className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                                            onClick={togglePasswordVisibility}
+                                        >
+                                            {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                                        </span>
+                                        <div className="h-2">
+                                            <ErrorMessage
+                                                name="password"
+                                                component="div"
+                                                className="text-red-500 text-xs mt-1"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div id="confirmPassword-input" className="relative w-[240px]">
+                                        <div className="flex gap-5 items-center">
+                                            <label>
+                                                Confirm Password <span className="text-red-500">*</span>
+                                            </label>
+                                        </div>
+                                        <Field
+                                            name="confirmPassword"
+                                            className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                                            placeholder="******"
+                                            type={confirmationPasswordVisible ? 'text' : 'password'}
+                                        />
+                                        <span
+                                            className="absolute  right-3 transform -translate-y-7 flex items-center cursor-pointer text-gray-500" // Center the icon vertically
+                                            onClick={togglePasswordConfirmationVisibility}
+                                        >
+                                            {confirmationPasswordVisible ? <FaEye /> : <FaEyeSlash />}
+                                        </span>
+                                        <div className="h-2">
+                                            <ErrorMessage
+                                                name="confirmPassword"
+                                                component="div"
+                                                className="text-red-500 text-xs mt-1"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="phoneNumber-input" className=" w-[500px]">
+                                    <div className="flex gap-5 items-center">
+                                        <label>
+                                            Nomor HP <span className="text-red-500">*</span>
+                                        </label>
+                                        <ErrorMessage
+                                            name="phoneNumber"
+                                            component="div"
+                                            className="text-red-500 text-xs mt-1"
+                                        />
+                                    </div>
+                                    <Field
                                         name="phoneNumber"
-                                        component="div"
-                                        className="text-red-500 text-xs mt-1"
+                                        className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                                        placeholder="0856..."
+                                        type="phoneNumber"
                                     />
                                 </div>
-                                <Field
-                                    name="phoneNumber"
-                                    className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                    placeholder="0856..."
-                                    type="phoneNumber"
-                                />
-                            </div>
-                            <div id="identity-input" className=" w-[500px]">
-                                <div className="flex gap-5 items-center">
-                                    <label>
-                                        Nomor KTP <span className="text-red-500">*</span>
-                                    </label>
-                                    <ErrorMessage
+                                <div id="identity-input" className=" w-[500px]">
+                                    <div className="flex gap-5 items-center">
+                                        <label>
+                                            Nomor KTP <span className="text-red-500">*</span>
+                                        </label>
+                                        <ErrorMessage
+                                            name="identityNumber"
+                                            component="div"
+                                            className="text-red-500 text-xs mt-1"
+                                        />
+                                    </div>
+                                    <Field
                                         name="identityNumber"
-                                        component="div"
-                                        className="text-red-500 text-xs mt-1"
+                                        className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
+                                        placeholder="3671...."
+                                        type="identityNumber"
                                     />
                                 </div>
-                                <Field
-                                    name="identityNumber"
-                                    className=" w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border focus:border-yellow-400 text-sm pr-10"
-                                    placeholder="3671...."
-                                    type="identityNumber"
-                                />
-                            </div>
-                            <button disabled={isPending} type="submit" className="z-50 text-yellow-300 disabled:bg-neutral-300 w-[500px] text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 ">
-                                Daftar
-                            </button>
-                        </Form>
-                    </Formik>
-                </div>
+                                <button disabled={isPending} type="submit" className="z-50 text-yellow-300 disabled:bg-neutral-300 w-[500px] text-lg rounded-lg font-bold py-2 mb-6 bg-blue-500 hover:bg-blue-600 transition-all duration-300 ">
+                                    Daftar
+                                </button>
+                            </Form>
+                        </Formik>
+                    </div>
+                </section>
             </section>
         </main>
     )

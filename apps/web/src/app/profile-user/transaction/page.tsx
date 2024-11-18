@@ -1,7 +1,5 @@
 
 'use client'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { FaShoppingCart, FaLock, FaHeart, FaCog } from 'react-icons/fa';
 import { useState } from "react";
 import ProfileHeader from "@/components/profile/profile";
 import LeftMenu from "@/components/profile/leftMenu";
@@ -11,6 +9,9 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import TableTransaction from "@/components/profile/transaction/tableTransaction";
+import { QueryGetDataTransactionReviewHooks } from "@/features/profile-transaction/hooks/QueryGetDataTransactionReviewHooks";
+import { MutateReviewEventHook } from "@/features/profile-transaction/hooks/MutateReviewEventHook";
 
 
 export default function ProfileTransaction() {
@@ -22,39 +23,57 @@ export default function ProfileTransaction() {
     const [rating, setRating] = useState<number | ''>('');
 
 
-    const { mutate: mutateReviewEvent } = useMutation({
-        mutationFn: async () => {
-            const res = await instance.post('/review', {
-                eventId: selectedEventId,
-                reviewComments: reviewText,
-                feedback: feedback,
-                rating: Number(rating),
-            })
-        },
-        onSuccess: () => {
-            setIsDialogOpen(false);
-            setReviewText("");
-            setRating('');
-        }
+
+    const { mutateReviewEvent } = MutateReviewEventHook({
+        setRating,
+        setReviewText,
+        setIsDialogOpen,
+        selectedEventId,
+        reviewText,
+        feedback,
+        rating
     })
 
-    const { data: reviewData } = useQuery({
-        queryKey: ['review-data'],
-        queryFn: async () => {
-            const res = await instance.get('/review/');
-            return res.data.data
-        }
-    })
+    // const { mutate: mutateReviewEvent } = useMutation({
+    //     mutationFn: async () => {
+    //         const res = await instance.post('/review', {
+    //             eventId: selectedEventId,
+    //             reviewComments: reviewText,
+    //             feedback: feedback,
+    //             rating: Number(rating),
+    //         })
+    //     },
+    //     onSuccess: () => {
+    //         setIsDialogOpen(false);
+    //         setReviewText("");
+    //         setRating('');
+    //     }
+    // })
 
-    
 
-    const { data: getTransactionData } = useQuery({
-        queryKey: ['get-transaction-data'],
-        queryFn: async () => {
-            const res = await instance.get('/transaction')
-            return res.data.data
-        }
-    })
+    const {
+        reviewData,
+        getTransactionData
+    } = QueryGetDataTransactionReviewHooks()
+
+
+    // const { data: reviewData } = useQuery({
+    //     queryKey: ['review-data'],
+    //     queryFn: async () => {
+    //         const res = await instance.get('/review/');
+    //         return res.data.data
+    //     }
+    // })
+
+
+
+    // const { data: getTransactionData } = useQuery({
+    //     queryKey: ['get-transaction-data'],
+    //     queryFn: async () => {
+    //         const res = await instance.get('/transaction')
+    //         return res.data.data
+    //     }
+    // })
 
     const openReviewDialog = (eventId: string) => {
         setSelectedEventId(eventId);
@@ -81,74 +100,14 @@ export default function ProfileTransaction() {
                 <section className="w-full lg:w-3/4 mt-4 bg-white rounded-lg shadow-lg ml-5 p-5">
                     <h2 className="text-xl font-semibold mb-5">Transaksi</h2>
 
-                    {/* Table */}
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white border">
-                            <thead>
-                                <tr className="border-b">
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID Transaksi</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Event</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tanggal Transaksi</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Jumlah</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Total Harga</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    getTransactionData?.map((item: any, index: any) => {
-                                        const totalQuantity = item.transactionDetail.reduce(
-                                            (acc: number, detail: any) => acc + detail.quantity,
-                                            0
-                                        );
-
-
-
-                                        return (
-                                            <tr key={index} className="border-b">
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.id}</td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.event.eventName}</td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">{item.createdAt.split('T')[0]}</td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">
-                                                    {totalQuantity}
-                                                </td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">
-                                                    {item.transactionStatus[0]?.status === 'WAITING_FOR_PAYMENT'
-                                                        ? 'Menunggu Pembayaran'
-                                                        : item.transactionStatus[0]?.status === 'PAID'
-                                                            ? 'Berhasil'
-                                                            : item.transactionStatus[0]?.status === 'CANCELLED'
-                                                                ? 'Batal'
-                                                                : item.transactionStatus[0]?.status === 'EXPIRED'
-                                                                    ? 'Pembayaran Gagal'
-                                                                    : item.transactionStatus[0]?.status
-                                                    }
-                                                    </td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">Rp{item.totalPrice.toLocaleString("id-ID")}</td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">
-                                                    {isEventReviewed(item.event.id) ? (
-                                                        <span className="text-green-500">Event Reviewed</span>
-                                                    ) : (
-                                                        <button
-                                                            onClick={() => openReviewDialog(item.event.id)}
-                                                            className="text-blue-500 hover:underline"
-                                                        >
-                                                            Submit Review
-                                                        </button>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                    <TableTransaction
+                        getTransactionData={getTransactionData}
+                        isEventReviewed={isEventReviewed}
+                        openReviewDialog={openReviewDialog}
+                    />
                 </section>
             </section>
 
-            {/* Review Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
@@ -167,7 +126,7 @@ export default function ProfileTransaction() {
                         />
                         <Input
                             type="number"
-                            placeholder="Rating (1-5)"
+                            placeholder="1:Sangat Buruk - 5:Sangat Baik"
                             min="1"
                             max="5"
                             value={rating}
