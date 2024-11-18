@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import authStore from "./../../zustand/authstore";
 
 const instance = axios.create({
-    baseURL: "https://tiket-box-api.vercel.app/api/"
+    baseURL: "http://localhost:8000/api/"
 })
 
 instance.interceptors.request.use(

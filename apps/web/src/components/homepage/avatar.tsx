@@ -52,7 +52,7 @@ export default function AvatarHover() {
                     <div className="space-y-1 flex flex-col w-full text-left">
                         <div className=" font-bold text-blue-800 flex flex-col items-center space-x-2 mb-2" >
                             <div className="flex items-center"><FaStar /> <span className='ml-1'>Loyalty Points</span></div>
-                            <div className="text-lg">{loyaltyPoints}</div>
+                            <div className="text-lg">{loyaltyPoints?.toLocaleString("id-ID")}</div>
                         </div>
                         <Link href="/profile-user/profile" className="flex py-1">
                             <button className="text-base hover:font-bold transition-all duration-300 ">
