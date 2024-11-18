@@ -806,7 +806,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -817,7 +817,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -840,7 +840,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -851,7 +851,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -874,7 +874,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -885,7 +885,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -908,7 +908,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -919,7 +919,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -942,7 +942,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -953,7 +953,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -976,7 +976,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -987,7 +987,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -1010,7 +1010,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -1021,7 +1021,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -1044,7 +1044,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -1055,7 +1055,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -1078,7 +1078,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -1089,7 +1089,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,
@@ -1112,7 +1112,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 10,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 250000,
@@ -1123,7 +1123,7 @@ const ticketArr = [
     version: 'v1.0',
     discount: 15,
     startDate: new Date('2024-11-10T08:00:00Z'),
-    endDate: new Date('2024-11-10T18:00:00Z'),
+    endDate: new Date('2024-11-25T18:00:00Z'),
   },
   {
     price: 100000,

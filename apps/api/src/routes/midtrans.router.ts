@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleMidtransNotification } from "@/controllers/midtransController";
+import { handleMidtransNotification } from "./../controllers/midtransController";
 
 const midtransRouter = Router()
 

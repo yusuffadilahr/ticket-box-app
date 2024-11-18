@@ -1,6 +1,6 @@
-import { keepAuthUser, sendVerifyEmailUser, updateProfileUser, verifyUser } from "@/controllers/userController";
-import { uploader } from "@/middlewares/uploader";
-import { tokenValidation } from "@/middlewares/verify.token";
+import { keepAuthUser, sendVerifyEmailUser, updateProfileUser, verifyUser } from "./../controllers/userController";
+import { uploader } from "./../middlewares/uploader";
+import { tokenValidation } from "./../middlewares/verify.token";
 import { Router } from "express";
 
 const userRouter = Router()

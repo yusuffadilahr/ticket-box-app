@@ -1,4 +1,4 @@
-import Header from "@/features/event-organizer/component/Header";
+import Header from "./../../../features/event-organizer/component/Header";
 import { Metadata } from "next";
 import { ReactNode } from "react";
 

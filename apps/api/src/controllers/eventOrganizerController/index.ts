@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { prisma } from '@/connection';
-import { comparePassword } from '@/utils/passwordHash';
+import { prisma } from './../../connection';
+import { comparePassword } from './../../utils/passwordHash';
 import { nanoid } from 'nanoid';
-import { decodeToken, encodeToken } from '@/utils/token.sign';
-import { eventOrganizerRegisterService, forgotPasswordOrganizerService, getFeedbackUserService, getReportTransactionService, getUserByEventService, resetPasswordOnLoginService, resetPasswordOrganizerService, sendVerifyEmailUserService, updateProfileOrganizerService, verifyEmailUserService } from '@/services/event.organizer.service';
+import { decodeToken, encodeToken } from './../../utils/token.sign';
+import { eventOrganizerRegisterService, forgotPasswordOrganizerService, getFeedbackUserService, getReportTransactionService, getUserByEventService, resetPasswordOnLoginService, resetPasswordOrganizerService, sendVerifyEmailUserService, updateProfileOrganizerService, verifyEmailUserService } from './../../services/event.organizer.service';
 
 export const eventOrganizerRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {

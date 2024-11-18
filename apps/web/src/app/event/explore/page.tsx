@@ -5,17 +5,17 @@ import {
     Accordion,
     AccordionItem,
     AccordionTrigger,
-} from '@/components/ui/accordion';
+} from './../../../components/ui/accordion';
 import { useDebouncedCallback } from 'use-debounce';
 import { useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
+import instance from './../../../utils/axiosInstance/axiosInstance';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import SearchFilterEvent from '@/components/explore/searchInputFilter';
-import CategoryFilter from '@/components/explore/categoryFilter';
-import PriceFilter from '@/components/explore/priceFilter';
-import DateFilter from '@/components/explore/dateFilter';
-import LocationFilter from '@/components/explore/locationFilter';
-import CardEvent from '@/components/explore/cardEvent';
+import SearchFilterEvent from './../../../components/explore/searchInputFilter';
+import CategoryFilter from './../../../components/explore/categoryFilter';
+import PriceFilter from './../../../components/explore/priceFilter';
+import DateFilter from './../../../components/explore/dateFilter';
+import LocationFilter from './../../../components/explore/locationFilter';
+import CardEvent from './../../../components/explore/cardEvent';
 
 export default function Explore({ searchParams }: { searchParams: any }) {
 

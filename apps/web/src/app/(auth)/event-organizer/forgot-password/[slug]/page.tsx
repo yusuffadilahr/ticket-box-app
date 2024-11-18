@@ -1,15 +1,14 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
-import Link from 'next/link';
 import { ErrorMessage } from 'formik';
-import toast, { Toaster } from 'react-hot-toast';
-import instance from '@/utils/axiosInstance/axiosInstance';
+import toast from 'react-hot-toast';
+import instance from './../../../../../utils/axiosInstance/axiosInstance';
 import { useMutation } from '@tanstack/react-query';
-import { forgotPasswordSchema } from '@/features/event-organizer/schema/forgotPasswordSchema';
+import { forgotPasswordSchema } from './../../../../../features/event-organizer/schema/forgotPasswordSchema';
 
 interface Params {
     slug: string;

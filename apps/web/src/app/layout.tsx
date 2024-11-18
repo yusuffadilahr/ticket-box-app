@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Inter_Tight } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import TanstackProviders from '@/providers/tanstackProviders';
+import { Header } from './../components/Header';
+import { Footer } from './../components/Footer';
+import TanstackProviders from './../providers/tanstackProviders';
 import { Toaster } from 'react-hot-toast';
-import AuthProvider from '@/providers/authProviders';
-import HOCLoading from '@/providers/HOCLoading';
+import AuthProvider from './../providers/authProviders';
+import HOCLoading from './../providers/HOCLoading';
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -1,5 +1,5 @@
-import { prisma } from "@/connection";
-import { Status } from '@prisma/client'; // Import your enum
+import { prisma } from "./../../connection";
+import { Status } from '@prisma/client';
 import { Request, Response, NextFunction } from "express";
 
 
@@ -44,6 +44,8 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 updatedAt: new Date()
             },
         });
+
+        
 
         res.status(200).json({
             error: false,

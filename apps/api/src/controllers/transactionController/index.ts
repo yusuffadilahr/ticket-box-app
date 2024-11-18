@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { mysqlConnection, prisma } from "@/connection";
-import { addHours, addMinutes } from "date-fns";
-// import coreApi from "@/utils/midtransInstance/midtransInstance";
-import snap from "@/utils/midtransInstance/midtransInstance";
+import { mysqlConnection, prisma } from "./../../connection";
+import { addHours } from "date-fns";
+import snap from "./../../utils/midtransInstance/midtransInstance";
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -25,14 +24,8 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         })
 
         if (!dataEvent) throw { msg: "Event tidak ditemukan", status: 404 }
-
         let totalPembayaran = 0;
-
-
         const dataDetails = ticketDetails?.map((item: any, i: any) => {
-
-            // if (item.quantity > ticket.seatAvailable) throw { msg: `Tiket yang dibeli dengan id = ${item.ticketId} melebihi kuota`, status: 400 };
-
 
             const subtotal = item.quantity * item.price
             const totalDiscount = item.quantity * item.discount
@@ -43,7 +36,6 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
                 ticketId: item.ticketId,
                 price: subtotal,
                 quantity: item.quantity,
-                // discount: item.discount,
                 discount: totalDiscount,
                 expiredAt: addHours(new Date(), 7)
             }
@@ -224,7 +216,12 @@ export const getTransaction = async (req: Request, res: Response, next: NextFunc
         const dataTransaction = await prisma.transactions.findMany({
             where: { userId: userId },
             include: {
-                transactionDetail: true,
+                // transactionDetail: true,
+                transactionDetail: {
+                    include: {
+                        tickets : true
+                    }
+                },
                 event: {
                     include: {
                         Reviews: {

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import instance from "@/utils/axiosInstance/axiosInstance";
+import instance from "./../../../utils/axiosInstance/axiosInstance";
 
 export const QueryGetDataTransactionReviewApi = () => {
     const { data: reviewData } = useQuery({
@@ -14,6 +14,7 @@ export const QueryGetDataTransactionReviewApi = () => {
         queryKey: ['get-transaction-data'],
         queryFn: async () => {
             const res = await instance.get('/transaction')
+            console.log(res.data.data)
             return res.data.data
         }
     })

@@ -1,5 +1,5 @@
-import { prisma } from "@/connection";
-import { createCategoryService } from "@/services/category.service";
+import { prisma } from "./../../connection";
+import { createCategoryService } from "./../../services/category.service";
 import { NextFunction, Request, Response } from "express";
 
 export const createCategory = async (req: Request, res: Response, next: NextFunction) => {

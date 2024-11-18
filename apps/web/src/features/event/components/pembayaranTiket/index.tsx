@@ -1,5 +1,5 @@
-import TotalPayment from '@/components/eventDetails/totalPayment';
-import PointReferralDiscount from '@/components/eventDetails/pointReferralDiscount';
+import TotalPayment from './../../../../components/eventDetails/totalPayment';
+import PointReferralDiscount from './../../../../components/eventDetails/pointReferralDiscount';
 
 
 export default function PembayaranTiket({ isPending, setPointsToDeduct, pointsToDeduct, profilePoint, toggleReferralDiscount, useReferralDiscount, profileDiscount, totalTickets, queryDataDetailEvent, ticketQuantities, totalPrice, handleCheckoutTickets }: any) {

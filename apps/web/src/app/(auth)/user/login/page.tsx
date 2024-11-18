@@ -1,19 +1,19 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import {  useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
-import { useLayoutEffect, useState } from 'react';
+import {  useState } from 'react';
 import Link from 'next/link';
-import { loginSchema } from '@/features/login/schema/loginSchema';
+import { loginSchema } from './../../../../features/login/schema/loginSchema';
 import { ErrorMessage } from 'formik';
 import { useMutation } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
-import authStore from '@/zustand/authstore';
+import authStore from './../../../../zustand/authstore';
 import Cookies from 'js-cookie'
-import {GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut} from 'firebase/auth'
-import auth from '@/utils/firebase/firebase';
+import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
+import auth from './../../../../utils/firebase/firebase';
 
 const provider = new GoogleAuthProvider()
 export default function Page() {

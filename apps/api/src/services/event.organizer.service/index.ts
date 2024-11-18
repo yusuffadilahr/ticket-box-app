@@ -1,8 +1,8 @@
-import { prisma } from "@/connection";
-import { cloudinaryUpload } from "@/utils/cloudinary/index";
-import { comparePassword, hashPassword } from "@/utils/passwordHash";
-import { encodeToken } from "@/utils/token.sign";
-import { transporter } from "@/utils/transporter";
+import { prisma } from "./../../connection";
+import { cloudinaryUpload } from "./../../utils/cloudinary/index";
+import { comparePassword, hashPassword } from "./../../utils/passwordHash";
+import { encodeToken } from "./../../utils/token.sign";
+import { transporter } from "./../../utils/transporter";
 import { Prisma } from "@prisma/client";
 import { endOfWeek, startOfWeek } from "date-fns";
 import fs, { readFileSync } from 'fs'

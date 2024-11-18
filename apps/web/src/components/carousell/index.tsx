@@ -4,8 +4,8 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from "@/components/ui/carousel"
-import { Card, CardContent } from "@/components/ui/card"
+} from "./../../components/ui/carousel"
+import { Card, CardContent } from "./../../components/ui/card"
 import Image from 'next/image'
 import EmblaCarousel from 'embla-carousel';
 import { EmblaCarouselType } from 'embla-carousel';

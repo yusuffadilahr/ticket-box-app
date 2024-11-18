@@ -1,19 +1,14 @@
 'use client'; 
 
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
-import { EventSchema } from '@/features/event/schema/eventSchemas';
-import TiptapEditor from '@/components/RichTextEditor';
+import instance from './../../../../../utils/axiosInstance/axiosInstance';
 import { toast } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { UpdateEventSchema } from '@/features/event/schema/updateEventSchemas';
-import EditEventInfo from '@/features/eventDashboard/components/editEventInfo';
+import EditEventInfo from './../../../../../features/eventDashboard/components/editEventInfo';
 import { useState } from 'react';
-import ImageUploader from '@/features/eventDashboard/components/imageUploader';
-// Validasi menggunakan Yup
+import ImageUploader from './../../../../../features/eventDashboard/components/imageUploader';
 
 export default function Page({ params }: { params: { slug: string } }) {
     const { slug } = params

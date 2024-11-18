@@ -1,18 +1,30 @@
 'use client';
+import dynamic from 'next/dynamic';
 
 import React, { useState } from 'react';
-import { Formik, Form} from 'formik';
+import { Formik, Form } from 'formik';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
-import { EventSchema } from '@/features/event/schema/eventSchemas';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
+import { EventSchema } from './../../../../features/event/schema/eventSchemas';
 import { toast } from 'react-hot-toast';
+
 import 'react-quill/dist/quill.snow.css';
+
 import { useRouter } from 'next/navigation';
 
-import TicketList from '@/components/eventDashboard/ticketList';
-import EditEventInfo from '@/features/eventDashboard/components/editEventInfo';
-import ImageUploader from '@/features/eventDashboard/components/imageUploader';
-import CreateNewTicket from '@/features/eventDashboard/components/createNewTicket';
+
+const EditEventInfo = dynamic(() => import('./../../../../features/eventDashboard/components/editEventInfo'), { ssr: false });
+const ImageUploader = dynamic(() => import('./../../../../features/eventDashboard/components/imageUploader'), { ssr: false });
+const CreateNewTicket = dynamic(() => import('./../../../../features/eventDashboard/components/createNewTicket'), { ssr: false });
+const TicketList = dynamic(() => import('./../../../../components/eventDashboard/ticketList'), { ssr: false });
+
+
+// import TicketList from './../../../../components/eventDashboard/ticketList';
+// import EditEventInfo from './../../../../features/eventDashboard/components/editEventInfo';
+// import ImageUploader from './../../../../features/eventDashboard/components/imageUploader';
+// import CreateNewTicket from './../../../../features/eventDashboard/components/createNewTicket';
+
+
 
 const EventForm = () => {
   const [isPaid, setIsPaid] = useState(true);
@@ -130,7 +142,7 @@ const EventForm = () => {
             </div>
             <div className="flex justify-center mt-8">
               <button
-              disabled={isPending}
+                disabled={isPending}
                 type="submit"
                 className={`bg-blue-500 hover:bg-blue-700 w-full ${isPending ? 'bg-neutral-700 hover:bg-blue-700' : ''} text-white rounded-md p-3`}
               >

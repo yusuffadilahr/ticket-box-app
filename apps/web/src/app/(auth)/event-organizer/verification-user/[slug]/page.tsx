@@ -1,17 +1,12 @@
 'use client';
-// import {
-//     InputOTP,
-//     InputOTPGroup,
-//     InputOTPSeparator,
-//     InputOTPSlot,
-//   } from "@/components/ui/input-otp"
+
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
-import VerificationHeaders from '@/features/event-organizer/verification-user/components';
-import authStore from '@/zustand/authstore';
+import VerificationHeaders from '../../../../../features/event-organizer/verification-user/components';
+import authStore from '../../../../../zustand/authstore';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -29,7 +24,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const { mutate: mutateVerifyCode } = useMutation({
     mutationFn: async (data: any) => {
       return await axios.patch(
-        'http://localhost:8000/api/event-organizer/verify-user',
+        'https://tiket-box-api.vercel.app/api/event-organizer/verify-user',
         {
           verificationCode: data,
         },

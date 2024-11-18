@@ -1,7 +1,6 @@
 'use client';
-import authStore from '@/zustand/authstore';
+import authStore from './../../zustand/authstore';
 import Cookies from 'js-cookie';
-import { Metadata } from 'next';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 

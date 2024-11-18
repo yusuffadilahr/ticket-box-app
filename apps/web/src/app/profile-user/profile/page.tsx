@@ -1,14 +1,13 @@
 
 'use client'
-import { Formik, Field, ErrorMessage, Form } from 'formik';
-import { registerUserSchema } from "@/features/register/schema/registerSchema";
-import ProfileHeader from "@/components/profile/profile";
-import LeftMenu from "@/components/profile/leftMenu";
-import authStore from '@/zustand/authstore';
+import { Formik, Field, Form } from 'formik';
+import ProfileHeader from "./../../../components/profile/profile";
+import LeftMenu from "./../../../components/profile/leftMenu";
+import authStore from './../../../zustand/authstore';
 import { useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "./../../../components/ui/avatar"
 import { useMutation, useQuery } from '@tanstack/react-query';
-import instance from '@/utils/axiosInstance/axiosInstance';
+import instance from './../../../utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
 
 

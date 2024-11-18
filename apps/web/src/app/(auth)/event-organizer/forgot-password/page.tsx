@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
 import { ErrorMessage } from 'formik';
 import toast from 'react-hot-toast';
-import instance from '@/utils/axiosInstance/axiosInstance';
+import instance from './../../../../utils/axiosInstance/axiosInstance';
 import { useMutation } from '@tanstack/react-query';
 
 export default function Page() {

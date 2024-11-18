@@ -6,7 +6,7 @@ export default function EventImage({ queryDataDetailEvent }: any) {
             <Image
                 src={queryDataDetailEvent?.EventImages[0]?.eventImageUrl.includes('https://') ?
                     queryDataDetailEvent?.EventImages[0]?.eventImageUrl :
-                    `http://localhost:8000/api/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
+                    `https://tiket-box-api.vercel.app/api/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
                 } alt="testing"
                 className="object-cover w-full h-auto rounded-lg drop-shadow-lg"
                 width={1000}
