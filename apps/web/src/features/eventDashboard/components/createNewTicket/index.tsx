@@ -1,3 +1,5 @@
+'use client'
+
 import CreateTicket from "./../../../../components/eventDashboard/createTicket";
 import { ErrorMessage } from "formik";
 

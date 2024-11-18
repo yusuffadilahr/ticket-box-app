@@ -135,7 +135,7 @@ const EventForm = () => {
             </div>
             <div className="flex justify-center mt-8">
               <button
-              disabled={isPending}
+                disabled={isPending}
                 type="submit"
                 className={`bg-blue-500 hover:bg-blue-700 w-full ${isPending ? 'bg-neutral-700 hover:bg-blue-700' : ''} text-white rounded-md p-3`}
               >
