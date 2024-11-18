@@ -1,4 +1,5 @@
 'use client';
+import dynamic from 'next/dynamic';
 
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
@@ -12,10 +13,16 @@ import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
 
 
-import TicketList from './../../../../components/eventDashboard/ticketList';
-import EditEventInfo from './../../../../features/eventDashboard/components/editEventInfo';
-import ImageUploader from './../../../../features/eventDashboard/components/imageUploader';
-import CreateNewTicket from './../../../../features/eventDashboard/components/createNewTicket';
+const EditEventInfo = dynamic(() => import('./../../../../features/eventDashboard/components/editEventInfo'), { ssr: false });
+const ImageUploader = dynamic(() => import('./../../../../features/eventDashboard/components/imageUploader'), { ssr: false });
+const CreateNewTicket = dynamic(() => import('./../../../../features/eventDashboard/components/createNewTicket'), { ssr: false });
+const TicketList = dynamic(() => import('./../../../../components/eventDashboard/ticketList'), { ssr: false });
+
+
+// import TicketList from './../../../../components/eventDashboard/ticketList';
+// import EditEventInfo from './../../../../features/eventDashboard/components/editEventInfo';
+// import ImageUploader from './../../../../features/eventDashboard/components/imageUploader';
+// import CreateNewTicket from './../../../../features/eventDashboard/components/createNewTicket';
 
 
 
