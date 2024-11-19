@@ -1,7 +1,10 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Field, ErrorMessage } from 'formik';
 
+interface CreateTicketProps {
+  isPaid: boolean;
+}
 
-export default function CreateTicket({isPaid}:any) {
+export default function CreateTicket({ isPaid }: CreateTicketProps) {
     return (
         <>
         <div className="flex flex-col col-span-2">

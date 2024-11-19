@@ -4,10 +4,10 @@ import { Formik } from 'formik';
 import bg from '../../../../../../../apps/web/public/daftar-cr.webp';
 import Image from 'next/image';
 import logo from '../../../../../../../apps/web/public/Logo.webp';
-import { loginOrganizerSchema } from '../../../../features/login-organizer/schema/loginOrganizerSchema';
-import BenefitCard from '../../../../features/event-organizer/component/benefitCard';
-import FormInputLogin from '../../../../features/event-organizer/login/component/FormInputLogin';
-import useHandleLogin from '@/features/event-organizer/login/hooks/useHandleLogin';
+import { loginOrganizerSchema } from '../../../../features/loginOrganizer/schema/loginOrganizerSchema';
+import BenefitCard from '../../../../features/eventOrganizer/component/benefitCard';
+import FormInputLogin from '../../../../features/eventOrganizer/login/component/FormInputLogin';
+import useHandleLogin from '@/features/eventOrganizer/login/hooks/useHandleLogin';
 
 export default function Page() {
   const { handleLogin, isPending } = useHandleLogin()

@@ -1,4 +1,4 @@
-import { registerOrganizerSchema } from "@/features/register-organizer/schema/registerOrganizerSchema";
+import { registerOrganizerSchema } from "@/features/registerOrganizer/schema/registerOrganizerSchema";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";

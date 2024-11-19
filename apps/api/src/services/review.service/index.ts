@@ -65,7 +65,7 @@ export const getReviewUserService = async ({ userId }: any) => {
 export const getReviewUserEventService = async ({ id }: any) => {
     const dataReview = await prisma.reviews.findMany({
         where: {
-            userId:id
+            eventId: Number(id)
         },
         include: {
             event: true,

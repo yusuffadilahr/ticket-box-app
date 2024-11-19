@@ -5,11 +5,11 @@ import Image from "next/image"
 import logo from "../../../../../../../apps/web/public/Logo.webp"
 import { Formik } from 'formik';
 import Link from "next/link";
-import { registerOrganizerSchema } from "../../../../features/register-organizer/schema/registerOrganizerSchema";
+import { registerOrganizerSchema } from "../../../../features/registerOrganizer/schema/registerOrganizerSchema";
 import { useRouter } from "next/navigation";
-import WelcomeCard from "../../../../features/event-organizer/register/components/RegisterOrganizer";
-import FormInput from "../../../../features/event-organizer/register/components/FormInput";
-import useMutateRegisterEventOrganizer from "../../../../features/event-organizer/register/hooks/useMutateRegisterEventOrganizer";
+import WelcomeCard from "../../../../features/eventOrganizer/register/components/RegisterOrganizer";
+import FormInput from "../../../../features/eventOrganizer/register/components/FormInput";
+import useMutateRegisterEventOrganizer from "../../../../features/eventOrganizer/register/hooks/useMutateRegisterEventOrganizer";
 
 
 export default function RegisterOrganizer() {

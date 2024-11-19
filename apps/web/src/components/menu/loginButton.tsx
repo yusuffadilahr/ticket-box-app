@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 
-export default function LoginButton({pathname}:any) {
+export default function LoginButton({ pathname }: { pathname : String}) {
     return (
         <Link
             href={'/user/login'}

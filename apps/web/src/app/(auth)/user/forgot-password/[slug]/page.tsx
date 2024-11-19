@@ -7,7 +7,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ErrorMessage } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
-import { forgotPasswordSchema } from './../../../../../features/forgot-password/schema/forgotPasswordSchema';
+import { forgotPasswordSchema } from './../../../../../features/forgotPassword/schema/forgotPasswordSchema';
 import instance from './../../../../../utils/axiosInstance/axiosInstance';
 import { useMutation } from '@tanstack/react-query';
 

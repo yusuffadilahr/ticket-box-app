@@ -36,8 +36,8 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                                             ? item.EventImages[0].eventImageUrl
                                                             : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
                                                     }
-                                                    height={142}
-                                                    width={142}
+                                                    height={200}
+                                                    width={200}
                                                     alt="testing"
                                                     className="w-full lg:w-full h-24 lg:h-44 object-cover rounded-t-2xl"
                                                 />
@@ -46,7 +46,7 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                         <div className='text-black p-2 pt-5'>
                                             <div className='flex flex-col gap-1 lg:gap-2'>
                                                 <h1 className='flex items-center gap-2 text-xs lg:text-sm text-gray-500 font-normal'>
-                                                    <IoLocationSharp />{item?.location.length > 20 ? <h1>{item?.location.slice(0, 15)}</h1> : item?.location}</h1>
+                                                    <IoLocationSharp />{item?.location.length > 20 ? <h1>{item?.location.slice(0, 20)}...</h1> : item?.location}</h1>
                                                 <h1 className='flex items-center gap-2 text-xs lg:text-sm text-gray-500 font-normal'>
                                                     <FaCalendarAlt />
                                                     {item?.startEvent.split('T')[0].split('-').join('/')} - {item?.endEvent.split('T')[0].split('-').join('/')}
@@ -60,15 +60,15 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                                                 <h1 className='text-sm lg:text-base   bottom-0 text-orange-600 font-bold'>
                                                     Rp{item?.minimumPrice.toLocaleString("id-ID")}
                                                 </h1>
-                                                {isSoldOut ? 
-                                                <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'>
-                                                    Tiket Habis
-                                                </h1> : isExpired ? <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'>
-                                                    Tiket Kadaluarsa
-                                                </h1> :
+                                                {isSoldOut ?
                                                     <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'>
-                                                        Tiket Tersedia
-                                                    </h1>}
+                                                        Tiket Habis
+                                                    </h1> : isExpired ? <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'>
+                                                        Tiket Kadaluarsa
+                                                    </h1> :
+                                                        <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'>
+                                                            Tiket Tersedia
+                                                        </h1>}
                                                 {/* {item?.seatAvailability > 0 ?
                                                     <h1 className='text-xs lg:text-sm   bottom-0 text-green-500'>
                                                         Tiket Tersedia
