@@ -19,12 +19,12 @@ export default function Page({ params }: { params: { slug: string } }) {
             return await instance.put(`/event/updates-event/${slug}`, values);
         },
         onSuccess: (res) => {
-            toast.success('berhasil')
+            toast.success(res?.data?.message);
             console.log(res);
         },
-        onError: (error) => {
-            toast.error('error bro')
-            console.log(error);
+        onError: (err) => {
+            toast.error('Error, harap dicoba kembali.');
+            console.log(err);
         },
     });
     const { data: getCategory } = useQuery({

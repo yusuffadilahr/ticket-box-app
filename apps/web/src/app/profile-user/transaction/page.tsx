@@ -10,7 +10,7 @@ import { Input } from './../../../components/ui/input';
 import TableTransaction from "./../../../components/profile/transaction/tableTransaction";
 import { QueryGetDataTransactionReviewHooks } from "./../../../features/profile-transaction/hooks/QueryGetDataTransactionReviewHooks";
 import { MutateReviewEventHook } from "./../../../features/profile-transaction/hooks/MutateReviewEventHook";
-
+import instance from "@/utils/axiosInstance/axiosInstance";
 
 export default function ProfileTransaction() {
 
@@ -44,9 +44,11 @@ export default function ProfileTransaction() {
         setIsDialogOpen(true);
     };
 
-    const isEventReviewed = (eventId: string) => {
-        return Array.isArray(reviewData?.dataReview) &&
-            reviewData.dataReview.some((review: any) => review.eventId === eventId);
+    const isEventReviewed = (eventId: number) => {
+        return (
+            Array.isArray(reviewData?.dataReview) &&
+            reviewData.dataReview.some((review: any) => review.eventId === eventId)
+        );
     };
 
 

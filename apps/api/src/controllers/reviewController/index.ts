@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { createReviewUserService, getReviewUserService } from './../../services/review.service'
+import { createReviewUserService, getReviewUserEventService, getReviewUserService } from './../../services/review.service'
 
 export const createReviewUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -17,7 +17,7 @@ export const createReviewUser = async (req: Request, res: Response, next: NextFu
 
         res.status(201).json({
             error: false,
-            message: 'Berhasil',
+            message: 'Berhasil memberikan review!',
             data: {}
         })
 
@@ -30,7 +30,25 @@ export const createReviewUser = async (req: Request, res: Response, next: NextFu
 export const getReviewUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId } = req.body
-        const data = await getReviewUserService({ id: userId })
+        const data = await getReviewUserService({ userId })
+
+        res.status(201).json({
+            error: false,
+            message: 'Berhasil Mendapatkan Data Review',
+            data: {
+                dataReview: data?.dataReview,
+            }
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getReviewUserEvent = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params
+        const data = await getReviewUserEventService({ id })
 
         res.status(201).json({
             error: false,

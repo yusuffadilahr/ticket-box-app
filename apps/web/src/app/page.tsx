@@ -4,7 +4,7 @@ import Image from 'next/image';
 import CarouselSlider from './../components/carousell';
 import waras from './../../waras.png';
 import { useEffect } from 'react';
-import {  useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import authStore from './../zustand/authstore';
 import { CiMusicNote1 } from 'react-icons/ci';
@@ -87,7 +87,6 @@ export default function Home() {
       <div className="w-full sm:h-[700px] lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
         <CarouselSlider data={queryGetCarousel} />
       </div>
-
       <TopSeller
         queryGetDataTopSell={queryGetDataTopSell}
       />
