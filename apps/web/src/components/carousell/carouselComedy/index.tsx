@@ -18,9 +18,7 @@ export default function CarouselComedy({ queryGetComedyEvent }: any) {
                             <div className="w-full lg:h-36">
                                 <Image
                                     src={
-                                        item?.EventImages[0]?.eventImageUrl?.includes(
-                                            'https://',
-                                        )
+                                        item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                             ? item.EventImages[0].eventImageUrl
                                             : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
                                     }

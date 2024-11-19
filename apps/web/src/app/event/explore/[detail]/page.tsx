@@ -16,9 +16,6 @@ interface IParams {
     };
 }
 
-
-
-
 export default function EventDetail({ params }: IParams) {
     const router = useRouter()
     const { detail } = params;
