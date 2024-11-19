@@ -66,9 +66,7 @@ export default function TabReview({ queryDataReview }:any) {
                                                     <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                                                         Feedback : {item?.feedback}
                                                     </p>
-
                                                 </div>
-
                                             </div>
                                         </li>
 
@@ -79,7 +77,7 @@ export default function TabReview({ queryDataReview }:any) {
                     })
                     
                     :
-                    <div>Belum ada Review</div>
+                    <div className='font-bold text-gray-700 flex justify-center'>Belum ada Review</div>
                 }
             </CardContent>
         </Card>

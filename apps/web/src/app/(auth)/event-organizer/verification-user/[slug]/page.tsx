@@ -5,7 +5,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
-import VerificationHeaders from '../../../../../features/event-organizer/verification-user/components';
+import VerificationHeaders from '../../../../../features/eventOrganizer/verificationUser/components';
 import authStore from '../../../../../zustand/authstore';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';

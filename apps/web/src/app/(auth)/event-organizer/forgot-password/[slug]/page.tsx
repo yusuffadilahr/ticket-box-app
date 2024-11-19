@@ -8,7 +8,7 @@ import { ErrorMessage } from 'formik';
 import toast from 'react-hot-toast';
 import instance from './../../../../../utils/axiosInstance/axiosInstance';
 import { useMutation } from '@tanstack/react-query';
-import { forgotPasswordSchema } from './../../../../../features/event-organizer/schema/forgotPasswordSchema';
+import { forgotPasswordSchema } from './../../../../../features/eventOrganizer/schema/forgotPasswordSchema';
 
 interface Params {
     slug: string;

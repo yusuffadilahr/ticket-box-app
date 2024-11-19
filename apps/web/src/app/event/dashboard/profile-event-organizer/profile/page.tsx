@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "./../../../../../components/ui/input"
 import { Label } from "./../../../../../components/ui/label"
 import { ErrorMessage, Form, Formik } from 'formik';
-import { profileOrganizerSchema } from './../../../../../features/event-organizer/schema/profileUpdateSchema';
+import { profileOrganizerSchema } from './../../../../../features/eventOrganizer/schema/profileUpdateSchema';
 
 export default function Page() {
   const ownerName = authStore((state) => state?.ownerName);

@@ -5,7 +5,7 @@ import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 import { useMutation } from "@tanstack/react-query";
 import instance from './../../../../../utils/axiosInstance/axiosInstance';
-import { resetPasswordProfile } from "./../../../../../features/reset-password-profile/schema/resetPasswordProfile";
+import { resetPasswordProfile } from "./../../../../../features/resetPasswordProfile/schema/resetPasswordProfile";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 

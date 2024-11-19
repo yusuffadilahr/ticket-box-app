@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 
-export default function RegisterButton({pathname,color}:any) {
+export default function RegisterButton({ pathname, color }: { pathname: String, color :String}) {
     return (
         <Link
             href={'/user/register'}

@@ -8,17 +8,16 @@ import { Button } from './../../../components/ui/button';
 import { Textarea } from './../../../components/ui/textarea';
 import { Input } from './../../../components/ui/input';
 import TableTransaction from "./../../../components/profile/transaction/tableTransaction";
-import { QueryGetDataTransactionReviewHooks } from "./../../../features/profile-transaction/hooks/QueryGetDataTransactionReviewHooks";
-import { MutateReviewEventHook } from "./../../../features/profile-transaction/hooks/MutateReviewEventHook";
-import instance from "@/utils/axiosInstance/axiosInstance";
+import { QueryGetDataTransactionReviewHooks } from "./../../../features/profileTransaction/hooks/QueryGetDataTransactionReviewHooks";
+import { MutateReviewEventHook } from "./../../../features/profileTransaction/hooks/MutateReviewEventHook";
 
 export default function ProfileTransaction() {
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-    const [reviewText, setReviewText] = useState("");
-    const [feedback, setFeedback] = useState("");
-    const [rating, setRating] = useState<number | ''>('');
+    const [reviewText, setReviewText] = useState<string>("");
+    const [feedback, setFeedback] = useState<string>("");
+    const [rating, setRating] = useState<number | string>('');
 
 
 
