@@ -41,7 +41,6 @@ export default function Explore({ searchParams }: { searchParams: any }) {
         queryFn: async () => {
             const res = await instance.get('/category', {
             });
-            console.log(res, "<<<<<<<<<<<<<>>>>>>>")
             return res.data.data;
         },
     });

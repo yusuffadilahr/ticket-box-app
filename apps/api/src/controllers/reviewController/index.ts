@@ -1,4 +1,4 @@
-import  { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express'
 
 import { createReviewUserService, getReviewUserService } from './../../services/review.service'
 
@@ -29,8 +29,8 @@ export const createReviewUser = async (req: Request, res: Response, next: NextFu
 
 export const getReviewUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params
-        const data = await getReviewUserService({ id })
+        const { userId } = req.body
+        const data = await getReviewUserService({ id: userId })
 
         res.status(201).json({
             error: false,

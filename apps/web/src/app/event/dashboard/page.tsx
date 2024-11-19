@@ -80,26 +80,32 @@ export default function OrganizerDashboard() {
       },
     ],
   };
+  
+  const yearData = dashboardData?.yearlyStatistic?.map((item: any) => ({
+    year: item.year,
+    total: item.yearlyStatistics.reduce((sum: any, stat: any) => sum + (stat._sum?.totalPrice || 0), 0),
+  }));
 
   const yearlyStatistic: { options: ApexOptions, series: any[] } = {
     options: {
-      chart: { id: 'daily-chart' },
+      chart: { id: 'yearly-chart' },
       xaxis: {
-        categories: dashboardData?.yearlyStatistic?.map((item: any) => new Date(item?.createdAt).toLocaleDateString()),
+        categories: yearData?.map((item: any) => item?.year),
       },
       title: {
-        text: 'Laporan Per Tahun',
+        text: 'Statistik Tahunan',
         align: 'center',
         style: { fontSize: '16px', fontWeight: 'bold', color: '#333' },
       },
     },
     series: [
       {
-        name: 'Laporan Tahun Ini',
-        data: dashboardData?.yearlyStatistic?.map((item: any) => item?._sum?.totalPrice),
+        name: 'Total Pendapatan',
+        data: yearData?.map((data: any) => data.total),
       },
     ],
   };
+
 
   const rangeBarChart: { options: ApexOptions, series: any[] } = {
     series: [

@@ -50,7 +50,7 @@ export const createReviewUserService = async ({
 export const getReviewUserService = async ({ id }: any) => {
     const dataReview = await prisma.reviews.findMany({
         where: {
-            eventId: Number(id)
+            userId:id
         },
         include: {
             event: true,
