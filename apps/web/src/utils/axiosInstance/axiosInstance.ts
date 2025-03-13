@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import authStore from "./../../zustand/authstore";
 
 const instance = axios.create({
-    baseURL: "http://localhost:8000/api/"
+    baseURL: "https://ticket-box-app-production.up.railway.app/api/"
 })
 
 instance.interceptors.request.use(
