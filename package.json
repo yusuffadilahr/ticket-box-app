@@ -6,6 +6,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "serve": "turbo run serve",
+    "start": "node apps/api/dist/index.js",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "postprepare": "bash -c 'chmod ug+x .husky/*'",
     "postinstall": "node -e \"if (process.platform !== 'win32') require('child_process').execSync('chmod ug+x .husky/*')\""
