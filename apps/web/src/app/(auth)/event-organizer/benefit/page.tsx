@@ -1,6 +1,6 @@
-import { FaUsers, FaChartPie, FaTicketAlt, FaMoneyBillWave, FaCheckSquare, FaHeadset } from 'react-icons/fa';
-import FeatureCard from './../../../../features/event-organizer/component/FeatureCard';
+import { FaUsers, FaChartPie, FaTicketAlt, FaMoneyBillWave, FaCheckSquare, FaHeadset } from 'react-icons/fa'; 
 import Link from 'next/link';
+import FeatureCard from '@/features/eventOrganizer/component/FeatureCard';
 
 export default function benefitOrganizer() {
     return (

@@ -1,4 +1,6 @@
-export default function FeatureCard({ icon, title, description }: { icon: String, title: String, description: String }) {
+import * as React from 'react'
+
+export default function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: String, description: String }) {
     return (
         <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <div className="text-4xl mb-4">{icon}</div>

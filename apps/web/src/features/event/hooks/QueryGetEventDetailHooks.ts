@@ -1,10 +1,10 @@
 import { QueryGetEventDetailApi } from "../api/QueryGetEventDetailApi"
 
-export const QueryGetEventDetailHooks = ({ id }: { id :Number}) => {
+export const QueryGetEventDetailHooks = ({ id }: { id: Number }) => {
     const {
         queryDataDetailEvent,
         queryDataReview
-    } = QueryGetEventDetailApi({id})
+    } = QueryGetEventDetailApi({ id })
 
     return {
         queryDataDetailEvent,

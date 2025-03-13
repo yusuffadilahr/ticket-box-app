@@ -2,12 +2,12 @@ import Image from "next/image"
 import Link from "next/link"
 import CarouselComedy from "./../../../../components/carousell/carouselComedy"
 
-export default function KomediSection({ queryGetComedyEvent, waras }:any) {
+export default function KomediSection({ queryGetComedyEvent }:any) {
     return (
         <div className="relative w-full  flex justify-center items-center">
             <div className="w-full px-2 lg:px-20 h-[900px] lg:h-[700px] ">
                 <Image
-                    src={waras}
+                    src='waras.png'
                     height={800}
                     width={1200}
                     alt="comedy"

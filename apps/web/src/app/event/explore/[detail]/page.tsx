@@ -19,7 +19,7 @@ interface IParams {
 export default function EventDetail({ params }: IParams) {
     const router = useRouter()
     const { detail } = params;
-    const id = detail.split('TBX')[0];
+    const id = Number(detail.split('TBX')[0]);
 
     const [ticketQuantities, setTicketQuantities] = useState<number[]>([])
     const [pointsToDeduct, setPointsToDeduct] = useState(0);

@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import CarouselSlider from './../components/carousell';
-import waras from './../../waras.png';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -97,10 +96,7 @@ export default function Home() {
       />
 
 
-      <KomediSection
-        queryGetComedyEvent={queryGetComedyEvent}
-        waras={waras}
-      />
+      <KomediSection  queryGetComedyEvent={queryGetComedyEvent} />
 
       <Terbaru
         queryGetDataNewest={queryGetDataNewest}
