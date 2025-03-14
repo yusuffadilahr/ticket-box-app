@@ -18,7 +18,9 @@ import LocationFilter from './../../../components/explore/locationFilter';
 import CardEvent from './../../../components/explore/cardEvent';
 import LoadingComponent from '@/app/_service/clientside/loading';
 
-export default function Explore({ searchParams, dataExplore, dataCategory }: { searchParams: any, dataExplore: any, dataCategory: any }) {
+export default function Explore({ searchParams }: { searchParams: any }) {
+
+
     const params = useSearchParams();
     const [searchInput, setSearchInput] = useState(params.get('search') || '');
     const [limitData, setLimitData] = useState(8);
@@ -30,8 +32,39 @@ export default function Explore({ searchParams, dataExplore, dataCategory }: { s
     const [dateUntil, setDateUntil] = useState(params.get('dateUntil') || null);
     const [location, setLocation] = useState(params.get('location') || '');
 
+
+
     const router = useRouter();
     const pathname = usePathname();
+
+    const { data: queryGetCategory, isLoading: isLoadingCategory } = useQuery({
+        queryKey: ['get-event-data-carousel'],
+        queryFn: async () => {
+            const res = await instance.get('/category', {
+            });
+            return res.data.data;
+        },
+    });
+
+    const { data: querySearchData, isLoading: isLoadingEvent } = useQuery({
+        queryKey: ['search-data', searchInput, page, selectedCategory, minPrice, maxPrice, location, dateFrom, dateUntil],
+        queryFn: async () => {
+            const res = await instance.get('/event/search', {
+                params: {
+                    event: searchInput,
+                    page: page,
+                    limit_data: limitData,
+                    category: selectedCategory,
+                    minPrice: minPrice ?? 0,
+                    maxPrice: maxPrice ?? 999999999,
+                    location: location,
+                    dateFrom: dateFrom ?? '',
+                    dateUntil: dateUntil ?? '',
+                },
+            });
+            return res.data.data
+        }
+    });
 
     const debounce = useDebouncedCallback((values) => {
         setSearchInput(values);
@@ -40,9 +73,8 @@ export default function Explore({ searchParams, dataExplore, dataCategory }: { s
 
 
     useEffect(() => {
-        const currentUrl = new URLSearchParams(params);
+        const currentUrl = new URLSearchParams(searchParams);
         currentUrl.set(`page`, page.toString())
-
         if (searchInput) {
             currentUrl.set(`search`, searchInput)
         } else {
@@ -85,12 +117,12 @@ export default function Explore({ searchParams, dataExplore, dataCategory }: { s
             currentUrl.delete(`location`)
         }
 
-        router.push(`${pathname}?${currentUrl.toString()}`)
-        router.refresh()
-        
-    }, [page, searchInput, selectedCategory, minPrice, maxPrice, dateFrom, dateUntil, location, params, router, pathname])
 
-    if (dataExplore?.eventSearch.length === 0) return <LoadingComponent />
+
+        router.push(`${pathname}?${currentUrl.toString()}`)
+    }, [page, searchInput, selectedCategory, minPrice, maxPrice, dateFrom, dateUntil, location])
+
+
 
     return (
         <main className="pt-12 lg:pt-28 lg:px-20 flex flex-col lg:flex-row gap-5">
@@ -119,7 +151,7 @@ export default function Explore({ searchParams, dataExplore, dataCategory }: { s
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Tipe Event</AccordionTrigger>
                                 <CategoryFilter
-                                    queryGetCategory={dataCategory || []}
+                                    queryGetCategory={queryGetCategory}
                                     setSelectedCategory={setSelectedCategory}
                                 />
                             </AccordionItem>
@@ -153,27 +185,33 @@ export default function Explore({ searchParams, dataExplore, dataCategory }: { s
                 </div>
             </section>
 
-            <div className="flex flex-col pt-10 lg:pt-0">
-                <section className="w-full lg:w-fit ">
-                    <CardEvent
-                        querySearchData={dataExplore || []}
-                    />
+            {isLoadingEvent ?
+                <LoadingComponent />
+                :
+                <div className="flex flex-col pt-10 lg:pt-0">
+                    <section className="w-full lg:w-fit">
+                        <CardEvent
+                            querySearchData={querySearchData}
+                        />
+                    </section>
+                    <section className="flex justify-center mt-6">
+                    {querySearchData?.eventSearch.length > 0 && !isLoadingEvent ? (
+                        Array(querySearchData?.totalPage).fill(0).map((item, index) => {
+                            return (
+                                <button
+                                    key={index}
+                                    className="join-item btn btn-sm mx-2 border rounded-lg w-10 h-10 hover:bg-slate-400  hover:font-bold transition-all active:bg-yellow-500  focus:ring focus:bg-blue-950 focus:text-white duration-300 ease-in-out "
+                                    onClick={() => setPage(index + 1)}
+                                >
+                                    {index + 1}
+                                </button>
+                            );
+                        })
+                    ) : querySearchData?.eventSearch.length === 0 && !isLoadingEvent ? 
+                    <div className='px-3 bg-red-100 text-red-600 rounded-xl'>Data tidak tersedia</div> : ''}
                 </section>
-
-                <section className="flex justify-center mt-6">
-                    {Array(dataExplore?.totalPage).fill(0).map((_, index) => {
-                        return (
-                            <button
-                                key={index}
-                                className="join-item btn btn-sm mx-2 border rounded-lg w-10 h-10 hover:bg-slate-400  hover:font-bold transition-all active:bg-yellow-500  focus:ring focus:bg-blue-950 focus:text-white duration-300 ease-in-out "
-                                onClick={() => setPage(index + 1)}
-                            >
-                                {index + 1}
-                            </button>
-                        );
-                    })}
-                </section>
-            </div>
+                </div>
+            }
         </main>
     );
 }
