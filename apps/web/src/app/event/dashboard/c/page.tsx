@@ -29,11 +29,9 @@ const EventForm = () => {
     onSuccess: (res) => {
       toast.success(res?.data?.message);
       router.push('/event/dashboard/list-event')
-      console.log(res);
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message);
-      console.log(error);
     },
   });
   const { data: getCategory } = useQuery({

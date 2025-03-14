@@ -285,9 +285,6 @@ export const getUserByEventService = async ({
     const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
     const endWeek = endOfWeek(new Date(), { weekStartsOn: 1 })
 
-    console.log(weekStart, "<<< weekStart")
-    console.log(endWeek, "<<< endWeek")
-
     const weeklyStatistic = await prisma.transactions.groupBy({
         by: ['createdAt'],
         where: {
@@ -348,8 +345,6 @@ export const getUserByEventService = async ({
         yearlyStatistic.push({ year, yearlyStatistics });
     }
 
-
-    console.log(yearlyStatistic, "<<<<<<<<<<<<<<<<<<<, ")
     return {
         dataAttendee,
         findEvent,

@@ -16,13 +16,11 @@ export default function Page() {
             })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success('Harap cek email secara berkala!')
             navigate.push('/event-organizer/login')
         },
         onError: (err) => {
             toast.error('Maaf ada kesalahan atau mungkin email belum terdaftar!')
-            console.log(err)
         }
     })
 

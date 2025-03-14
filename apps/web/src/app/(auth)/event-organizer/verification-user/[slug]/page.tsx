@@ -40,11 +40,9 @@ export default function Page({ params }: { params: { slug: string } }) {
       Cookies.remove('role');
       Cookies.remove('token');
       router.push('/event-organizer/login');
-      console.log(res);
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
-      console.log(err);
     },
   });
 

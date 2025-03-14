@@ -40,10 +40,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       Cookies.remove('token')
       router.push('/user/login')
       resetAuth()
-      console.log(res);
     },
     onError: (err: any) => {
-      console.log(err?.response?.data?.message)
     }
   });
 

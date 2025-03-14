@@ -23,7 +23,6 @@ export default function Page() {
             }}
             validationSchema={loginOrganizerSchema}
             onSubmit={(values) => {
-              console.log(values);
               handleLogin({ email: values.email, password: values.password });
             }}>
 

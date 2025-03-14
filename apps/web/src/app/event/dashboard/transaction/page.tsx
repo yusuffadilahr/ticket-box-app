@@ -29,10 +29,7 @@ export default function EventTable() {
 
     const debounce = useDebouncedCallback((values) => {
         setSearchTransaction(values)
-        console.log(values)
     }, 1000)
-
-    console.log(getTransactionData, "<<<< mantap")
 
     if (isFetching) return (
         <SkeletonListEvent />

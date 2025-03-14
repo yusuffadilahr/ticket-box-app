@@ -39,15 +39,12 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
                 transactions: auth?.data?.data?.transactions
             })  
 
-            console.log(auth, "<<< auth provider")
-
             const encryptRole = CryptoJS.AES.encrypt(auth?.data?.data?.role, secret_key).toString()
 
             Cookies.set('role', encryptRole, { expires: 1 })
             Cookies.set('token', token, { expires: 1 })
 
         } catch (err) {
-            console.log(err);
         }
     };
 

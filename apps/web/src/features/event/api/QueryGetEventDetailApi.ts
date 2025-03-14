@@ -14,7 +14,6 @@ export const QueryGetEventDetailApi: any = ({ id }: any) => {
         queryKey: ['get-event-review'],
         queryFn: async () => {
             const res = await instance.get(`/review/event/${id}`);
-            console.log(res)
             return res.data.data;
 
         },

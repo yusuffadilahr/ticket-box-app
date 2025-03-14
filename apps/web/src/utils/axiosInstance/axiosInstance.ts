@@ -18,8 +18,6 @@ instance.interceptors.request.use(
         return request
     },
     error => {
-        console.log('Error Interceptor')
-        console.log(error)
     }
 )
 

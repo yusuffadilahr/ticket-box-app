@@ -15,16 +15,13 @@ export default function Page({ params }: { params: { slug: string } }) {
 
     const { mutate: mutationCreateEvent } = useMutation({
         mutationFn: async (values: FormData) => {
-            console.log(values);
             return await instance.put(`/event/updates-event/${slug}`, values);
         },
         onSuccess: (res) => {
             toast.success(res?.data?.message);
-            console.log(res);
         },
         onError: (err) => {
             toast.error('Error, harap dicoba kembali.');
-            console.log(err);
         },
     });
     const { data: getCategory } = useQuery({
@@ -39,14 +36,10 @@ export default function Page({ params }: { params: { slug: string } }) {
         queryFn: async () => {
             const res = await instance.get(`/event/detail/${slug}`);
             return res.data.data
-            console.log(res.data.data)
         },
     });
 
     const [isPaid, setIsPaid] = useState(true);
-
-
-    console.log(eventDetail)
 
     if (eventDetail == undefined) return <div></div>
     
@@ -70,7 +63,6 @@ export default function Page({ params }: { params: { slug: string } }) {
                     categoryId: eventDetail[0]?.categoryId || '',
                 }}
                 onSubmit={(values: any) => {
-                    console.log([values]);
                     const fd = new FormData();
                     fd.append('eventName', values.eventName);
                     fd.append('location', values.location);

@@ -16,13 +16,11 @@ export default function Page() {
             })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success(res?.data?.message)
             navigate.push('/user/login')
         },
         onError: (err: any) => {
             toast.error('Maaf ada kesalahan atau mungkin email belum terdaftar!')
-            console.log(err?.response?.data?.message)
         }
     })
 

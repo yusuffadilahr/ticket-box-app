@@ -48,7 +48,6 @@ export default function EventTable() {
       const res = await instance.get(`/event/organizer-event`, {
         params: { page, limit_data: 5, search: searchInput },
       });
-      console.log(res.data.data);
       return res.data.data;
     },
   });
@@ -61,11 +60,8 @@ export default function EventTable() {
       refetch();
     },
     onError: (err) => {
-      console.log(err);
     },
   });
-
-  console.log(getEventList, '<<<<<<<<<< gas');
 
   const debounceSearch = useDebouncedCallback((values) => {
     setSearchInput(values);

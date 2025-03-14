@@ -51,7 +51,6 @@ export default function RegisterOrganizer() {
                             }}
                             validationSchema={registerOrganizerSchema}
                             onSubmit={(values) => {
-                                console.log(values)
                                 handleRegister({
                                     organizerName: values.organizerName,
                                     ownerName: values.ownerName,

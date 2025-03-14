@@ -30,7 +30,6 @@ export default function Page() {
             return await instance.post('/auth/login/user', { email, password })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success(res?.data?.message)
             setAuth({
                 token: res?.data?.data?.token,
@@ -48,7 +47,6 @@ export default function Page() {
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message)
-            console.log(err)
         }
     })
 
@@ -79,13 +77,11 @@ export default function Page() {
                 identityNumber: res?.data?.data?.identityNumber
             })
             Cookies.set('token', res?.data?.data?.token, { expires: 1 })
-            console.log(res)
             toast.success(res?.data?.message)
             router.push('/')
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message)
-            console.log(err)
         }
     })
 
@@ -103,7 +99,6 @@ export default function Page() {
             })
         }, 
         onError: (err)=> {
-            console.log(err)
         }
     })
 

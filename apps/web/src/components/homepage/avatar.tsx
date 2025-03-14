@@ -16,7 +16,6 @@ export default function AvatarHover() {
     const setKeepAuth = authStore((state) => state.setKeepAuth)
     const loyaltyPoints = authStore((state) => state.point)
     const profilePicture = authStore((state) => state.profilePicture)
-    console.log(profilePicture)
 
     const navigate = useRouter()
 

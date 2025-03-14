@@ -21,11 +21,9 @@ export default function OrganizerResetPass() {
         onSuccess: (res) => {
             toast.success(res?.data?.message)
             router.push('/event/dashboard')
-            console.log(res)
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message)
-            console.log(err)
         }
     })
 
@@ -60,7 +58,6 @@ export default function OrganizerResetPass() {
                             password: ''
                         }}
                         onSubmit={(values) => {
-                            console.log(values)
                             mutateResetPasswordProfile({
                                 existingPassword: values?.existingPassword,
                                 password: values?.password

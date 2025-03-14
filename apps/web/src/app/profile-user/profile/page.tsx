@@ -43,12 +43,10 @@ export default function ProfileHome() {
         },
         onSuccess: (res) => {
             toast.success(res?.data?.message)
-            console.log(res)
             window.location.reload()
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message)
-            console.log(err)
         }
     })
 

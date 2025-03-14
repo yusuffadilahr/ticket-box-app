@@ -45,13 +45,11 @@ export default function ForgotPassword({ params }: { params: Params }) {
             })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success(res?.data?.message)
             router.push('/event-organizer/login')
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message)
-            console.log(err)
         }
     })
 

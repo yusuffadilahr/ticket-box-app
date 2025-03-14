@@ -13,12 +13,10 @@ const useMutateRegisterEventOrganizer = () => {
             })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success(res?.data?.message)
             router.push('/event-organizer/login')
         },
         onError: (err: any) => {
-            console.log(err?.response?.data?.message)
             toast.error(err?.response?.data?.message)
         }
     })

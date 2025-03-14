@@ -12,12 +12,10 @@ export const MutateHandleCheckoutTicketsHook = ({ id, router, profileDiscount, u
             if (redirectUrl) {
                 router.push(redirectUrl)
             } else {
-                console.log('Pembayaran Berhasil')
                 router.push('/event/explore')
             }
         },
         onError: (err: any) => {
-            console.log(err)
         }
     })
     return {

@@ -39,12 +39,10 @@ export default function ForgotPassword({ params }: { params: Params }) {
             })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success('Reset password success')
             router.push('/user/login')
         },
         onError: (err) => {
-            console.log(err)
         }
     })
 

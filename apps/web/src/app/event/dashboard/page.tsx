@@ -175,7 +175,6 @@ export default function OrganizerDashboard() {
   };
 
 
-  console.log("check event data", dashboardData)
   if (isFetching) return (
     <main className="flex flex-col">
       <section className='flex'>

@@ -30,12 +30,10 @@ export default function Page() {
       return await instance.get('/event-organizer/send-email-verify');
     },
     onSuccess: (res) => {
-      console.log(res);
       toast.success('Harap cek email anda secara berkala!');
     },
     onError: (err) => {
       toast.error('gagal!');
-      console.log(err);
     },
   });
 
@@ -53,21 +51,17 @@ export default function Page() {
     },
     onSuccess: (res) => {
       toast.success(res?.data?.message)
-      console.log(res, "<<<< res")
       setTimeout(() => {
         window.location.reload()
       }, 1000)
     },
     onError: (err: any) => {
-      console.log(err)
       toast.error(err?.response?.data?.message)
     }
   })
 
   useEffect(() => {
-    console.log('<<<<<<< refetch')
     refetch()
-    console.log('<<<<<<< refetch bawah')
   }, [refetch])
 
   if (isFetching) return (
@@ -99,8 +93,6 @@ export default function Page() {
       </div>
     </main>
   )
-
-  console.log(getEventData, "<<<<<")
 
   return (
     <main className="w-full flex flex-col h-fit gap-5">
@@ -204,7 +196,6 @@ export default function Page() {
                     }
 
                     mutateUpdateProfile(fd)
-                    console.log(values)
                   }}
                 >
                   {({ setFieldValue }) => (

@@ -17,12 +17,10 @@ export default function Page() {
             return await instance.post('/auth/register/user', { firstName, lastName, email, password, phoneNumber, identityNumber, referralBody })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success(res.data.message)
             router.push('/user/login')
         },
         onError: (err) => {
-            console.log(err)
             toast.error('ini gagal') 
         }
     })

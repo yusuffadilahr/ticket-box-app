@@ -25,13 +25,11 @@ export default function ProfileResetPass() {
             })
         },
         onSuccess: (res) => {
-            console.log(res)
             toast.success('Berhasil mengubah password!')
             router.push('/')
         },
         onError: (err) => {
             toast.error('Gagal!')
-            console.log(err)
         }
     })
 
@@ -64,7 +62,6 @@ export default function ProfileResetPass() {
                             password: ''
                         }}
                         onSubmit={(values) => {
-                            console.log(values)
                             mutateResetPasswordProfile({
                                 existingPassword: values?.existingPassword,
                                 password: values?.password
