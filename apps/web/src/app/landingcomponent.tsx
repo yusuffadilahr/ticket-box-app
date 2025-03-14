@@ -50,6 +50,10 @@ export default function Home({
         }
     }, [role, token]);
 
+    useEffect(() => {
+        console.log('Welcome buddy!🐢🐢')
+    }, [])
+
     if (isLoadingMusic) {
         return (
             <section className="w-full h-screen bg-white flex flex-col justify-center items-center">
