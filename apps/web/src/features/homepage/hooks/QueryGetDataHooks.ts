@@ -6,14 +6,21 @@ export const QueryGetDataHooks: any = () => {
         queryGetDataTopSell,
         queryGetComedyEvent,
         queryGetCategoryMusic,
-        queryGetCarousel
+        queryGetCarousel,
+        isLoadingNewest,
+        isLoadingTopSell,
+        isLoadingComedy,
+        isLoadingMusic
     } = QueryGetDataApi()
-    
+
     return {
         queryGetDataNewest,
         queryGetDataTopSell,
         queryGetComedyEvent,
         queryGetCategoryMusic,
-        queryGetCarousel
+        queryGetCarousel, isLoadingNewest,
+        isLoadingTopSell,
+        isLoadingComedy,
+        isLoadingMusic
     }
 }
