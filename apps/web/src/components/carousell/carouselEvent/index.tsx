@@ -27,14 +27,14 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                         <CarouselItem key={index} className=" basis-1/2 lg:basis-1/4">
                             <div className="p-1">
                                 <Card className="h-[270px] lg:h-fit pb-2 rounded-2xl">
-                                    <Link href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}>
+                                    <Link href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}`}>
                                         <CardContent className="flex items-center justify-center">
                                             <div className='w-full h-20 lg:h-44'>
                                                 <Image
                                                     src={
                                                         item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                                             ? item.EventImages[0].eventImageUrl
-                                                            : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
+                                                            : `https://ticket-box-app-production.up.railway.app/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
                                                     }
                                                     height={200}
                                                     width={200}

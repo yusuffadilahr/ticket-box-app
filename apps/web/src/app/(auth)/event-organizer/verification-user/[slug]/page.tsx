@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   const { mutate: mutateVerifyCode } = useMutation({
     mutationFn: async (data: any) => {
-      return await axios.patch('http://localhost:8000/api/event-organizer/verify-user',
+      return await axios.patch('https://ticket-box-app-production.up.railway.app/api/event-organizer/verify-user',
         {
           verificationCode: data,
         },

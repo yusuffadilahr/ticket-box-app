@@ -11,7 +11,7 @@ export default function CardEvent({ querySearchData }:any) {
                 querySearchData?.eventSearch?.map((item: any, index: any) => (
                     <Card key={index} className="h-[260px] lg:h-fit pb-4">
                         <Link
-                            href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}
+                            href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}`}
                         >
                             <CardContent className="flex items-center justify-center w-full h-full rounded-2xl">
                                 <div className="bg-white w-full lg:w-full lg:h-full rounded-2xl">
@@ -19,7 +19,7 @@ export default function CardEvent({ querySearchData }:any) {
                                         <Image
                                             src={item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                                 ? item.EventImages[0].eventImageUrl
-                                                : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
+                                                : `https://ticket-box-app-production.up.railway.app/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
                                             height={142}
                                             width={142}
                                             alt="Event Image"

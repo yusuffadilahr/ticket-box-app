@@ -13,14 +13,14 @@ export default function CarouselComedy({ queryGetComedyEvent }: any) {
                         className="bg-white w-[180px] rounded-2xl lg:w-[280px] lg:h-fit pb-1"
                     >
                         <Link
-                            href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}-${item.eventName.toLowerCase().split(' ').join('-')}`}
+                            href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}`}
                         >
                             <div className="w-full lg:h-36">
                                 <Image
                                     src={
                                         item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                             ? item.EventImages[0].eventImageUrl
-                                            : `http://localhost:8000/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
+                                            : `https://ticket-box-app-production.up.railway.app/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`
                                     }
                                     height={142}
                                     width={142}

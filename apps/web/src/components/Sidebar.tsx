@@ -47,7 +47,7 @@ export const SidebarMenu = () => {
               src={
                 profilePicture?.includes('https')
                   ? profilePicture
-                  : `http://localhost:8000/api/src/public/images/${profilePicture}`
+                  : `https://ticket-box-app-production.up.railway.app/api/src/public/images/${profilePicture}`
               }
               width={500}
               height={500}
