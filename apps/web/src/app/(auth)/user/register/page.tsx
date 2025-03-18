@@ -4,26 +4,31 @@ import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 import { Formik, Field, ErrorMessage, Form } from 'formik';
 import { registerUserSchema } from './../../../../features/register/schema/registerSchema';
-import { useMutation } from '@tanstack/react-query';
-import instance from '../../../../utils/axiosInstance/axiosInstance';
 import { toast } from "react-hot-toast";
-import { IDataRegister } from './type';
 import { useRouter } from 'next/navigation';
+import { registerAction } from '@/app/_service/serverside/fetchserver/auth';
 
 export default function Page() {
+    const [isPending, setIsPending] = useState<boolean>(false);
     const router = useRouter()
-    const { mutate: handleRegister, isPending } = useMutation({
-        mutationFn: async ({ firstName, lastName, email, password, phoneNumber, identityNumber, referralBody }: IDataRegister) => {
-            return await instance.post('/auth/register/user', { firstName, lastName, email, password, phoneNumber, identityNumber, referralBody })
-        },
-        onSuccess: (res) => {
-            toast.success(res.data.message)
+
+    const handleRegister = async (formData: FormData) => {
+        try {
+            setIsPending(true)
+            const res = await registerAction(formData)
+            const checkError = res?.error
+
+            if (checkError) throw new Error(res?.message)
+
+            toast.success(res?.message)
             router.push('/user/login')
-        },
-        onError: (err) => {
-            toast.error('ini gagal') 
+
+        } catch (error) {
+            toast.error('Gagal melakukan registrasi')
+        } finally {
+            setIsPending(false)
         }
-    })
+    }
 
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
     const [confirmationPasswordVisible, setConfirmationPasswordVisible] = useState<boolean>(false);
@@ -44,27 +49,27 @@ export default function Page() {
                 password: '',
                 phoneNumber: '',
                 identityNumber: '',
-                referralBody:''
+                referralBody: ''
             }}
             validationSchema={registerUserSchema}
             onSubmit={(values) => {
-                handleRegister({
-                    firstName: values?.firstName,
-                    lastName: values?.lastName,
-                    email: values?.email,
-                    password: values?.password,
-                    phoneNumber: values?.phoneNumber,
-                    identityNumber: values?.identityNumber,
-                    referralBody:values?.referralBody
-                })
-            }}
-        >
+                const fd = new FormData()
+                fd.append('firstName', values.firstName)
+                fd.append('lastName', values.lastName)
+                fd.append('email', values.email)
+                fd.append('password', values.password)
+                fd.append('phoneNumber', values.phoneNumber)
+                fd.append('identityNumber', values.identityNumber)
+                fd.append('referralBody', values.referralBody)
+
+                handleRegister(fd)
+            }}>
             <Form className='flex flex-col justify-center items-center w-full'>
                 <main className="flex justify-center flex-col w-[80%] md:w-[60%] lg:w-[45%] mb-36 pt-24 lg:pt-32 space-y-5">
-                <div className='py-2'>
-                    <h1 className='text-2xl font-bold'>Daftar Sekarang!</h1>
-                    <p className='text-neutral-600'>Dan ayo, jadi bagian dari komunitas kami!</p>
-                </div>
+                    <div className='py-2'>
+                        <h1 className='text-2xl font-bold'>Daftar Sekarang!</h1>
+                        <p className='text-neutral-600'>Dan ayo, jadi bagian dari komunitas kami!</p>
+                    </div>
                     <div id="email-input">
                         <div className="flex gap-5 items-center">
                             <label>

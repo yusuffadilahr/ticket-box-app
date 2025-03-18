@@ -1,9 +1,9 @@
 'use client';
 
-import {  useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Formik, Form, Field } from 'formik';
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
-import {  useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { loginSchema } from './../../../../features/login/schema/loginSchema';
 import { ErrorMessage } from 'formik';
@@ -12,12 +12,14 @@ import instance from './../../../../utils/axiosInstance/axiosInstance';
 import toast from 'react-hot-toast';
 import authStore from './../../../../zustand/authstore';
 import Cookies from 'js-cookie'
-import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import auth from './../../../../utils/firebase/firebase';
+import { loginAction } from '@/app/_service/serverside/fetchserver/auth';
 
 const provider = new GoogleAuthProvider()
 export default function Page() {
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+    const [isPending, setIsPending] = useState<boolean>(false)
     const router = useRouter()
     const setAuth = authStore((state) => state.setAuth)
 
@@ -25,42 +27,43 @@ export default function Page() {
         setPasswordVisible(!passwordVisible);
     };
 
-    const { mutate: handleLogin, isPending } = useMutation({
-        mutationFn: async ({ email, password }: { email: string, password: string }) => {
-            return await instance.post('/auth/login/user', { email, password })
-        },
-        onSuccess: (res) => {
-            toast.success(res?.data?.message)
-            setAuth({
-                token: res?.data?.data?.token,
-                firstName: res?.data?.data?.firstName,
-                lastName: res?.data?.data?.lastName,
-                role: res?.data?.data?.role,
-                phoneNumber: res?.data?.data?.phoneNumber,
-                profilePicture: res?.data?.data?.profilePicture,
-                referralCode: res?.data?.data?.referralCode,
-                totalPoint: res?.data?.data?.totalPoint,
-                identityNumber: res?.data?.data?.identityNumber
-            })
-            Cookies.set('token', res?.data?.data?.token, { expires: 1 })
-            router.push('/')
-        },
-        onError: (err: any) => {
-            toast.error(err?.response?.data?.message)
+    const handleLogin = async (formData: FormData) => {
+        try {
+            setIsPending(true)
+            const res = await loginAction(formData)
+            const checkError = res?.error
+            if (!checkError) {
+                toast.success(res?.message)
+                setAuth({
+                    token: res?.data?.token,
+                    firstName: res?.data?.firstName,
+                    lastName: res?.data?.lastName,
+                    role: res?.data?.role,
+                    phoneNumber: res?.data?.phoneNumber,
+                    profilePicture: res?.data?.profilePicture,
+                    referralCode: res?.data?.referralCode,
+                    totalPoint: res?.data?.totalPoint,
+                    identityNumber: res?.data?.identityNumber
+                })
+                Cookies.set('token', res?.data?.data?.token, { expires: 1 })
+                router.push('/')
+            }
+        } finally {
+            setIsPending(false)
         }
-    })
+    }
 
-    const {mutate: handleLoginGoogle} = useMutation({
-        mutationFn: async({firstName,lastName, email, profilePicture}: {
-            firstName:string,
-            lastName:string,
-            email:string,
-            profilePicture:string
+    const { mutate: handleLoginGoogle } = useMutation({
+        mutationFn: async ({ firstName, lastName, email, profilePicture }: {
+            firstName: string,
+            lastName: string,
+            email: string,
+            profilePicture: string
         }) => {
             return await instance.post('/auth/login/auth-google', {
-                firstName, 
-                lastName, 
-                email, 
+                firstName,
+                lastName,
+                email,
                 profilePicture
             })
         },
@@ -85,20 +88,20 @@ export default function Page() {
         }
     })
 
-    const {mutate: registerWithGoogle} = useMutation({
-        mutationFn: async()=> {
+    const { mutate: registerWithGoogle } = useMutation({
+        mutationFn: async () => {
             const firebase = await signInWithPopup(auth, provider)
             return firebase
         },
-        onSuccess: (res)=> {
+        onSuccess: (res) => {
             handleLoginGoogle({
-                firstName: res?.user?.displayName?.split(' ')[0] as string, 
-                lastName: res?.user?.displayName?.split(' ')[1] as string, 
-                email:res?.user?.email as string, 
+                firstName: res?.user?.displayName?.split(' ')[0] as string,
+                lastName: res?.user?.displayName?.split(' ')[1] as string,
+                email: res?.user?.email as string,
                 profilePicture: res?.user?.photoURL as string
             })
-        }, 
-        onError: (err)=> {
+        },
+        onError: (err) => {
         }
     })
 
@@ -112,9 +115,12 @@ export default function Page() {
                     }}
                     validationSchema={loginSchema}
                     onSubmit={(values) => {
-                        handleLogin({ email: values.email, password: values.password })
-                    }}
-                >
+                        const fd = new FormData()
+                        fd.append('email', values.email)
+                        fd.append('password', values.password)
+
+                        handleLogin(fd)
+                    }}>
                     <Form className="w-full flex flex-col px-10 gap-7">
                         <div id="email-input" className="flex flex-col">
                             <div className="flex gap-3">
@@ -179,14 +185,14 @@ export default function Page() {
                         </div>
                     </Form>
                 </Formik>
-            <div className='w-full px-10 mt-5 flex gap-2'>
-            <Link href="/user/register" className="text-white text-sm rounded-lg text-center w-full py-2 bg-blue-900 hover:bg-blue-950">
-                Daftar
-            </Link>
-            <button onClick={() => registerWithGoogle()} type="button" className="text-white flex items-center gap-1 text-center justify-center text-sm rounded-lg w-full py-2 bg-black disabled:bg-neutral-300 hover:bg-neutral-800">
-                <FaGoogle /> Masuk dengan Google
-            </button>
-            </div>
+                <div className='w-full px-10 mt-5 flex gap-2'>
+                    <Link href="/user/register" className="text-white text-sm rounded-lg text-center w-full py-2 bg-blue-900 hover:bg-blue-950">
+                        Daftar
+                    </Link>
+                    <button onClick={() => registerWithGoogle()} type="button" className="text-white flex items-center gap-1 text-center justify-center text-sm rounded-lg w-full py-2 bg-black disabled:bg-neutral-300 hover:bg-neutral-800">
+                        <FaGoogle /> Masuk dengan Google
+                    </button>
+                </div>
             </section>
         </main>
     );
