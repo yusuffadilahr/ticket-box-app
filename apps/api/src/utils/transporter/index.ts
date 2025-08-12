@@ -1,11 +1,17 @@
+import { config } from 'dotenv';
 import nodemailer from 'nodemailer'
+config()
+
+const passwordEmail = process.env.PASSWORD_WEB_EMAIL || ''
 export const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'mail.gancy.my.id',
+    port: 465,
+    secure: true,
     auth: {
-        user: 'tiketbox88@gmail.com',
-        pass: 'huobxyafyutvorwm' 
+        user: 'ticket-box@gancy.my.id',
+        pass: passwordEmail,
     },
     tls: {
-        rejectUnauthorized: false
-    }
-})
+        rejectUnauthorized: false,
+    },
+});

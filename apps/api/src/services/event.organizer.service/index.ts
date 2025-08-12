@@ -1,3 +1,4 @@
+import path from "path";
 import { prisma } from "./../../connection";
 import { cloudinaryUpload } from "./../../utils/cloudinary/index";
 import { comparePassword, hashPassword } from "./../../utils/passwordHash";
@@ -46,12 +47,14 @@ export const eventOrganizerRegisterService = async ({
 
     const sendToken = await encodeToken({ id: dataUser?.id, role: dataUser?.role })
 
-    const dataEmail = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8')
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
+
     let compiledHtml: any = compile(dataEmail)
     compiledHtml = compiledHtml({
         firstName: dataUser?.ownerName,
         email: email,
-        url: `http://localhost:3000/event-organizer/verification-user/${dataUser?.verifyCode}-TBX-${sendToken}`,
+        url: `https://ticket-box-web-app.vercel.app/event-organizer/verification-user/${dataUser?.verifyCode}-TBX-${sendToken}`,
         verifCode: dataUser?.verifyCode
     });
 
@@ -73,13 +76,14 @@ export const sendVerifyEmailUserService = async ({
 
     const sendToken = await encodeToken({ id: findUser?.id, role: findUser?.role })
 
-    const dataEmail = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8')
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let compiledHtml: any = compile(dataEmail)
     compiledHtml = compiledHtml({
         firstName: findUser?.ownerName,
         email: findUser?.email,
-        url: `http://localhost:3000/event-organizer/verification-user/${findUser?.verifyCode}-TBX-${sendToken}`,
+        url: `https://ticket-box-web-app.vercel.app/event-organizer/verification-user/${findUser?.verifyCode}-TBX-${sendToken}`,
         verifCode: findUser?.verifyCode
     });
 
@@ -108,11 +112,13 @@ export const verifyEmailUserService = async ({
         where: { id: findUser?.id },
     });
 
-    const emailSucces = readFileSync('./src/public/emailSend/verifyEmailSucces.html', 'utf-8')
-    let sendEmail: any = compile(emailSucces)
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'verifyEmailSucces.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
+
+    let sendEmail: any = compile(dataEmail)
     sendEmail = sendEmail({
         firstName: findUser?.ownerName,
-        url: 'http://localhost:3000/event/dashboard'
+        url: 'https://ticket-box-web-app.vercel.app/event/dashboard'
     })
 
     await transporter.sendMail({
@@ -140,11 +146,13 @@ export const forgotPasswordOrganizerService = async ({
         where: { email: email }
     })
 
-    const emailHtml = readFileSync('./src/public/emailSend/email.html', 'utf-8')
-    let emailToUser: any = await compile(emailHtml)
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'email.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
+
+    let emailToUser: any = compile(dataEmail)
     emailToUser = emailToUser({
         email: email,
-        url: `http://localhost:3000/event-organizer/forgot-password/${token}`
+        url: `https://ticket-box-web-app.vercel.app/event-organizer/forgot-password/${token}`
     })
 
     await transporter.sendMail({
@@ -184,12 +192,13 @@ export const resetPasswordOrganizerService = async ({
             id,
         },
     });
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'resetPasswordSucces.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
-    const emailSucces = readFileSync('./src/public/emailSend/resetPasswordSucces.html', 'utf-8')
-    let sendEmail: any = compile(emailSucces)
+    let sendEmail: any = compile(dataEmail)
     sendEmail = sendEmail({
         firstName: findUser?.ownerName,
-        url: 'http://localhost:3000/event-organizer/login'
+        url: 'https://ticket-box-web-app.vercel.app/event-organizer/login'
     })
 
     await transporter.sendMail({
@@ -228,11 +237,14 @@ export const resetPasswordOnLoginService = async ({
         },
     });
 
-    const emailSucces = readFileSync('./src/public/emailSend/resetPasswordSucces.html', 'utf-8')
-    let sendEmail: any = compile(emailSucces)
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'resetPasswordSucces.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
+
+
+    let sendEmail: any = compile(dataEmail)
     sendEmail = sendEmail({
         firstName: findUser?.ownerName,
-        url: 'http://localhost:3000/event-organizer/login'
+        url: 'https://ticket-box-web-app.vercel.app/event-organizer/login'
     })
 
     await transporter.sendMail({

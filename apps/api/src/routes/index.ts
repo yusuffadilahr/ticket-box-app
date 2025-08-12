@@ -7,9 +7,10 @@ import eventOrganizerRouter from './event.organizer.router';
 import transactionRouter from './transaction.router';
 import reviewRouter from './review.router';
 import midtransRouter from './midtrans.router';
+import path from 'path'
 
 const router = Router();
-router.use('*/images', express.static('src/public/images'))
+router.use(express.static(path.join(__dirname, '../public')));
 
 router.use('/auth', authRouter)
 router.use('/user', userRouter)

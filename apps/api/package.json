@@ -9,11 +9,11 @@
     "serve": "cross-env NODE_ENV=production node dist/index.js",
     "start": "npm run serve",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prisma": "npx prisma",
-    "postinstall": "npx prisma generate --schema=./prisma/schema.prisma"
+    "prisma": "npx prisma"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js",
+    "schema": "./prisma/schema.prisma"
   },
   "author": "",
   "license": "ISC",

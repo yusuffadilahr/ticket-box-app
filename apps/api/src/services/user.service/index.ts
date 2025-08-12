@@ -5,6 +5,7 @@ import { transporter } from "./../../utils/transporter";
 import { addHours, addMonths } from "date-fns";
 import { compile } from "handlebars";
 import fs, { readFileSync } from 'fs'
+import path from "path";
 
 export const userRegisterService = async ({
     firstName,
@@ -43,13 +44,15 @@ export const userRegisterService = async ({
         });
 
         const setTokenUser = await encodeToken({ id: dataRegisterUser.id, role: dataRegisterUser.role });
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
 
-        const emailHTML = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8');
-        let compiledHtml: any = await compile(emailHTML);
+        const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
+
+        let compiledHtml: any = await compile(dataEmail);
         compiledHtml = compiledHtml({
             firstName: firstName,
             email: email,
-            url: `http://localhost:3000/user/verification-user/${verificationCode}-TBX-${setTokenUser}`,
+            url: `https://ticket-box-web-app.vercel.app/user/verification-user/${verificationCode}-TBX-${setTokenUser}`,
             verifCode: verificationCode
         });
 
@@ -116,11 +119,13 @@ export const verifyUserService = async ({ userId, verificationCode }: any) => {
         where: { id: findUser?.id },
     });
 
-    const emailSucces = readFileSync('./src/public/emailSend/verifyEmailSucces.html', 'utf-8')
-    let sendEmail: any = compile(emailSucces)
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'verifyEmailSucces.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
+
+    let sendEmail: any = compile(dataEmail)
     sendEmail = sendEmail({
         firstName: findUser?.firstName,
-        url: 'http://localhost:3000/'
+        url: 'https://ticket-box-web-app.vercel.app/'
     })
 
     await transporter.sendMail({
@@ -160,14 +165,15 @@ export const sendVerifyEmailUserService = async ({
     })
 
     if (!findUser) throw { msg: 'User tidak ditemukan', status: 404 }
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
-    const emailHTML = fs.readFileSync('./src/public/emailSend/emailVerification.html', 'utf-8');
-    let compiledHtml: any = compile(emailHTML);
+    let compiledHtml: any = compile(dataEmail);
 
     compiledHtml = compiledHtml({
         firstName: findUser?.firstName,
         email: findUser?.email,
-        url: `http://localhost:3000/user/verification-user/${findUser?.verifyCode}-TBX-${token}`,
+        url: `https://ticket-box-web-app.vercel.app/user/verification-user/${findUser?.verifyCode}-TBX-${token}`,
         verifCode: findUser?.verifyCode
     });
 
@@ -197,15 +203,13 @@ export const forgotPasswordService = async ({
         where: { email },
     });
 
-    const emailHtml = fs.readFileSync(
-        './src/public/emailSend/email.html',
-        'utf-8',
-    );
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'email.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
-    let compiledHtml: any = compile(emailHtml);
+    let compiledHtml: any = compile(dataEmail);
     compiledHtml = compiledHtml({
         email: email,
-        url: `http://localhost:3000/user/forgot-password/${token}`,
+        url: `https://ticket-box-web-app.vercel.app/user/forgot-password/${token}`,
     });
 
     await transporter.sendMail({
@@ -242,11 +246,13 @@ export const resetPasswordService = async ({
         },
     });
 
-    const emailSucces = readFileSync('./src/public/emailSend/resetPasswordSucces.html', 'utf-8')
-    let sendEmail: any = compile(emailSucces)
+    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'resetPasswordSucces.html');
+    const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
+    
+    let sendEmail: any = compile(dataEmail)
     sendEmail = sendEmail({
         firstName: findUser?.firstName,
-        url: 'http://localhost:3000/user/login'
+        url: 'https://ticket-box-web-app.vercel.app/user/login'
     })
 
     await transporter.sendMail({

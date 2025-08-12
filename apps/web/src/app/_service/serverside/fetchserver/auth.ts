@@ -18,12 +18,12 @@ export const loginAction = async (formData: FormData) => {
             body: JSON.stringify(data)
         })
 
-        if (!res.ok) throw new Error('Gagal melakukan login');
+        const response = await res.json()
+        if (!res.ok) return response
 
-        const response = res.json()
         return response
     } catch (error) {
-
+        return error
     }
 }
 

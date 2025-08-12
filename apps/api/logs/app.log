@@ -12,3 +12,103 @@ D:\repositories\ticket-box-app\apps\api\src\services\user.service\index.ts:62:48
      })
 
 Argument `referralCode` must not be null.
+2025-08-12 21:45:02 [error]: ERROR 500 undefined - URL: POST /api/auth/login/auth-google ERROR_SERVER: 
+Invalid `prisma.users.create()` invocation in
+D:\repositories\ticket-box-app\apps\api\src\controllers\userController\index.ts:74:42
+
+  71     data: { token }
+  72   })
+  73 } else {
+→ 74   const newUser = await prisma.users.create({
+         data: {
+           firstName: "Markicaw",
+           email: "markicaww@gmail.com",
+           password: "$2b$10$JqtlH0Vh83F9B7cgIPlYNO.oOzSaWTd1kYrCpcELPtI0.fEZvaYwm",
+           role: "user",
+           isVerified: true,
+           verifyCode: "a_kX71",
+           phoneNumber: "Belum terisi",
+           identityNumber: "Belum terisi",
+           profilePicture: "https://lh3.googleusercontent.com/a/ACg8ocINSzGnM6__ZjMraaS0CSZ6UvqZUed-JKI3IqvG4zs98T0_F0QN=s96-c",
+           referralCode: "TBX-c06op4yQ-2025712",
+           isGoogleRegister: true,
+       +   lastName: String
+         }
+       })
+
+Argument `lastName` is missing.
+2025-08-12 21:45:13 [error]: ERROR 500 undefined - URL: POST /api/auth/login/auth-google ERROR_SERVER: 
+Invalid `prisma.users.create()` invocation in
+D:\repositories\ticket-box-app\apps\api\src\controllers\userController\index.ts:74:42
+
+  71     data: { token }
+  72   })
+  73 } else {
+→ 74   const newUser = await prisma.users.create({
+         data: {
+           firstName: "Markicaw",
+           email: "markicaww@gmail.com",
+           password: "$2b$10$7Rkk36v92JdQRtRXZd2.huY8axpPvf/eJ07/SAndhqr.SQtYqNZAe",
+           role: "user",
+           isVerified: true,
+           verifyCode: "iZCZJD",
+           phoneNumber: "Belum terisi",
+           identityNumber: "Belum terisi",
+           profilePicture: "https://lh3.googleusercontent.com/a/ACg8ocINSzGnM6__ZjMraaS0CSZ6UvqZUed-JKI3IqvG4zs98T0_F0QN=s96-c",
+           referralCode: "TBX-vwkcC8li-2025712",
+           isGoogleRegister: true,
+       +   lastName: String
+         }
+       })
+
+Argument `lastName` is missing.
+2025-08-12 21:49:00 [error]: ERROR 500 undefined - URL: POST /api/auth/login/auth-google ERROR_SERVER: 
+Invalid `prisma.users.create()` invocation in
+D:\repositories\ticket-box-app\apps\api\src\controllers\userController\index.ts:74:42
+
+  71     data: { token }
+  72   })
+  73 } else {
+→ 74   const newUser = await prisma.users.create({
+         data: {
+           firstName: "Markicaw",
+           email: "markicaww@gmail.com",
+           password: "$2b$10$Hdu/ow861Siex9ELNrc0Z.XBlV/IRxkpCSIFmJY3CVgz1lo5eGif2",
+           role: "user",
+           isVerified: true,
+           verifyCode: "XZWBDi",
+           phoneNumber: "Belum terisi",
+           identityNumber: "Belum terisi",
+           profilePicture: "https://lh3.googleusercontent.com/a/ACg8ocINSzGnM6__ZjMraaS0CSZ6UvqZUed-JKI3IqvG4zs98T0_F0QN=s96-c",
+           referralCode: "TBX-6qmpuwen-2025712",
+           isGoogleRegister: true,
+       +   lastName: String
+         }
+       })
+
+Argument `lastName` is missing.
+2025-08-12 21:49:13 [error]: ERROR 500 undefined - URL: POST /api/auth/login/auth-google ERROR_SERVER: 
+Invalid `prisma.users.create()` invocation in
+D:\repositories\ticket-box-app\apps\api\src\controllers\userController\index.ts:74:42
+
+  71     data: { token }
+  72   })
+  73 } else {
+→ 74   const newUser = await prisma.users.create({
+         data: {
+           firstName: "Markicaw",
+           email: "markicaww@gmail.com",
+           password: "$2b$10$Hr0oCmMk2RZ51ZL1qkoiQedFAbLuAKT8EU2AYZS3Tf9zTnsLmIF8G",
+           role: "user",
+           isVerified: true,
+           verifyCode: "JIMvgD",
+           phoneNumber: "Belum terisi",
+           identityNumber: "Belum terisi",
+           profilePicture: "https://lh3.googleusercontent.com/a/ACg8ocINSzGnM6__ZjMraaS0CSZ6UvqZUed-JKI3IqvG4zs98T0_F0QN=s96-c",
+           referralCode: "TBX-pylen2_9-2025712",
+           isGoogleRegister: true,
+       +   lastName: String
+         }
+       })
+
+Argument `lastName` is missing.

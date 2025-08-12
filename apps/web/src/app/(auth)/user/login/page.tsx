@@ -32,23 +32,33 @@ export default function Page() {
             setIsPending(true)
             const res = await loginAction(formData)
             const checkError = res?.error
-            if (!checkError) {
-                toast.success(res?.message)
-                setAuth({
-                    token: res?.data?.token,
-                    firstName: res?.data?.firstName,
-                    lastName: res?.data?.lastName,
-                    role: res?.data?.role,
-                    phoneNumber: res?.data?.phoneNumber,
-                    profilePicture: res?.data?.profilePicture,
-                    referralCode: res?.data?.referralCode,
-                    totalPoint: res?.data?.totalPoint,
-                    identityNumber: res?.data?.identityNumber
-                })
-                Cookies.set('token', res?.data?.data?.token, { expires: 1 })
-                router.push('/')
+            if (checkError) throw res
+
+            toast.success(res?.message)
+            setAuth({
+                token: res?.data?.token,
+                firstName: res?.data?.firstName,
+                lastName: res?.data?.lastName,
+                role: res?.data?.role,
+                phoneNumber: res?.data?.phoneNumber,
+                profilePicture: res?.data?.profilePicture,
+                referralCode: res?.data?.referralCode,
+                totalPoint: res?.data?.totalPoint,
+                identityNumber: res?.data?.identityNumber
+            })
+
+            Cookies.set('token', res?.data?.data?.token, { expires: 1 })
+            router.push('/')
+
+        } catch (err: any) {
+            if ('error' in err && err.error) {
+                toast.error(err?.message || 'Ada kesalahan server!')
+                return
             }
-        } finally {
+
+            toast.error('Ada kesalahan server!')
+        }
+        finally {
             setIsPending(false)
         }
     }
@@ -79,6 +89,7 @@ export default function Page() {
                 totalPoint: res?.data?.data?.totalPoint,
                 identityNumber: res?.data?.data?.identityNumber
             })
+            
             Cookies.set('token', res?.data?.data?.token, { expires: 1 })
             toast.success(res?.data?.message)
             router.push('/')
@@ -93,16 +104,22 @@ export default function Page() {
             const firebase = await signInWithPopup(auth, provider)
             return firebase
         },
+
         onSuccess: (res) => {
+            const dataName = res?.user?.displayName || ''
+            const mid = Math.floor(dataName.length / 2)
+
+            const firstName = dataName.substring(0, mid) || ''
+            const lastName = dataName.substring(mid) || ''
+
             handleLoginGoogle({
-                firstName: res?.user?.displayName?.split(' ')[0] as string,
-                lastName: res?.user?.displayName?.split(' ')[1] as string,
-                email: res?.user?.email as string,
-                profilePicture: res?.user?.photoURL as string
+                firstName,
+                lastName,
+                email: res?.user?.email || '',
+                profilePicture: res?.user?.photoURL || ''
             })
         },
-        onError: (err) => {
-        }
+        onError: (err) => { }
     })
 
     return (
