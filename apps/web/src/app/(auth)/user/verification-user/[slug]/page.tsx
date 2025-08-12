@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const { mutate: mutateVerifyCode, isPending } = useMutation({
     mutationFn: async (data: any) => {
       return await axios.patch(
-        'https://ticket-box-app-production.up.railway.app/api/user/verify-user',
+        'https://api-vi-ticketbox.gancy.my.id/api/user/verify-user',
         {
           verificationCode: data,
         },

@@ -1,6 +1,6 @@
 export const getDataTopSell = async () => {
     try {
-        const res = await fetch('https://ticket-box-app-production.up.railway.app/api/event/bestseller-event', {
+        const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/event/bestseller-event', {
             cache: 'no-store'
         })
 
@@ -14,7 +14,7 @@ export const getDataTopSell = async () => {
 }
 export const getDataComedy = async () => {
     try {
-        const res = await fetch('https://ticket-box-app-production.up.railway.app/api/event/comedy-event', {
+        const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/event/comedy-event', {
             cache: 'no-store'
         })
 
@@ -29,7 +29,7 @@ export const getDataComedy = async () => {
 
 export const getDataNewest = async () => {
     try {
-        const res = await fetch('https://ticket-box-app-production.up.railway.app/api/event/newest-event', {
+        const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/event/newest-event', {
             cache: 'no-store'
         })
 

@@ -322,12 +322,12 @@ export const getUserByEventService = async ({
 
     const yearlyStatistic = [];
     const currentYear = new Date().getFullYear();
-    
+
     for (let yearOffset = 0; yearOffset < 5; yearOffset++) {
         const year = currentYear - yearOffset;
         const startOfYear = new Date(year, 0, 1); // Awal tahun, 1 Januari
         const endOfYear = new Date(year + 1, 0, 0); // Akhir tahun, 31 Desember
-    
+
         const yearlyStatistics = await prisma.transactions.groupBy({
             by: ['createdAt'],
             where: {
@@ -341,7 +341,7 @@ export const getUserByEventService = async ({
                 totalPrice: true
             }
         });
-    
+
         yearlyStatistic.push({ year, yearlyStatistics });
     }
 
@@ -420,8 +420,8 @@ export const getReportTransactionService = async ({
         where: {
             eventOrganizerId: userId,
             OR: [
-                { id: { contains: search as string, mode: 'insensitive' as Prisma.QueryMode } },
-                { userId: { contains: search as string, mode: 'insensitive' as Prisma.QueryMode } },
+                { id: { contains: search as string } },
+                { userId: { contains: search as string } },
             ]
         },
         include: {

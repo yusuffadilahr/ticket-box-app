@@ -56,7 +56,7 @@ export const TopBar = () => {
                                         src={
                                             profilePicture?.includes("https")
                                                 ? profilePicture
-                                                : `https://ticket-box-app-production.up.railway.app/api/src/public/images/${profilePicture}`
+                                                : `https://api-vi-ticketbox.gancy.my.id/api/src/public/images/${profilePicture}`
                                         }
                                         width={500}
                                         height={500}

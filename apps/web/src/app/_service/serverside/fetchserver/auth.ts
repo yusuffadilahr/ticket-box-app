@@ -7,7 +7,7 @@ export const loginAction = async (formData: FormData) => {
             password: formData.get('password')
         }
 
-        const res = await fetch('https://ticket-box-app-production.up.railway.app/api/auth/login/user', {
+        const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/auth/login/user', {
             cache: 'no-store',
             method: 'POST',
             headers: {
@@ -39,7 +39,7 @@ export const registerAction = async (formData: FormData) => {
             referralBody: formData.get('referralBody')
         }
 
-        const res = await fetch('https://ticket-box-app-production.up.railway.app/api/auth/register/user', {
+        const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/auth/register/user', {
             cache: 'no-store',
             body: JSON.stringify(data),
             headers: {

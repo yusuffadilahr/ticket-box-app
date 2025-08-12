@@ -4,7 +4,7 @@ import { cookies } from "next/headers"
 export const getDetailData = async (detail: string) => {
     try {
         const id = Number(detail.split('TBX')[0])
-        const res = await axios.get(`https://ticket-box-app-production.up.railway.app/api/event/detail/${id}`, {
+        const res = await axios.get(`https://api-vi-ticketbox.gancy.my.id/api/event/detail/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -22,7 +22,7 @@ export const getReviewData = async (detail: string) => {
         const id = Number(detail.split('TBX')[0])
         const token = cookies().get('token')?.value
 
-        const res = await axios.get(`https://ticket-box-app-production.up.railway.app/api/review/event/${id}`, {
+        const res = await axios.get(`https://api-vi-ticketbox.gancy.my.id/api/review/event/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',

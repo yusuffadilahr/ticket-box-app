@@ -1,15 +1,12 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
-
 
 model Users {
   id                  String   @id @default(uuid())
@@ -18,14 +15,14 @@ model Users {
   email               String   @unique
   password            String
   role                String   @default("user")
-  phoneNumber         String?  @db.Text
-  identityNumber      String?  @db.Text
+  phoneNumber         String?  @db.LongText
+  identityNumber      String?  @db.LongText
   profilePicture      String?
   isVerified          Boolean
   verifyCode          String
-  referralCode        String  @unique
+  referralCode        String?  @unique
   isGoogleRegister    Boolean? @default(false)
-  forgotPasswordToken String? @db.Text
+  forgotPasswordToken String?  @db.LongText
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -39,20 +36,19 @@ model Users {
   @@map("users")
 }
 
-
 model EventOrganizer {
-  id             String  @id @default(uuid())
-  organizerName  String 
-  ownerName      String
-  email          String  @unique
-  password       String
-  role           String  @default("EO")
-  forgotPasswordToken String? @db.Text
-  phoneNumber    String
-  isVerified  Boolean?
-  verifyCode String?
-  identityNumber String? @unique
-  profilePicture String
+  id                  String   @id @default(uuid())
+  organizerName       String
+  ownerName           String
+  email               String   @unique
+  password            String
+  role                String   @default("EO")
+  forgotPasswordToken String?  @db.LongText
+  phoneNumber         String
+  isVerified          Boolean?
+  verifyCode          String?
+  identityNumber      String?  @unique
+  profilePicture      String
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -69,7 +65,7 @@ model Event {
   eventName        String
   location         String
   locationUrl      String
-  description      String   @db.Text
+  description      String   @db.LongText
   isPaid           Boolean
   startEvent       DateTime
   endEvent         DateTime
@@ -168,8 +164,8 @@ model ReferalDiscounts {
 model Reviews {
   id         Int    @id @default(autoincrement())
   rating     Int
-  reviewText String @db.Text
-  feedback   String @db.Text
+  reviewText String @db.LongText
+  feedback   String @db.LongText
   eventId    Int
   userId     String
 
@@ -185,9 +181,9 @@ model Reviews {
 
 model Transactions {
   id         String   @id @default(cuid())
-  userId     String 
-  eventId    Int 
-  totalPrice Int 
+  userId     String
+  eventId    Int
+  totalPrice Int
   expiredAt  DateTime
 
   createdAt DateTime  @default(now())

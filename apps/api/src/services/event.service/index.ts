@@ -96,8 +96,8 @@ export const findEventService = async ({
         AND: [
             event ? {
                 OR: [
-                    { eventName: { contains: event as string, mode: 'insensitive' as Prisma.QueryMode } },
-                    { location: { contains: event as string, mode: 'insensitive' as Prisma.QueryMode } },
+                    { eventName: { contains: event as string } },
+                    { location: { contains: event as string } },
                 ]
             } : {},
 

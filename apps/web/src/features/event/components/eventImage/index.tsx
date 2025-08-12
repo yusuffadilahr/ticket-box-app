@@ -6,7 +6,7 @@ export default function EventImage({ queryDataDetailEvent }: any) {
             <Image
                 src={queryDataDetailEvent?.EventImages[0]?.eventImageUrl.includes('https://') ?
                     queryDataDetailEvent?.EventImages[0]?.eventImageUrl :
-                    `https://ticket-box-app-production.up.railway.app/api/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
+                    `https://api-vi-ticketbox.gancy.my.id/api/src/public/images/${queryDataDetailEvent?.EventImages[0]?.eventImageUrl}`
                 } alt="testing"
                 className="object-cover w-full h-auto rounded-lg drop-shadow-lg"
                 width={1000}

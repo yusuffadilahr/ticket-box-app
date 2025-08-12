@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import { uploadMulter } from "./../../utils/multer";
 import { NextFunction, Request, Response } from "express";
 
@@ -7,6 +8,8 @@ export const uploader = (req: Request, res: Response, next: NextFunction) => {
 
 
     uploads(req, res, (err) => {
+        logger.error(`ERROR MIDDLEWARE UPLOADER - ${err}`);
+
         try {
             if (err) throw { msg: err.message, status: 400 }
             if (!Array.isArray(req?.files) && !req?.files?.images?.length) throw { msg: 'file tidak ditemukan', status: 404 }

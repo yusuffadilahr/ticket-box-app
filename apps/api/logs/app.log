@@ -1,0 +1,14 @@
+2025-08-12 19:42:11 [error]: ERROR 500 undefined - URL: POST /api/auth/register/user ERROR_SERVER: 
+Invalid `tx.users.findUnique()` invocation in
+D:\repositories\ticket-box-app\apps\api\src\services\user.service\index.ts:62:48
+
+  59     html: compiledHtml,
+  60 });
+  61 
+→ 62 const checkedRefferal = await tx.users.findUnique({
+       where: {
+     +   referralCode: String
+       }
+     })
+
+Argument `referralCode` must not be null.

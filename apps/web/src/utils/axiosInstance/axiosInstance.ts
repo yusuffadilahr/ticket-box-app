@@ -4,9 +4,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import authStore from "./../../zustand/authstore";
 
-const instance = axios.create({
-    baseURL: "https://ticket-box-app-production.up.railway.app/api/"
-})
+const url = process.env.NEXT_PUBLIC_BASE_API_URL || ''
+const instance = axios.create({ baseURL: url })
 
 instance.interceptors.request.use(
     async request => {

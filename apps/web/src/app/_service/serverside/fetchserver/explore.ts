@@ -22,7 +22,7 @@ export const getDataExplore = async ({
     dateUntil: string | null
 }) => {
     try {
-        const res = await axios.get('https://ticket-box-app-production.up.railway.app/api/event/search', {
+        const res = await axios.get('https://api-vi-ticketbox.gancy.my.id/api/event/search', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -47,7 +47,7 @@ export const getDataExplore = async ({
 
 export const getCategory = async () => {
     try {
-        const res = await axios.get('https://ticket-box-app-production.up.railway.app/api/category', {
+        const res = await axios.get('https://api-vi-ticketbox.gancy.my.id/api/category', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',

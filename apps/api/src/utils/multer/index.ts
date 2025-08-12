@@ -1,7 +1,5 @@
 import multer from "multer";
 
-
-
 const storage = multer.memoryStorage()
 const fileFilter = (req: any, file: any, cb: any) => {
     const extensionAccepted = ['jpg', 'png', 'jpeg', 'webp', 'svg']

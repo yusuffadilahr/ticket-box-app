@@ -19,7 +19,7 @@ export default function CardEvent({ querySearchData }:any) {
                                         <Image
                                             src={item?.EventImages[0]?.eventImageUrl?.includes('https://')
                                                 ? item.EventImages[0].eventImageUrl
-                                                : `https://ticket-box-app-production.up.railway.app/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
+                                                : `https://api-vi-ticketbox.gancy.my.id/api/src/public/images/${item.EventImages[0]?.eventImageUrl || 'default-image.png'}`}
                                             height={142}
                                             width={142}
                                             alt="Event Image"
