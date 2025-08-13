@@ -23,7 +23,7 @@ export default function KomediSection({ queryGetComedyEvent }:any) {
                     queryGetComedyEvent={queryGetComedyEvent}
                 />
                 <Link
-                    href={'http://localhost:3000/event/explore?page=1&category=4'}
+                    href={'https://ticket-box-web-app.vercell.app/event/explore?page=1&category=4'}
                     className="flex justify-center"
                 >
                     <button className="text-white border rounded-md p-2  hover:bg-white hover:text-black transition-all duration-200 ease-in-out">
