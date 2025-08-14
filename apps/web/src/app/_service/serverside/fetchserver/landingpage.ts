@@ -44,3 +44,20 @@ export const getDataNewest = async () => {
         return []
     }
 }
+
+export const getDataCarousell = async () => {
+    try {
+        const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/event/carousel-images', {
+            next: { revalidate: 1240 }
+        })
+
+        const response = await res.json()
+
+        if (!res.ok) return response
+
+        return response
+    } catch (error) {
+        return []
+    }
+
+}

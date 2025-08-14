@@ -15,18 +15,18 @@ export const QueryGetDataApi = ()=>{
         },
     });
 
-    const { data: queryGetCarousel, isLoading: isLoadingCarousel } = useQuery({
-        queryKey: ['get-event-data-carousel'],
-        queryFn: async () => {
-            const res = await instance.get('/event/carousel-images', {});
-            return res.data.data;
-        },
-    });
+    // const { data: queryGetCarousel, isLoading: isLoadingCarousel } = useQuery({
+    //     queryKey: ['get-event-data-carousel'],
+    //     queryFn: async () => {
+    //         const res = await instance.get('/event/carousel-images', {});
+    //         return res.data.data;
+    //     },
+    // });
 
     return {
         queryGetCategoryMusic,
-        queryGetCarousel,
         isLoadingMusic,
-        isLoadingCarousel
+        // queryGetCarousel,
+        // isLoadingCarousel
     }
 }

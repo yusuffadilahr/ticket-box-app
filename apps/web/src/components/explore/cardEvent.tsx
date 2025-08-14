@@ -11,7 +11,7 @@ export default function CardEvent({ querySearchData }:any) {
                 querySearchData?.eventSearch?.map((item: any, index: any) => (
                     <Card key={index} className="h-[260px] lg:h-fit pb-4">
                         <Link
-                            href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}`}
+                            href={`/event/explore/${item?.id}TBX${item?.startEvent?.split('T')[0].split('-').join('')}`}
                         >
                             <CardContent className="flex items-center justify-center w-full h-full rounded-2xl">
                                 <div className="bg-white w-full lg:w-full lg:h-full rounded-2xl">

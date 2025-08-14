@@ -14,7 +14,7 @@ import { FaCalendarAlt } from 'react-icons/fa';
 
 
 export default function CarousellEvent({ data }: { data: any[] }) {
-    if(data?.length === 0 || !data) return null
+    if (data?.length === 0 || !data) return null
 
     return (
         <Carousel
@@ -25,7 +25,7 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                     const isSoldOut = item.seatAvailable < 1;
 
                     return (
-                        <CarouselItem key={index} className=" basis-1/2 lg:basis-1/4">
+                        <CarouselItem key={index} className="basis-11/12 sm:basis-1/2 lg:basis-1/4">
                             <div className="p-1">
                                 <Card className="h-[270px] lg:h-fit pb-2 rounded-2xl">
                                     <Link href={`/event/explore/${item.id}TBX${item.startEvent.split('T')[0].split('-').join('')}`}>
@@ -89,8 +89,10 @@ export default function CarousellEvent({ data }: { data: any[] }) {
                 })}
 
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <div className='hidden md:block'>
+                <CarouselPrevious />
+                <CarouselNext />
+            </div>
         </Carousel>
     );
 }

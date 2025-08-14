@@ -1,35 +1,27 @@
-import Image from "next/image"
-import Link from "next/link"
 import CarouselComedy from "./../../../../components/carousell/carouselComedy"
 
-export default function KomediSection({ queryGetComedyEvent }:any) {
+export default function KomediSection({ queryGetComedyEvent }: any) {
     return (
-        <div className="relative w-full  flex justify-center items-center">
-            <div className="w-full px-2 lg:px-20 h-[900px] lg:h-[700px] ">
-                <Image
-                    src='/waras.png'
-                    height={800}
-                    width={1200}
-                    alt="comedy"
-                    className="object-cover rounded-3xl flex w-full h-[900px] lg:h-[700px]"
-                />
+        <div className="space-y-4">
+            <div className="px-2 lg:px-20">
+                <h1 className="text-2xl font-bold">
+                    Komedi
+                </h1>
             </div>
-
-            <div className="absolute space-y-12">
-                <div className="text-lg lg:text-2xl font-bold text-white p-2 flex justify-center">
-                    Lepasin stres, mari ketawa bareng!
+            <div className="relative w-full flex justify-center items-center overflow-hidden">
+                <div className="w-full px-2 lg:px-20 h-[900px] xl:h-[500px] relative">
+                    <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gradient-to-r
+                from-black via-slate-800 to-blue-950"/>
                 </div>
-                <CarouselComedy
-                    queryGetComedyEvent={queryGetComedyEvent}
-                />
-                <Link
-                    href={'https://ticket-box-web-app.vercell.app/event/explore?page=1&category=4'}
-                    className="flex justify-center"
-                >
-                    <button className="text-white border rounded-md p-2  hover:bg-white hover:text-black transition-all duration-200 ease-in-out">
-                        Lihat Lebih Lanjut
-                    </button>
-                </Link>
+
+                <div className="absolute inset-0 flex flex-col justify-center items-center space-y-8 lg:space-y-12 px-4">
+                    <div className="w-full max-w-7xl">
+                        <CarouselComedy
+                            data={queryGetComedyEvent}
+                        />
+                    </div>
+                </div>
+
             </div>
         </div>
     )

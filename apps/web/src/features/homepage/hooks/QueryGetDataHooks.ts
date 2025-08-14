@@ -3,15 +3,15 @@ import { QueryGetDataApi } from "../api/QueryGetDataApi";
 export const QueryGetDataHooks = () => {
     const {
         queryGetCategoryMusic,
-        queryGetCarousel,
+        // queryGetCarousel,
+        // isLoadingCarousel
         isLoadingMusic,
-        isLoadingCarousel
     } = QueryGetDataApi()
 
     return {
         queryGetCategoryMusic,
-        queryGetCarousel, 
         isLoadingMusic,
-        isLoadingCarousel,
+        // queryGetCarousel, 
+        // isLoadingCarousel,
     }
 }

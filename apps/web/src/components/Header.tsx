@@ -9,7 +9,7 @@ import AvatarHover from './homepage/avatar';
 import authStore from './../zustand/authstore';
 import { useQuery } from '@tanstack/react-query';
 import instance from './../utils/axiosInstance/axiosInstance';
-import {  useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import Cookies from 'js-cookie';
@@ -42,17 +42,22 @@ export const Header = () => {
   const pathname = usePathname();
   const inputRef: any = useRef(null);
 
-  const { data: querySearchData } = useQuery({
+  const { data: querySearchData, isError, isLoading } = useQuery({
     queryKey: ['query-search-data', valueInput],
     queryFn: async () => {
-      const res = await instance.get('/event/search', {
-        params: {
-          event: valueInput,
-          page: 1,
-          limit_data: 100,
-        },
-      });
-      return res.data.data.eventSearch;
+      try {
+        const res = await instance.get('/event/search', {
+          params: {
+            event: valueInput,
+            page: 1,
+            limit_data: 10,
+          },
+        });
+        return res.data?.data?.eventSearch ?? [];
+      } catch (err) {
+        console.error("Search API failed:", err);
+        return []
+      }
     },
     enabled: !!valueInput,
   });
@@ -99,7 +104,7 @@ export const Header = () => {
           <div className="lg:hidden">
             <HamburgerMenu
               pathname={pathname}
-              handleRedirectToOrganizerPage={handleRedirectToOrganizerPage} 
+              handleRedirectToOrganizerPage={handleRedirectToOrganizerPage}
               token={token}
               firstName={firstName}
               lastName={lastName}
@@ -123,17 +128,17 @@ export const Header = () => {
             className={`${pathname.startsWith('/user') ? 'hidden' : 'block'} relative z-30`}
           >
             <SearchBarInput
-              inputRef = {inputRef}
-              setIsBlur = {setIsBlur}
-              debounce = {debounce}
+              inputRef={inputRef}
+              setIsBlur={setIsBlur}
+              debounce={debounce}
             />
             <div className="absolute z-10 bg-white  w-full mt-1 rounded-md shadow-lg max-h-96 overflow-auto text-black">
               {isBlur && valueInput && (
                 <SearchBarSuggestion
-                  querySearchData = {querySearchData}
-                  router = {router}
-                  setValueInput = {setValueInput} />
-                
+                  querySearchData={querySearchData}
+                  router={router}
+                  setValueInput={setValueInput} />
+
               )}
             </div>
 
@@ -166,5 +171,5 @@ export const Header = () => {
       </nav>
     </>
   );
-  };
-  
+};
+

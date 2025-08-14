@@ -186,7 +186,7 @@ export default function Explore({ searchParams }: { searchParams: any }) {
             </section>
 
             {isLoadingEvent ?
-                <LoadingComponent />
+                null
                 :
                 <div className="flex flex-col pt-10 lg:pt-0">
                     <section className="w-full lg:w-fit">

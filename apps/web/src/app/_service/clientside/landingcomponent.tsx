@@ -1,30 +1,31 @@
-'use client';
-
+'use client'
 import Image from 'next/image';
-import CarouselSlider from './../components/carousell';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import authStore from './../zustand/authstore';
 import { CiMusicNote1 } from 'react-icons/ci';
 import { PiPersonSimpleWalkThin } from 'react-icons/pi';
 import { CiTrophy } from 'react-icons/ci';
 import { CiMicrophoneOn } from 'react-icons/ci';
 import { GiBlackBook } from 'react-icons/gi';
 import Cookies from 'js-cookie';
-import TopSeller from './../features/homepage/components/topSeller';
-import KategoriSection from './../features/homepage/components/kategori';
-import KomediSection from './../features/homepage/components/komedi';
-import Terbaru from './../features/homepage/components/terbaru';
-import Musik from './../features/homepage/components/musik';
-import { QueryGetDataHooks } from './../features/homepage/hooks/QueryGetDataHooks';
+import authStore from '@/zustand/authstore';
+import { QueryGetDataHooks } from '@/features/homepage/hooks/QueryGetDataHooks';
+import CarouselSlider from '@/components/carousell';
+import KategoriSection from '@/features/homepage/components/kategori';
+import KomediSection from '@/features/homepage/components/komedi';
+import Terbaru from '@/features/homepage/components/terbaru';
+import Musik from '@/features/homepage/components/musik';
+import CarousellEvent from '@/components/carousell/carouselEvent';
 
 export default function Home({
     dataTopSell,
+    dataCarousell,
     dataComedy,
     dataNewest
 }: {
-    dataTopSell: any,
+    dataCarousell: any
+    dataTopSell: any
     dataComedy: any
     dataNewest: any
 }) {
@@ -35,9 +36,7 @@ export default function Home({
 
     const {
         queryGetCategoryMusic,
-        queryGetCarousel,
         isLoadingMusic,
-        isLoadingCarousel
     } = QueryGetDataHooks()
 
     useEffect(() => {
@@ -50,13 +49,13 @@ export default function Home({
     }, [role, token]);
 
     useEffect(() => {
-        console.log('Welcome buddy!🐢🐢')
+
     }, [])
 
-    if (isLoadingMusic || isLoadingCarousel) {
+    if (isLoadingMusic) {
         return (
             <section className="w-full h-screen bg-white flex flex-col justify-center items-center">
-                <div className="w-20">
+                {/* <div className="w-20">
                     <Image
                         width={500}
                         height={500}
@@ -65,7 +64,7 @@ export default function Home({
                         src={'https://assets-v2.lottiefiles.com/a/903ffa84-1150-11ee-b76b-1f284ac5ea90/ICdNKu73qS.gif'}
                         className="w-20"
                     />
-                </div>
+                </div> */}
                 <h1 className="text-neutral-400 text-sm mt-4">Mohon tunggu..</h1>
             </section>
         )
@@ -109,27 +108,33 @@ export default function Home({
 
     return (
         <main className="space-y-8">
-            <div className="w-full sm:h-[700px] lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
-                <CarouselSlider data={queryGetCarousel} />
+            <div className="w-full lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
+                <CarouselSlider data={dataCarousell} />
             </div>
-            
             {dataTopSell.length > 0 && (
-                <TopSeller queryGetDataTopSell={dataTopSell || []} />
+                <div className=" px-12 lg:px-20">
+                    <h1 className="text-2xl font-bold">
+                        Top Seller
+                        <div className="mt-4">
+                            <CarousellEvent data={dataTopSell} />
+                        </div>
+                    </h1>
+                </div>
             )}
 
-            <KategoriSection categoryList={categoryList} iconComponents={iconComponents} />
-            <KomediSection queryGetComedyEvent={dataComedy || []} />
             <Terbaru queryGetDataNewest={dataNewest || []} />
+            <KomediSection queryGetComedyEvent={dataComedy || []} />
             <Musik queryGetCategoryMusic={queryGetCategoryMusic} />
+            <KategoriSection categoryList={categoryList} iconComponents={iconComponents} />
 
-            <Link href="/event-organizer/benefit" className="px-8 lg:px-20 mt-8 flex justify-center">
+            {/* <Link href="/event-organizer/benefit" className="px-8 lg:px-20 mt-8 flex justify-center">
                 <Image
                     src="https://tiketevent.com/assets/admin/img/banner-home/about-banner.webp"
                     width={1200}
                     height={800}
                     alt="event organizer"
                 />
-            </Link>
+            </Link> */}
         </main>
     );
 }

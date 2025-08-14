@@ -7,7 +7,6 @@ import { Footer } from './../components/Footer';
 import TanstackProviders from './../providers/tanstackProviders';
 import { Toaster } from 'react-hot-toast';
 import AuthProvider from './../providers/authProviders';
-import HOCLoading from './../providers/HOCLoading';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,9 +26,7 @@ export default function RootLayout({ children }: ILayoutChildren) {
           <Header />
           <Toaster position="top-center" reverseOrder={false} />
           <AuthProvider>
-            <HOCLoading>
-              {children}
-            </HOCLoading>
+            {children}
           </AuthProvider>
           <Footer />
         </TanstackProviders>

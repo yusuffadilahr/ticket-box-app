@@ -5,7 +5,8 @@ import LoadingComponent from '../../clientside/loading';
 import { getDetailData, getReviewData } from '../fetchserver/detailevent';
 
 const DynamicDetailClientComponent = dynamic(() => import('@/app/event/explore/[detail]/detail'), {
-    loading: () => <LoadingComponent />
+    loading: () => <div className="h-screen w-full bg-white"></div>
+
 });
 
 export default async function DetailEvent({ detail }: { detail: string }) {
