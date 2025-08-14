@@ -44,11 +44,11 @@ export const userRegisterService = async ({
         });
 
         const setTokenUser = await encodeToken({ id: dataRegisterUser.id, role: dataRegisterUser.role });
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
+        const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'emailVerification.html');
 
         const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
-        let compiledHtml: any = await compile(dataEmail);
+        let compiledHtml: any = compile(dataEmail);
         compiledHtml = compiledHtml({
             firstName: firstName,
             email: email,
@@ -57,6 +57,7 @@ export const userRegisterService = async ({
         });
 
         await transporter.sendMail({
+            from: 'ticket-box@gancy.my.id',
             to: email,
             subject: 'Verifikasi Email Anda untuk Ber-Transaksi',
             html: compiledHtml,
@@ -119,7 +120,7 @@ export const verifyUserService = async ({ userId, verificationCode }: any) => {
         where: { id: findUser?.id },
     });
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'verifyEmailSucces.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'verifyEmailSucces.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let sendEmail: any = compile(dataEmail)
@@ -129,6 +130,7 @@ export const verifyUserService = async ({ userId, verificationCode }: any) => {
     })
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: findUser?.email,
         subject: 'Kamu berhasil verifikasi!',
         html: sendEmail
@@ -165,7 +167,7 @@ export const sendVerifyEmailUserService = async ({
     })
 
     if (!findUser) throw { msg: 'User tidak ditemukan', status: 404 }
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'emailVerification.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let compiledHtml: any = compile(dataEmail);
@@ -178,6 +180,7 @@ export const sendVerifyEmailUserService = async ({
     });
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: findUser?.email,
         subject: 'Verifikasi dirimu sekarang!',
         html: compiledHtml
@@ -203,7 +206,7 @@ export const forgotPasswordService = async ({
         where: { email },
     });
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'email.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'email.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let compiledHtml: any = compile(dataEmail);
@@ -213,6 +216,7 @@ export const forgotPasswordService = async ({
     });
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: email,
         subject: 'Lupa Password?',
         html: compiledHtml,
@@ -246,9 +250,9 @@ export const resetPasswordService = async ({
         },
     });
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'resetPasswordSucces.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'resetPasswordSucces.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
-    
+
     let sendEmail: any = compile(dataEmail)
     sendEmail = sendEmail({
         firstName: findUser?.firstName,
@@ -256,6 +260,7 @@ export const resetPasswordService = async ({
     })
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: findUser?.email,
         html: sendEmail
     })

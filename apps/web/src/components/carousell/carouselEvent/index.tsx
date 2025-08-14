@@ -14,12 +14,13 @@ import { FaCalendarAlt } from 'react-icons/fa';
 
 
 export default function CarousellEvent({ data }: { data: any[] }) {
+    if(data?.length === 0 || !data) return null
 
     return (
         <Carousel
             className="w-full">
             <CarouselContent>
-                {data?.map((item: any, index: any) => {
+                {data.length > 0 && data?.map((item: any, index: any) => {
                     const isExpired = new Date() > new Date(item.endDate)
                     const isSoldOut = item.seatAvailable < 1;
 

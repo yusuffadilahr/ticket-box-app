@@ -1,15 +1,17 @@
 import { QueryGetDataApi } from "../api/QueryGetDataApi";
 
-export const QueryGetDataHooks: any = () => {
+export const QueryGetDataHooks = () => {
     const {
         queryGetCategoryMusic,
         queryGetCarousel,
-        isLoadingMusic
+        isLoadingMusic,
+        isLoadingCarousel
     } = QueryGetDataApi()
 
     return {
         queryGetCategoryMusic,
         queryGetCarousel, 
-        isLoadingMusic
+        isLoadingMusic,
+        isLoadingCarousel,
     }
 }

@@ -1,43 +1,46 @@
 export const getDataTopSell = async () => {
     try {
         const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/event/bestseller-event', {
-            cache: 'no-store'
+            next: { revalidate: 240 }
         })
 
-        if (!res.ok) {
-            throw new Error('Failed to fetch data');
-        }
+        const response = await res.json()
+        if (!res.ok) return response
 
-        const response = res.json()
         return response
-    } catch (error) {}
+    } catch (error) {
+        return []
+    }
 }
+
 export const getDataComedy = async () => {
     try {
         const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/event/comedy-event', {
-            cache: 'no-store'
+            next: { revalidate: 240 }
         })
 
-        if (!res.ok) {
-            throw new Error('Failed to fetch data');
-        }
+        const response = await res.json()
+        if (!res.ok) return response
 
-        const response = res.json()
         return response
-    } catch (error) {}
+    } catch (error) {
+
+        return []
+    }
 }
 
 export const getDataNewest = async () => {
     try {
         const res = await fetch('https://api-vi-ticketbox.gancy.my.id/api/event/newest-event', {
-            cache: 'no-store'
+            next: { revalidate: 240 }
         })
 
-        if (!res.ok) {
-            throw new Error('Failed to fetch data');
-        }
+        const response = await res.json()
 
-        const response = res.json()
+        if (!res.ok) return response
+
         return response
-    } catch (error) {}
+    } catch (error) {
+        return []
+    }
 }

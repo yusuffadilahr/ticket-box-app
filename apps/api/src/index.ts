@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import router from './routes/index';
 import { connected } from './utils/ascii';
 import { logger } from '@/utils/logger';
+import { transporter } from '@/utils/transporter';
 config({ path: '.env.development' });
 
 const app: Express = express();
@@ -28,8 +29,8 @@ interface IError extends Error {
 
 app.use((error: IError, req: Request, res: Response, next: NextFunction) => {
   logger.error(`ERROR ${error.status || 500} ${error.msg} - URL: ${req.method} ${req.url} ERROR_SERVER: ${error?.message || ''}`);
-  
-    console.log(error, '<< dapet apaan')
+
+  console.log(error, '<< dapet apaan')
   res.status(error.status || 500).json({
     error: true,
     message: error.msg || 'Internal Server Error',

@@ -36,10 +36,9 @@ export default function Home({
     const {
         queryGetCategoryMusic,
         queryGetCarousel,
-        isLoadingMusic
+        isLoadingMusic,
+        isLoadingCarousel
     } = QueryGetDataHooks()
-
-
 
     useEffect(() => {
         if (role && role == 'EO') {
@@ -54,7 +53,7 @@ export default function Home({
         console.log('Welcome buddy!🐢🐢')
     }, [])
 
-    if (isLoadingMusic) {
+    if (isLoadingMusic || isLoadingCarousel) {
         return (
             <section className="w-full h-screen bg-white flex flex-col justify-center items-center">
                 <div className="w-20">
@@ -113,7 +112,11 @@ export default function Home({
             <div className="w-full sm:h-[700px] lg:h-fit sm:px-2 lg:px-20 pt-20 lg:pt-28">
                 <CarouselSlider data={queryGetCarousel} />
             </div>
-            <TopSeller queryGetDataTopSell={dataTopSell || []} />
+            
+            {dataTopSell.length > 0 && (
+                <TopSeller queryGetDataTopSell={dataTopSell || []} />
+            )}
+
             <KategoriSection categoryList={categoryList} iconComponents={iconComponents} />
             <KomediSection queryGetComedyEvent={dataComedy || []} />
             <Terbaru queryGetDataNewest={dataNewest || []} />

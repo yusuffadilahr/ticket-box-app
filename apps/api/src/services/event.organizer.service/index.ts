@@ -47,7 +47,7 @@ export const eventOrganizerRegisterService = async ({
 
     const sendToken = await encodeToken({ id: dataUser?.id, role: dataUser?.role })
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'emailVerification.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let compiledHtml: any = compile(dataEmail)
@@ -59,6 +59,7 @@ export const eventOrganizerRegisterService = async ({
     });
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: email,
         subject: 'Verifikasi Email Anda untuk melanjutkan!',
         html: compiledHtml
@@ -76,7 +77,7 @@ export const sendVerifyEmailUserService = async ({
 
     const sendToken = await encodeToken({ id: findUser?.id, role: findUser?.role })
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'emailVerification.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'emailVerification.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let compiledHtml: any = compile(dataEmail)
@@ -88,6 +89,7 @@ export const sendVerifyEmailUserService = async ({
     });
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: findUser?.email,
         subject: 'Verifikasi dirimu sekarang!',
         html: compiledHtml
@@ -112,7 +114,7 @@ export const verifyEmailUserService = async ({
         where: { id: findUser?.id },
     });
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'verifyEmailSucces.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'verifyEmailSucces.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let sendEmail: any = compile(dataEmail)
@@ -122,6 +124,7 @@ export const verifyEmailUserService = async ({
     })
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: findUser?.email,
         subject: `Halo ${findUser?.ownerName}, Selamat datang!`,
         html: sendEmail
@@ -146,7 +149,7 @@ export const forgotPasswordOrganizerService = async ({
         where: { email: email }
     })
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'email.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'email.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let emailToUser: any = compile(dataEmail)
@@ -156,6 +159,7 @@ export const forgotPasswordOrganizerService = async ({
     })
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: email,
         subject: 'Lupa Password?',
         html: emailToUser
@@ -192,7 +196,7 @@ export const resetPasswordOrganizerService = async ({
             id,
         },
     });
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'resetPasswordSucces.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'resetPasswordSucces.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
     let sendEmail: any = compile(dataEmail)
@@ -202,6 +206,7 @@ export const resetPasswordOrganizerService = async ({
     })
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: findUser?.email,
         subject: 'Berhasil mengganti password!',
         html: sendEmail
@@ -237,7 +242,7 @@ export const resetPasswordOnLoginService = async ({
         },
     });
 
-    const emailFilePath = path.join(__dirname, '..', 'public', 'emailSend', 'resetPasswordSucces.html');
+    const emailFilePath = path.join(__dirname, '..', '..', '..', 'public', 'emailSend', 'resetPasswordSucces.html');
     const dataEmail = fs.readFileSync(emailFilePath, 'utf-8')
 
 
@@ -248,6 +253,7 @@ export const resetPasswordOnLoginService = async ({
     })
 
     await transporter.sendMail({
+        from: 'ticket-box@gancy.my.id',
         to: findUser?.email,
         subject: 'Berhasil mengganti password!',
         html: sendEmail

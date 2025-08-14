@@ -5,8 +5,9 @@ config()
 const passwordEmail = process.env.PASSWORD_WEB_EMAIL || ''
 export const transporter = nodemailer.createTransport({
     host: 'mail.gancy.my.id',
-    port: 465,
-    secure: true,
+    from: 'ticket-box@gancy.my.id',
+    port: 587,
+    secure: false,
     auth: {
         user: 'ticket-box@gancy.my.id',
         pass: passwordEmail,

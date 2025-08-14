@@ -13,10 +13,6 @@ export default async function LandingPage() {
     const dataComedy = (await getDataComedy())?.data
     const dataNewest = (await getDataNewest())?.data
 
-    return (
-        <div>
-            <DynamicBodyLanding dataTopSell={dataTopSell} 
-            dataNewest={dataNewest} dataComedy={dataComedy} />
-        </div>
-    );
+    return <DynamicBodyLanding dataTopSell={dataTopSell || []}
+        dataNewest={dataNewest || []} dataComedy={dataComedy || []} />
 }
